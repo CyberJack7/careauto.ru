@@ -32,8 +32,8 @@ session_start();
         <form action="/careauto.ru/vendor/signup.php" method="post">
             <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">ФИО</label>
-                <input type="text" name="full_name" class="form-control" id="exampleInputEmail1"
-                    aria-describedby="emailHelp" />
+                <input type="text" placeholder="Фамилия Имя Отчество" name="full_name" class="form-control"
+                    id="exampleInputEmail1" aria-describedby="emailHelp" />
             </div>
             <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Адрес электронной почты</label>
