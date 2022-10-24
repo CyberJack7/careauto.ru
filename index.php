@@ -40,18 +40,21 @@ session_start();
             <button type="submit" class="btn btn-primary">Войти</button>
             <p>У вас еще нет аккаунта? - <a href="/careauto.ru/reg_page.php">Зарегестрируйтесь</a>
                 <?php
-        // Тупо потом переделать
-        if (isset($_SESSION['message'])) {
-          if ($_SESSION['message'] == "Вы ввели неверный логин/пароль!") {
-            echo '<p><div class="alert alert-danger" role="alert">
+                // Тупо потом переделать
+                if (isset($_SESSION['message'])) {
+                    if ($_SESSION['message'] == "Вы ввели неверный логин/пароль!") {
+                        echo '<p><div class="alert alert-danger" role="alert">
           ' . $_SESSION['message'] . '</div></p>';
-          } else {
-            echo '<p><div class="alert alert-success" role="alert">
+                    } elseif ($_SESSION['message'] == "Вы не ввели данные") {
+                        echo '<p><div class="alert alert-warning" role="alert">
           ' . $_SESSION['message'] . '</div></p>';
-          }
-        }
-        unset($_SESSION['message']);
-        ?>
+                    } else {
+                        echo '<p><div class="alert alert-success" role="alert">
+          ' . $_SESSION['message'] . '</div></p>';
+                    }
+                }
+                unset($_SESSION['message']);
+                ?>
 
         </form>
 
