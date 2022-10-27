@@ -18,7 +18,7 @@ catch(PDOException $e){
     echo $e->getMessage();
 }
 
-$result = $pdo->query('SELECT * FROM public.services');
+$result = $pdo->query('SELECT * FROM public.services ORDER BY price');
 echo '<b> Доступные услуги:<br> </b>';
 foreach ($result as $row){
     echo $row['name'] . " от " . $row['price'] . ' рублей <br>';
