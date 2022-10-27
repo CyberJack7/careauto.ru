@@ -38,6 +38,8 @@ session_start();
                     id="exampleInputPassword1" />
             </div>
             <button type="submit" class="btn btn-primary">Войти</button>
+
+
             <p>У вас еще нет аккаунта? - <a href="/careauto.ru/reg_page.php">Зарегестрируйтесь</a>
                 <?php
                 // Тупо потом переделать
@@ -55,6 +57,7 @@ session_start();
                 }
                 unset($_SESSION['message']);
                 ?>
+
 
         </form>
 
