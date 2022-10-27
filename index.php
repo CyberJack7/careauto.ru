@@ -34,6 +34,17 @@ session_start();
           >
             Войти
           </a>
+
+            <?php
+                if (isset($_SESSION['result'])) {
+                    if ($_SESSION['result'] == 2) {
+                        echo '<p><div class="alert alert-success" role="alert">
+                        ' . $_SESSION['message'] . '</div></p>';
+                    }                    
+                }
+                unset ($_SESSION['message'], $_SESSION['result']);
+                
+            ?>
         
 
 </body>
