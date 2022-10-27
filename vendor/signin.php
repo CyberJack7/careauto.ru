@@ -5,31 +5,49 @@ session_start();
 require_once 'connect.php';
 
 $email = $_POST['email'];
-$pass = $_POST['pass'];
-$user_type = $_POST['user_type']; // 1 client 0 autoservice
+$password = md5($_POST['password']);
+$user_type = $_POST['user_type']; // 1 - client, 0 - autoservice
 
-if (empty($email) || empty($pass)) {
-    $_SESSION['message'] = "Вы не ввели данные";
-    header('Location: ../index.php');
+echo $password;
+
+if (empty($email)) {
+    $_SESSION['message'] = "Введите почту";
+    header('Location: ../authoriz_page.php');
+} elseif (empty($password)) {
+    $_SESSION['message'] = "Введите пароль";
+    header('Location: ../authoriz_page.php');
 } else {
 
+    $sql_admin = "SELECT * FROM public.admin 
+        WHERE email_admin = '$email' AND password_admin = '$password'";
 
-    $sql = "SELECT * 
-FROM Public.clients 
-WHERE email = '$email'";
+    $sql_client = "SELECT * FROM public.client 
+        WHERE email_client = '$email' AND password_client = '$password'";
 
-    $sql2 = "";
+    $sql_autoservice = "SELECT * FROM public.autoservice 
+        WHERE email_autoservice = '$email' AND password_autoservice = '$password'";
 
-    if ($user_type) {
-        $check_user = $pdo->query($sql);
+    $result = $pdo->query($sql_admin)->fetch();
+
+    if($result){
+        echo "Вы авторизованы как администратор!";
+    } elseif ($user_type) {
+        $result = $pdo->query($sql_client)->fetch();
+        if($result){
+            echo "Вы авторизованы как автовладелец!";
+        } else {
+            $_SESSION['message'] = "Неверный логин или пароль! <br>
+            Если данные введены верно, смените тип пользователя";
+            header('Location: ../index.php');
+        }
     } else {
-    }
-    $result = $check_user->fetch();
-
-    if (password_verify($pass, $result['pass']))
-        echo "Вы успешно авторизировались!";
-    else {
-        $_SESSION['message'] = "Вы ввели неверный логин/пароль!";
-        header('Location: ../index.php');
+        $result = $pdo->query($sql_autoservice)->fetch();
+        if($result){
+            echo "Вы авторизованы как сервисный центр!";
+        } else {
+            $_SESSION['message'] = "Неверный логин или пароль! <br>
+            Если данные введены верно, смените тип пользователя";
+            header('Location: ../index.php');
+        }
     }
 }
