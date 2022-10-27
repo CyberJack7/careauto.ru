@@ -5,7 +5,7 @@ $driver = 'pgsql';
 $host = 'localhost';
 $db_name = 'postgres';
 $db_user = 'postgres';
-$db_pass = '681931';
+$db_pass = 'pass';
 $port = '5432';
 $charset = 'utf8';
 $options = [PDO::ATTR_ERRMODE =>
