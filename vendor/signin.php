@@ -6,6 +6,7 @@ require_once 'connect.php';
 
 $email = $_POST['email'];
 $pass = $_POST['pass'];
+$user_type = $_POST['user_type']; // 1 client 0 autoservice
 
 if (empty($email) || empty($pass)) {
     $_SESSION['message'] = "Вы не ввели данные";
@@ -17,8 +18,12 @@ if (empty($email) || empty($pass)) {
 FROM Public.clients 
 WHERE email = '$email'";
 
-    $check_user = $pdo->query($sql);
+    $sql2 = "";
 
+    if ($user_type) {
+        $check_user = $pdo->query($sql);
+    } else {
+    }
     $result = $check_user->fetch();
 
     if (password_verify($pass, $result['pass']))
