@@ -96,7 +96,7 @@ session_start();
         <?php
         if (isset($_SESSION['message'])) {
             echo '<p><div class="alert alert-warning" role="alert">
-        ' . $_SESSION['message'] . '</div></p>';
+            ' . $_SESSION['message'] . '</div></p>';
         }
         unset($_SESSION['message']);
         ?>
