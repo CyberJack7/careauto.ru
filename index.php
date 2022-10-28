@@ -29,7 +29,6 @@ session_start();
         
         <a
             href="authoriz_page.php"
-            target="_blank"
             class="btn btn-primary"
           >
             Войти

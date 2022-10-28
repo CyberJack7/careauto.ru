@@ -45,7 +45,7 @@ session_start();
                     id="exampleInputPassword1" />
             </div>
             <button type="submit" class="btn btn-primary">Войти</button>
-            <p>У вас еще нет аккаунта? - <a href="/careauto.ru/reg_page.php">Зарегестрируйтесь</a>
+            <p>У вас еще нет аккаунта? - <a href="/careauto.ru/reg_page.php">Зарегистрируйтесь</a>
                 <?php
                     if (isset($_SESSION['result'])) {
                         if ($_SESSION['result'] == 1) {
