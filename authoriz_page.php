@@ -47,14 +47,9 @@ session_start();
             <button type="submit" class="btn btn-primary">Войти</button>
             <p>У вас еще нет аккаунта? - <a href="/careauto.ru/reg_page.php">Зарегистрируйтесь</a>
                 <?php
-                    if (isset($_SESSION['result'])) {
-                        if ($_SESSION['result'] == 1) {
-                            echo '<p><div class="alert alert-warning" role="alert">
-                            ' . $_SESSION['message'] . '</div></p>';
-                        } else {
-                            echo '<p><div class="alert alert-success" role="alert">
-                            ' . $_SESSION['message'] . '</div></p>';
-                        }
+                    if (isset($_SESSION['message'])) {
+                        echo '<p><div class="alert alert-warning" role="alert">
+                        ' . $_SESSION['message'] . '</div></p>';
                     }
                     unset($_SESSION['message'], $_SESSION['result']);
                 ?>
