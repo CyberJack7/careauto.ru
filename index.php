@@ -43,7 +43,7 @@ session_start();
                     echo '<p><div class="alert alert-success" role="alert">
                     ' . $_SESSION['message'] . '</div></p>';
                 }
-                unset ($_SESSION['message'], $_SESSION['result']);                
+                unset ($_SESSION['message']);                
             ?>
 
 

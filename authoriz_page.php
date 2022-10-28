@@ -29,7 +29,7 @@ session_start();
 <body>
     <div class="mx-auto">
 
-        <h1>Авторизация</h1>
+        <h1>Вход</h1>
         <form action="/careauto.ru/vendor/signin.php" method="post">
             <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
                 <input type="radio" class="btn-check" name="user_type" value="1" id="btnradio1" autocomplete="off" checked>
@@ -55,7 +55,7 @@ session_start();
                         echo '<p><div class="alert alert-warning" role="alert">
                         ' . $_SESSION['message'] . '</div></p>';
                     }
-                    unset($_SESSION['message'], $_SESSION['result']);
+                    unset($_SESSION['message']);
                 ?>
 
         </form>

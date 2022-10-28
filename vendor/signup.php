@@ -69,7 +69,6 @@ function phone_check($phone){
     }
 }
 $user_type = $_POST['btnradio'];
-// $password = password_hash($_POST['password']);
 
 if ($user_type == "client") { // для клиента
     $client = [
@@ -119,7 +118,6 @@ if ($user_type == "client") { // для клиента
         :pass,:phone,:document)";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([
-        // 'client_id' => 'DEFAULT',
         'name_autoservice' => $autoservice['name'],
         'phone' => $autoservice['phone'],
         'email' => $autoservice['email'],
