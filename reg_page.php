@@ -97,11 +97,11 @@ require_once 'vendor/connect.php';
             </div>
             <div class="mb-3">
                 <label for="city" class="form-label">Выберите город</label>
-                <select name="city_id" class="form-select" aria-label="Default select example" id="city">
+                <select required name="city_id" class="form-select" aria-label="Default select example" id="city">
+                    <option value="" disabled selected>Выберите город</option>
                     <?php
                     $sql = "SELECT city_id, name_city FROM Public.city ORDER BY name_city asc";
                     $city = $pdo->query($sql);
-
                     if ($city->fetchColumn() > 0) {
                         while ($res_city = $city->fetch()) {
                             printf("<option value='%s'>%s</option>", $res_city["city_id"], $res_city["name_city"]);
@@ -121,7 +121,33 @@ require_once 'vendor/connect.php';
                 <input type="password" required placeholder="password" name="password_confirm" class="form-control"
                     id="password_confirm" />
             </div>
+            <!-- Button trigger modal -->
+            <!-- <button name=reg_button value="client " type="submit" class="btn btn-primary" data-bs-toggle="modal"
+                data-bs-target="#staticBackdrop">
+                Зарегистрироваться
+            </button> -->
+
             <button name="reg_button" value="client" type="submit" class="btn btn-primary">Зарегистрироваться</button>
+            <!-- Modal -->
+            <!-- <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            ...
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Understood</button>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+            <!-- MODAL WINDOW -->
         </form>
         <form id="autoservice" class="radio-blocks" style="display:none" action="/careauto.ru/vendor/signup.php"
             method="post" enctype="multipart/form-data">
