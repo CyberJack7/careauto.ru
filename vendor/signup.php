@@ -5,17 +5,7 @@ session_start();
 require_once 'connect.php';
 require_once 'path.php';
 
-function fullness_check($array)
-{
-    foreach ($array as $row) {
-        if (empty($row)) {
-            $_SESSION['message'] = "Заполните все поля!";
-            header('Location: ../reg_page.php');
-            exit;
-        }
-    }
-    return;
-}
+
 function email_check($email, $pdo)
 {
 
@@ -59,29 +49,18 @@ function password_check($pass, $pass_confirm)
         exit;
     }
 }
-function phone_check($phone){
-    if (((strlen($phone) == 12) & ($phone{0} == '+')) || ((strlen($phone) == 11) & ($phone{0} == '8'))){
-        return;
-    } else {
-        $_SESSION['message'] = "Введите корректный номер телефона";
-        header('Location: ../reg_page.php');
-        exit;
-    }
-}
-$user_type = $_POST['btnradio'];
+$user_type = $_POST['reg_button'];
 
 if ($user_type == "client") { // для клиента
     $client = [
         "name" => $_POST['name_client'],
         "email" => $_POST['email'],
         "city_id" => $_POST['city_id'],
-        "phone" => $_POST['phone'],
+        "phone" => str_replace(['(', ')', '-', '+', ' '], '', $_POST['phone']),
         "password" => password_hash($_POST['password'], PASSWORD_DEFAULT)
     ];
-    fullness_check($client);
     password_check($_POST['password'], $_POST['password_confirm']);
     email_check($client['email'], $pdo);
-    phone_check($client['phone']);
     $sql = "INSERT INTO Public.client(name_client,phone_client,email_client,
         password_client,favorites,city_id) VALUES (:name_client,:phone,
         :email,:pass,:favorites,:city_id)";
@@ -100,19 +79,18 @@ if ($user_type == "client") { // для клиента
     $autoservice = [
         "name" => $_POST['name_autoservice'],
         "email" => $_POST['email'],
-        "phone" => $_POST['phone'],
+        "phone" => str_replace(['(', ')', '-', '+', ' '], '', $_POST['phone']),
         "password" => password_hash($_POST['password'], PASSWORD_DEFAULT),
     ];
-    fullness_check($autoservice);
     password_check($_POST['password'], $_POST['password_confirm']);
     email_check($autoservice['email'], $pdo);
-    phone_check($autoservice['phone']);
     // пытаемся загрузить файл
     if (!move_uploaded_file($_FILES['document']['tmp_name'], $path_uploads_temp . time() . $_FILES['document']['name'])) {
         header('Location: ../reg_page.php');
         $_SESSION['message'] = "Ошибка при загрузке файла!";
     }
     $path_to_file = $path_uploads_temp . time() . $_FILES['document']['name'];
+    print_r($autoservice);
     $sql = "INSERT INTO Public.autoservice_in_check(name_autoservice,email_autoservice,
         password_autoservice,phone_autoservice,document) VALUES (:name_autoservice,:email,
         :pass,:phone,:document)";
