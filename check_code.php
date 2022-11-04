@@ -24,6 +24,13 @@ session_start();
     <link rel="manifest" href="images/site.webmanifest">
     <title>careauto</title>
 </head>
+<script>
+setTimeout(function() {
+    document.getElementById('resend').style.display = 'inline';
+    document.getElementById('label_resend').style.display = 'none';
+
+}, 5000);
+</script>
 
 <body>
     <div class="mx-auto">
@@ -43,7 +50,12 @@ session_start();
         </div>
         <form action="/careauto.ru/vendor/check_email_code.php" method="post">
             <div class="mb-3">
-                <button name="resend" value=1 type="submit" class="btn btn-secondary">Отправить письмо еще раз</button>
+                <label id="label_resend" for="resend" class="form-label">Повторная отправка кода будет доступна через 5
+                    секунд</label>
+                <button style="display: none" id="resend" name="resend" value=1 type="submit"
+                    class="btn btn-secondary">Отправить
+                    письмо еще
+                    раз</button>
             </div>
 
         </form>

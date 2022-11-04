@@ -33,6 +33,26 @@ require_once 'vendor/connect.php';
         });
     });
     </script>
+    <!-- <script>
+    $(".cor_password").on("keyup", function() { // Выполняем скрипт при изменении содержимого 2-го поля
+
+        var value_input1 = $(".password").val(); // Получаем содержимое 1-го поля
+        var value_input2 = $(this).val(); // Получаем содержимое 2-го поля
+
+        if (value_input1 != value_input2) { // Условие, если поля не совпадают
+
+            $(".error").html("Пароли не совпадают!"); // Выводим сообщение
+            $("#submit").attr("disabled", "disabled"); // Запрещаем отправку формы
+
+        } else { // Условие, если поля совпадают
+
+            $("#submit").removeAttr("disabled"); // Разрешаем отправку формы
+            $(".error").html(""); // Скрываем сообщение
+
+        }
+
+    });
+    </script> -->
     <script type="text/javascript">
     // маскка для телефона
     $(function() {
@@ -119,33 +139,8 @@ require_once 'vendor/connect.php';
                 <input type="password" required placeholder="password confirm  5 to 20 characters"
                     name="password_confirm" class="form-control" id="password_confirm" pattern=".{5,20}" />
             </div>
-            <!-- Button trigger modal -->
-            <!-- <button name=reg_button value="client " type="submit" class="btn btn-primary" data-bs-toggle="modal"
-                data-bs-target="#staticBackdrop">
-                Зарегистрироваться
-            </button> -->
 
             <button name="reg_button" value="client" type="submit" class="btn btn-primary">Зарегистрироваться</button>
-            <!-- Modal -->
-            <!-- <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-                aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            ...
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Understood</button>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-            <!-- MODAL WINDOW -->
         </form>
         <form id="autoservice" class="radio-blocks" style="display:none" action="/careauto.ru/vendor/signup.php"
             method="post" enctype="multipart/form-data">
