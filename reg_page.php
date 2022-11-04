@@ -54,8 +54,14 @@ session_start();
             </div>
             <div class="mb-3">
                 <label for="email_client" class="form-label">Адрес электронной почты</label>
-                <input type="email" placeholder="email" name="email" class="form-control" id="exampleInputEmail1"
-                    aria-describedby="emailHelp" />
+                <input type="email" placeholder="email" name="email" class="form-control" value="<?php 
+                    if(isset($_SESSION['email'])) 
+                        echo $_SESSION['email'];
+                    else
+                        echo null; ?>" id="exampleInputEmail1" aria-describedby="emailHelp" />
+                <div class="invalid-feedback">
+                    Please choose a username.
+                </div>
             </div>
             <div class="mb-3">
                 <label for="phone_client" class="form-label">Укажите ваш номер телефона</label>
@@ -93,9 +99,25 @@ session_start();
                 <input type="password" placeholder="password" name="password_confirm" class="form-control"
                     id="password_confirm" />
             </div>
+            
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="Введите код подтверждения" aria-label="Recipient's username" aria-describedby="button-addon2">
+                <button class="btn btn-outline-primary" type="button" href="/careauto.ru/vendor/send_email.php" id="button-addon2">Отправить код</button>
+            </div>
+
+            <!-- <form action="/careauto.ru/vendor/send_email.php" method="post" class="row g-2">
+                <div class="col-auto">
+                    <label for="input_conf_code" class="visually-hidden">Password</label>
+                    <input type="text" class="form-control" id="input_conf_code" placeholder="код подтверждения">
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary mb-3">Отправить код</button>
+                </div>
+            </form> -->
+
             <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
         </form>
-        <p>У вас уже есть аккаунт? - <a href="/careauto.ru/index.php">Авторизируйтесь</a>
+        <p>У вас уже есть аккаунт? - <a href="/careauto.ru/authoriz_page.php">Авторизируйтесь</a>
         </p>
         <?php
         if (isset($_SESSION['message'])) {

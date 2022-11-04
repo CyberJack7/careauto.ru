@@ -5,6 +5,11 @@ session_start();
 require_once 'connect.php';
 require_once 'path.php';
 
+/*$_POST['name_client'],
+        "email" => $_POST['email'],
+        "city_id" => $_POST['city_id'],
+        "phone" => $_POST['phone']*/
+
 function fullness_check($array)
 {
     foreach ($array as $row) {
@@ -16,6 +21,7 @@ function fullness_check($array)
     }
     return;
 }
+
 function email_check($email, $pdo)
 {
 
@@ -49,16 +55,22 @@ function email_check($email, $pdo)
     }
     return;
 }
+
 function password_check($pass, $pass_confirm)
 {
-    if ($pass === $pass_confirm) {
-        return;
-    } else {
+    if ($pass !== $pass_confirm) {
         $_SESSION['message'] = "Пароли не совпадают";
         header('Location: ../reg_page.php');
         exit;
+    } elseif (strlen($pass) < 5 || strlen($pass) > 20) {
+        $_SESSION['message'] = "Длина пароля должна быть от 5 до 20 символов <br> включительно";
+        header('Location: ../reg_page.php');
+        exit;
+    } else {
+        return;
     }
 }
+
 function phone_check($phone){
     if (((strlen($phone) == 12) & ($phone{0} == '+')) || ((strlen($phone) == 11) & ($phone{0} == '8'))){
         return;
@@ -68,6 +80,7 @@ function phone_check($phone){
         exit;
     }
 }
+
 $user_type = $_POST['btnradio'];
 
 if ($user_type == "client") { // для клиента
@@ -78,10 +91,12 @@ if ($user_type == "client") { // для клиента
         "phone" => $_POST['phone'],
         "password" => password_hash($_POST['password'], PASSWORD_DEFAULT)
     ];
+
     fullness_check($client);
     password_check($_POST['password'], $_POST['password_confirm']);
     email_check($client['email'], $pdo);
     phone_check($client['phone']);
+
     $sql = "INSERT INTO Public.client(name_client,phone_client,email_client,
         password_client,favorites,city_id) VALUES (:name_client,:phone,
         :email,:pass,:favorites,:city_id)";
@@ -96,6 +111,8 @@ if ($user_type == "client") { // для клиента
     ]);
     $_SESSION['message'] = "Регистрация прошла успешно!";
     header('Location: ../index.php');
+
+
 } elseif ($user_type == "autoservice") { // для автосервиса
     $autoservice = [
         "name" => $_POST['name_autoservice'],
@@ -103,14 +120,16 @@ if ($user_type == "client") { // для клиента
         "phone" => $_POST['phone'],
         "password" => password_hash($_POST['password'], PASSWORD_DEFAULT),
     ];
+
     fullness_check($autoservice);
     password_check($_POST['password'], $_POST['password_confirm']);
     email_check($autoservice['email'], $pdo);
     phone_check($autoservice['phone']);
+
     // пытаемся загрузить файл
     if (!move_uploaded_file($_FILES['document']['tmp_name'], $path_uploads_temp . time() . $_FILES['document']['name'])) {
-        header('Location: ../reg_page.php');
         $_SESSION['message'] = "Ошибка при загрузке файла!";
+        header('Location: ../reg_page.php');
     }
     $path_to_file = $path_uploads_temp . time() . $_FILES['document']['name'];
     $sql = "INSERT INTO Public.autoservice_in_check(name_autoservice,email_autoservice,
@@ -127,3 +146,5 @@ if ($user_type == "client") { // для клиента
     $_SESSION['message'] = "Регистрация прошла успешно!";
     header('Location: ../index.php');
 }
+    
+    
