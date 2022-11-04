@@ -45,7 +45,10 @@ if ($_SESSION['new_user']['attempt'] > 1) { // 3 попытки на ввод к
         }
     } else {
         $_SESSION['new_user']['attempt'] -= 1;
-        $_SESSION['message'] = "Код введен не верно! У вас осталось " . $_SESSION['new_user']['attempt'] . " попытки";
+        if ($_SESSION['new_user']['attempt'] == 1)
+            $_SESSION['message'] = "Код введен не верно! У вас осталось " . $_SESSION['new_user']['attempt'] . " попытка";
+        else
+            $_SESSION['message'] = "Код введен не верно! У вас осталось " . $_SESSION['new_user']['attempt'] . " попытки";
         header('Location: ../check_code.php');
         exit;
     }

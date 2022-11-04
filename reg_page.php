@@ -102,10 +102,8 @@ require_once 'vendor/connect.php';
                     <?php
                     $sql = "SELECT city_id, name_city FROM Public.city ORDER BY name_city asc";
                     $city = $pdo->query($sql);
-                    if ($city->fetchColumn() > 0) {
-                        while ($res_city = $city->fetch()) {
-                            printf("<option value='%s'>%s</option>", $res_city["city_id"], $res_city["name_city"]);
-                        }
+                    while ($res_city = $city->fetch()) {
+                        printf("<option value='%s'>%s</option>", $res_city["city_id"], $res_city["name_city"]);
                     }
                     ?>
                 </select>
@@ -113,13 +111,13 @@ require_once 'vendor/connect.php';
 
             <div class="mb-3">
                 <label for="password" class="form-label">Пароль</label>
-                <input type="password" required placeholder="password" name="password" class="form-control"
-                    id="password" />
+                <input type="password" required placeholder="password  5 to 20 characters" name="password"
+                    class="form-control" id="password" pattern=".{5,20}" />
             </div>
             <div class="mb-3">
                 <label for="password_confirm" class="form-label">Подтверждение пароля</label>
-                <input type="password" required placeholder="password" name="password_confirm" class="form-control"
-                    id="password_confirm" />
+                <input type="password" required placeholder="password confirm  5 to 20 characters"
+                    name="password_confirm" class="form-control" id="password_confirm" pattern=".{5,20}" />
             </div>
             <!-- Button trigger modal -->
             <!-- <button name=reg_button value="client " type="submit" class="btn btn-primary" data-bs-toggle="modal"
@@ -173,13 +171,13 @@ require_once 'vendor/connect.php';
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">Пароль</label>
-                <input type="password" required placeholder="password" name="password" class="form-control"
-                    id="password" />
+                <input type="password" required placeholder="password 5 to 20 characters" name="password"
+                    class="form-control" id="password" pattern=".{5,20}" />
             </div>
             <div class="mb-3">
                 <label for="password_confirm" class="form-label">Подтверждение пароля</label>
-                <input type="password" required placeholder="password" name="password_confirm" class="form-control"
-                    id="password_confirm" />
+                <input type="password" required placeholder="password confirm 5 to 20 characters"
+                    name="password_confirm" class="form-control" id="password_confirm" pattern=".{5,20}" />
             </div>
             <button name="reg_button" value="autoservice" type="submit"
                 class="btn btn-primary">Зарегистрироваться</button>
