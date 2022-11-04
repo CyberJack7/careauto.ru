@@ -43,7 +43,7 @@ session_start();
         </div>
         <form action="/careauto.ru/vendor/check_email_code.php" method="post">
             <div class="mb-3">
-                <button name="resend" value=1 type="submit" class="btn btn-secondary">Отправить писмо еще раз</button>
+                <button name="resend" value=1 type="submit" class="btn btn-secondary">Отправить письмо еще раз</button>
             </div>
 
         </form>
