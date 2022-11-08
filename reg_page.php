@@ -13,8 +13,11 @@ require_once 'vendor/connect.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/careauto.ru/assets/css/main.css">
 
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous" />
+
+
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
         integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
     </script>
@@ -33,26 +36,7 @@ require_once 'vendor/connect.php';
         });
     });
     </script>
-    <!-- <script>
-    $(".cor_password").on("keyup", function() { // Выполняем скрипт при изменении содержимого 2-го поля
 
-        var value_input1 = $(".password").val(); // Получаем содержимое 1-го поля
-        var value_input2 = $(this).val(); // Получаем содержимое 2-го поля
-
-        if (value_input1 != value_input2) { // Условие, если поля не совпадают
-
-            $(".error").html("Пароли не совпадают!"); // Выводим сообщение
-            $("#submit").attr("disabled", "disabled"); // Запрещаем отправку формы
-
-        } else { // Условие, если поля совпадают
-
-            $("#submit").removeAttr("disabled"); // Разрешаем отправку формы
-            $(".error").html(""); // Скрываем сообщение
-
-        }
-
-    });
-    </script> -->
     <script type="text/javascript">
     // маскка для телефона
     $(function() {
@@ -79,6 +63,23 @@ require_once 'vendor/connect.php';
         });
     });
     </script>
+    <!-- подсветка полей -->
+    <script type="text/javascript">
+    $('document').ready(function() {
+        $(':submit').on('click', function() {
+            $('input[required]').addClass('req');
+            $('select[required]').addClass('req');
+        });
+    });
+    </script>
+    <script type="text/javascript">
+    $('document').ready(function() {
+        $(':radio').on('click', function() {
+            $('input[required]').removeClass('req');
+            $('select[required]').removeClass('req');
+        });
+    });
+    </script>
     <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
@@ -100,82 +101,88 @@ require_once 'vendor/connect.php';
         </div>
         <form id=client class="radio-blocks" action="/careauto.ru/vendor/signup.php" method="post"
             enctype="multipart/form-data">
-            <div class="mb-3">
-                <label for="email_client" class="form-label">Адрес электронной почты</label>
-                <input type="email" required placeholder="email" name="email" class="form-control"
-                    id="exampleInputEmail1" aria-describedby="emailHelp" />
-            </div>
-            <div class="mb-3">
-                <label for="phone_client" class="form-label">Укажите ваш номер телефона</label>
-                <input type="text" data-phone-pattern required placeholder="Номер телефона" name="phone"
-                    class="form-control" id="phone_client" />
-            </div>
-            <div class="mb-3">
-                <label for="name_client" class="form-label">ФИО</label>
-                <input type="text" required placeholder="Фамилия Имя Отчество" name="name_client" class="form-control"
-                    id="name_client" />
-            </div>
-            <div class="mb-3">
-                <label for="city" class="form-label">Выберите город</label>
-                <select required name="city_id" class="form-select" aria-label="Default select example" id="city">
-                    <option value="" disabled selected>Выберите город</option>
-                    <?php
-                    $sql = "SELECT city_id, name_city FROM Public.city ORDER BY name_city asc";
-                    $city = $pdo->query($sql);
-                    while ($res_city = $city->fetch()) {
-                        printf("<option value='%s'>%s</option>", $res_city["city_id"], $res_city["name_city"]);
-                    }
-                    ?>
-                </select>
-            </div>
+            <div class="form_box">
 
-            <div class="mb-3">
-                <label for="password" class="form-label">Пароль</label>
-                <input type="password" required placeholder="password  5 to 20 characters" name="password"
-                    class="form-control" id="password" pattern=".{5,20}" />
-            </div>
-            <div class="mb-3">
-                <label for="password_confirm" class="form-label">Подтверждение пароля</label>
-                <input type="password" required placeholder="password confirm  5 to 20 characters"
-                    name="password_confirm" class="form-control" id="password_confirm" pattern=".{5,20}" />
-            </div>
+                <div class="mb-3">
+                    <label for="email_client" class="form-label">Адрес электронной почты</label>
+                    <input type="email" required placeholder="email" name="email" class="form-control"
+                        id="exampleInputEmail1" aria-describedby="emailHelp" />
+                </div>
+                <div class="mb-3">
+                    <label for="phone_client" class="form-label">Укажите ваш номер телефона</label>
+                    <input type="text" data-phone-pattern required placeholder="Номер телефона" name="phone"
+                        class="form-control" id="phone_client" />
+                </div>
+                <div class="mb-3">
+                    <label for="name_client" class="form-label">ФИО</label>
+                    <input type="text" required placeholder="Фамилия Имя Отчество" name="name_client"
+                        class="form-control" id="name_client" />
+                </div>
+                <div class="mb-3">
+                    <label for="city" class="form-label">Выберите город</label>
+                    <select required name="city_id" class="form-select" aria-label="Default select example" id="city">
+                        <option value="" disabled selected>Выберите город</option>
+                        <?php
+                        $sql = "SELECT city_id, name_city FROM Public.city ORDER BY name_city asc";
+                        $city = $pdo->query($sql);
+                        while ($res_city = $city->fetch()) {
+                            printf("<option value='%s'>%s</option>", $res_city["city_id"], $res_city["name_city"]);
+                        }
+                        ?>
+                    </select>
+                </div>
 
-            <button name="reg_button" value="client" type="submit" class="btn btn-primary">Зарегистрироваться</button>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Пароль</label>
+                    <input type="password" required placeholder="password  5 to 20 characters" name="password"
+                        class="form-control" id="password" pattern=".{5,20}" />
+                </div>
+                <div class="mb-3">
+                    <label for="password_confirm" class="form-label">Подтверждение пароля</label>
+                    <input type="password" required placeholder="password confirm  5 to 20 characters"
+                        name="password_confirm" class="form-control" id="password_confirm" pattern=".{5,20}" />
+                </div>
+
+                <button id="reg_button" name="reg_button" value="client" type="submit"
+                    class="btn btn-primary">Зарегистрироваться</button>
+            </div>
         </form>
         <form id="autoservice" class="radio-blocks" style="display:none" action="/careauto.ru/vendor/signup.php"
             method="post" enctype="multipart/form-data">
-            <div class="mb-3">
-                <label for="email_client" class="form-label">Адрес электронной почты</label>
-                <input type="email" required placeholder="email" name="email" class="form-control"
-                    id="exampleInputEmail1" aria-describedby="emailHelp" />
+            <div class="form_box">
+                <div class="mb-3">
+                    <label for="email_client" class="form-label">Адрес электронной почты</label>
+                    <input type="email" required placeholder="email" name="email" class="form-control"
+                        id="exampleInputEmail1" aria-describedby="emailHelp" />
+                </div>
+                <div class="mb-3">
+                    <label for="phone_client" class="form-label">Укажите ваш номер телефона</label>
+                    <input type="text" data-phone-pattern required placeholder="Номер телефона" name="phone"
+                        class="form-control" id="phone_client" />
+                </div>
+                <div class="mb-3">
+                    <label for="autoservice_name" class="form-label">Введите название сервисного центра</label>
+                    <input type="text" required placeholder="Название сервисного центра" name="name_autoservice"
+                        class="form-control" id="autoservice_name" />
+                </div>
+                <div class="mb-3">
+                    <label for="document" class="form-label">Прикрепите документ(в формате pdf)</label>
+                    <input type="file" required accept="application/pdf" name="document" class="form-control"
+                        id="document" />
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Пароль</label>
+                    <input type="password" required placeholder="password 5 to 20 characters" name="password"
+                        class="form-control" id="password" pattern=".{5,20}" />
+                </div>
+                <div class="mb-3">
+                    <label for="password_confirm" class="form-label">Подтверждение пароля</label>
+                    <input type="password" required placeholder="password confirm 5 to 20 characters"
+                        name="password_confirm" class="form-control" id="password_confirm" pattern=".{5,20}" />
+                </div>
+                <button id="reg_button1" name="reg_button" value="autoservice" type="submit"
+                    class="btn btn-primary">Зарегистрироваться</button>
             </div>
-            <div class="mb-3">
-                <label for="phone_client" class="form-label">Укажите ваш номер телефона</label>
-                <input type="text" data-phone-pattern required placeholder="Номер телефона" name="phone"
-                    class="form-control" id="phone_client" />
-            </div>
-            <div class="mb-3">
-                <label for="autoservice_name" class="form-label">Введите название сервисного центра</label>
-                <input type="text" required placeholder="Название сервисного центра" name="name_autoservice"
-                    class="form-control" id="autoservice_name" />
-            </div>
-            <div class="mb-3">
-                <label for="document" class="form-label">Прикрепите документ(в формате pdf)</label>
-                <input type="file" required accept="application/pdf" name="document" class="form-control"
-                    id="document" />
-            </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">Пароль</label>
-                <input type="password" required placeholder="password 5 to 20 characters" name="password"
-                    class="form-control" id="password" pattern=".{5,20}" />
-            </div>
-            <div class="mb-3">
-                <label for="password_confirm" class="form-label">Подтверждение пароля</label>
-                <input type="password" required placeholder="password confirm 5 to 20 characters"
-                    name="password_confirm" class="form-control" id="password_confirm" pattern=".{5,20}" />
-            </div>
-            <button name="reg_button" value="autoservice" type="submit"
-                class="btn btn-primary">Зарегистрироваться</button>
         </form>
         <p>У вас уже есть аккаунт? - <a href="/careauto.ru/index.php">Авторизируйтесь</a>
         </p>
