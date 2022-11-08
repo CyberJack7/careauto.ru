@@ -32,7 +32,8 @@ session_start();
         <h1>Вход</h1>
         <form action="/careauto.ru/vendor/signin.php" method="post">
             <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                <input type="radio" class="btn-check" name="user_type" value="1" id="btnradio1" autocomplete="off" checked>
+                <input type="radio" class="btn-check" name="user_type" value="1" id="btnradio1" autocomplete="off"
+                    checked>
                 <label class="btn btn-outline-primary" for="btnradio1">Автовладелец</label>
 
                 <input type="radio" class="btn-check" name="user_type" value="0" id="btnradio2" autocomplete="off">
@@ -40,22 +41,22 @@ session_start();
             </div>
             <div class="mb-3">
                 <label for="exampleInputEmail1" class="form-label">Адрес электронной почты</label>
-                <input type="email" placeholder="email" name="email" class="form-control" id="exampleInputEmail1"
-                    aria-describedby="emailHelp" />
+                <input type="email" required placeholder="email" name="email" class="form-control"
+                    id="exampleInputEmail1" aria-describedby="emailHelp" />
             </div>
             <div class="mb-3">
                 <label for="exampleInputPassword1" class="form-label">Пароль</label>
-                <input type="password" placeholder="password" name="password" class="form-control"
+                <input type="password" required placeholder="password" name="password" class="form-control"
                     id="exampleInputPassword1" />
             </div>
             <button type="submit" class="btn btn-primary">Войти</button>
             <p>У вас еще нет аккаунта? - <a href="/careauto.ru/reg_page.php">Зарегистрируйтесь</a>
                 <?php
-                    if (isset($_SESSION['message'])) {
-                        echo '<p><div class="alert alert-warning" role="alert">
+                if (isset($_SESSION['message'])) {
+                    echo '<p><div class="alert alert-warning" role="alert">
                         ' . $_SESSION['message'] . '</div></p>';
-                    }
-                    unset($_SESSION['message']);
+                }
+                unset($_SESSION['message']);
                 ?>
 
         </form>

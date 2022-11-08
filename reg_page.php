@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once 'vendor/connect.php';
 ?>
 
 
@@ -12,8 +13,11 @@ session_start();
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/careauto.ru/assets/css/main.css">
 
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous" />
+
+
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
         integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
     </script>
@@ -23,11 +27,56 @@ session_start();
     <!-- JQueary -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script type="text/javascript">
+    // переключение кнопок-форм
     $(function() {
         $("#" + $(".radio:checked").val()).show();
         $(".btn-check").change(function() {
             $(".radio-blocks").hide();
             $("#" + $(this).val()).show();
+        });
+    });
+    </script>
+
+    <script type="text/javascript">
+    // маскка для телефона
+    $(function() {
+        $('[data-phone-pattern]').on('input blur focus', (e) => {
+            var el = e.target,
+                clearVal = $(el).data('phoneClear'),
+                pattern = $(el).data('phonePattern'),
+                matrix_def = "+7(___) ___-__-__",
+                matrix = pattern ? pattern : matrix_def,
+                i = 0,
+                def = matrix.replace(/\D/g, ""),
+                val = $(el).val().replace(/\D/g, "");
+            if (clearVal !== 'false' && e.type === 'blur') {
+                if (val.length < matrix.match(/([\_\d])/g).length) {
+                    $(el).val('');
+                    return;
+                }
+            }
+            if (def.length >= val.length) val = def;
+            $(el).val(matrix.replace(/./g, function(a) {
+                return /[_\d]/.test(a) && i < val.length ? val.charAt(i++) : i >= val
+                    .length ? "" : a;
+            }));
+        });
+    });
+    </script>
+    <!-- подсветка полей -->
+    <script type="text/javascript">
+    $('document').ready(function() {
+        $(':submit').on('click', function() {
+            $('input[required]').addClass('req');
+            $('select[required]').addClass('req');
+        });
+    });
+    </script>
+    <script type="text/javascript">
+    $('document').ready(function() {
+        $(':radio').on('click', function() {
+            $('input[required]').removeClass('req');
+            $('select[required]').removeClass('req');
         });
     });
     </script>
@@ -42,80 +91,98 @@ session_start();
     <div class="mx-auto">
         <h1>Регистрация</h1>
         <p>Выберите тип пользователя</p>
-        <form action="/careauto.ru/vendor/signup.php" method="post" enctype="multipart/form-data">
-            <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                <input type="radio" value="client" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off"
-                    checked>
-                <label class="btn btn-outline-primary" for="btnradio1">Клиент</label>
+        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+            <input type="radio" value="client" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off"
+                checked>
+            <label class="btn btn-outline-primary" for="btnradio1">Клиент</label>
 
-                <input type="radio" value="autoservice" class="btn-check" name="btnradio" id="btnradio2"
-                    autocomplete="off">
-                <label class="btn btn-outline-primary" for="btnradio2">Сервисный центр</label>
-            </div>
-            <div class="mb-3">
-                <label for="email_client" class="form-label">Адрес электронной почты</label>
-                <input type="email" placeholder="email" name="email" class="form-control" value="<?php 
-                    if(isset($_SESSION['email'])) 
-                        echo $_SESSION['email'];
-                    else
-                        echo null; ?>" id="exampleInputEmail1" aria-describedby="emailHelp" />
-                <div class="invalid-feedback">
-                    Please choose a username.
+            <input type="radio" value="autoservice" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
+            <label class="btn btn-outline-primary" for="btnradio2">Сервисный центр</label>
+        </div>
+        <form id=client class="radio-blocks" action="/careauto.ru/vendor/signup.php" method="post"
+            enctype="multipart/form-data">
+            <div class="form_box">
+
+                <div class="mb-3">
+                    <label for="email_client" class="form-label">Адрес электронной почты</label>
+                    <input type="email" required placeholder="email" name="email" class="form-control"
+                        id="exampleInputEmail1" aria-describedby="emailHelp" />
                 </div>
-            </div>
-            <div class="mb-3">
-                <label for="phone_client" class="form-label">Укажите ваш номер телефона</label>
-                <input type="text" placeholder="Номер телефона" name="phone" class="form-control" id="phone_client" />
-            </div>
-            <div id="client" class="radio-blocks">
+                <div class="mb-3">
+                    <label for="phone_client" class="form-label">Укажите ваш номер телефона</label>
+                    <input type="text" data-phone-pattern required placeholder="Номер телефона" name="phone"
+                        class="form-control" id="phone_client" />
+                </div>
                 <div class="mb-3">
                     <label for="name_client" class="form-label">ФИО</label>
-                    <input type="text" placeholder="Фамилия Имя Отчество" name="name_client" class="form-control"
-                        id="name_client" />
+                    <input type="text" required placeholder="Фамилия Имя Отчество" name="name_client"
+                        class="form-control" id="name_client" />
                 </div>
                 <div class="mb-3">
-                    <label for="city_client" class="form-label">Укажите ваш город</label>
-                    <input type="text" placeholder="Город" name="city_id" class="form-control" id="city_client" />
+                    <label for="city" class="form-label">Выберите город</label>
+                    <select required name="city_id" class="form-select" aria-label="Default select example" id="city">
+                        <option value="" disabled selected>Выберите город</option>
+                        <?php
+                        $sql = "SELECT city_id, name_city FROM Public.city ORDER BY name_city asc";
+                        $city = $pdo->query($sql);
+                        while ($res_city = $city->fetch()) {
+                            printf("<option value='%s'>%s</option>", $res_city["city_id"], $res_city["name_city"]);
+                        }
+                        ?>
+                    </select>
                 </div>
-            </div>
 
-            <div id="autoservice" class="radio-blocks" style="display:none">
+                <div class="mb-3">
+                    <label for="password" class="form-label">Пароль</label>
+                    <input type="password" required placeholder="password  5 to 20 characters" name="password"
+                        class="form-control" id="password" pattern=".{5,20}" />
+                </div>
+                <div class="mb-3">
+                    <label for="password_confirm" class="form-label">Подтверждение пароля</label>
+                    <input type="password" required placeholder="password confirm  5 to 20 characters"
+                        name="password_confirm" class="form-control" id="password_confirm" pattern=".{5,20}" />
+                </div>
+
+                <button id="reg_button" name="reg_button" value="client" type="submit"
+                    class="btn btn-primary">Зарегистрироваться</button>
+            </div>
+        </form>
+        <form id="autoservice" class="radio-blocks" style="display:none" action="/careauto.ru/vendor/signup.php"
+            method="post" enctype="multipart/form-data">
+            <div class="form_box">
+                <div class="mb-3">
+                    <label for="email_client" class="form-label">Адрес электронной почты</label>
+                    <input type="email" required placeholder="email" name="email" class="form-control"
+                        id="exampleInputEmail1" aria-describedby="emailHelp" />
+                </div>
+                <div class="mb-3">
+                    <label for="phone_client" class="form-label">Укажите ваш номер телефона</label>
+                    <input type="text" data-phone-pattern required placeholder="Номер телефона" name="phone"
+                        class="form-control" id="phone_client" />
+                </div>
                 <div class="mb-3">
                     <label for="autoservice_name" class="form-label">Введите название сервисного центра</label>
-                    <input type="text" placeholder="Название сервисного центра" name="name_autoservice"
+                    <input type="text" required placeholder="Название сервисного центра" name="name_autoservice"
                         class="form-control" id="autoservice_name" />
                 </div>
                 <div class="mb-3">
                     <label for="document" class="form-label">Прикрепите документ(в формате pdf)</label>
-                    <input type="file" accept="application/pdf" name="document" class="form-control" id="document" />
+                    <input type="file" required accept="application/pdf" name="document" class="form-control"
+                        id="document" />
                 </div>
-            </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">Пароль</label>
-                <input type="password" placeholder="password" name="password" class="form-control" id="password" />
-            </div>
-            <div class="mb-3">
-                <label for="password_confirm" class="form-label">Подтверждение пароля</label>
-                <input type="password" placeholder="password" name="password_confirm" class="form-control"
-                    id="password_confirm" />
-            </div>
-            
-            <div class="input-group mb-3">
-                <input type="text" class="form-control" placeholder="Введите код подтверждения" aria-label="Recipient's username" aria-describedby="button-addon2">
-                <button class="btn btn-outline-primary" type="button" href="/careauto.ru/vendor/send_email.php" id="button-addon2">Отправить код</button>
-            </div>
-
-            <!-- <form action="/careauto.ru/vendor/send_email.php" method="post" class="row g-2">
-                <div class="col-auto">
-                    <label for="input_conf_code" class="visually-hidden">Password</label>
-                    <input type="text" class="form-control" id="input_conf_code" placeholder="код подтверждения">
+                <div class="mb-3">
+                    <label for="password" class="form-label">Пароль</label>
+                    <input type="password" required placeholder="password 5 to 20 characters" name="password"
+                        class="form-control" id="password" pattern=".{5,20}" />
                 </div>
-                <div class="col-auto">
-                    <button type="submit" class="btn btn-primary mb-3">Отправить код</button>
+                <div class="mb-3">
+                    <label for="password_confirm" class="form-label">Подтверждение пароля</label>
+                    <input type="password" required placeholder="password confirm 5 to 20 characters"
+                        name="password_confirm" class="form-control" id="password_confirm" pattern=".{5,20}" />
                 </div>
-            </form> -->
-
-            <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+                <button id="reg_button1" name="reg_button" value="autoservice" type="submit"
+                    class="btn btn-primary">Зарегистрироваться</button>
+            </div>
         </form>
         <p>У вас уже есть аккаунт? - <a href="/careauto.ru/authoriz_page.php">Авторизируйтесь</a>
         </p>
@@ -134,4 +201,3 @@ session_start();
 </html>
 
 <!-- Registration page -->
-
