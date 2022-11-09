@@ -44,7 +44,7 @@ session_start();
 </head>
 
 
-<body>
+<body class="auth">
     <div class="mx-auto">
 
         <h1>Вход</h1>

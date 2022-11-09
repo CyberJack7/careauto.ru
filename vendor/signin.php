@@ -60,7 +60,7 @@ if (password_verify($password, $result['password_admin'])) {
             "city_id" => $user['city_id']
         ];
         $_SESSION['message'] = "Вы авторизованы как автовладелец!";
-        header('Location: ../index.php');
+        header('Location: ../my_auto.php');
     } else {
         $_SESSION['message'] = "Неверный логин или пароль! <br>
             Если данные введены верно, смените тип пользователя";

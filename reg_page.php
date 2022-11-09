@@ -87,7 +87,7 @@ require_once 'vendor/connect.php';
     <title>careauto</title>
 </head>
 
-<body>
+<body class="reg">
     <div class="mx-auto">
         <h1>Регистрация</h1>
         <p>Выберите тип пользователя</p>
