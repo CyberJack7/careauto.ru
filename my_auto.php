@@ -49,7 +49,7 @@ session_start();
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="/">Мои авто</a>
+              <a class="nav-link active" aria-current="page" href="my_auto.php">Мои авто</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="musicians.html">Сервисные центры</a>
@@ -58,7 +58,7 @@ session_start();
               <a class="nav-link" href="musicians.html">Заявки</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="musicians.html">История обслуживания</a>
+              <a class="nav-link" href="client_history.php">История обслуживания</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="musicians.html">Написать в техподдержку</a>
