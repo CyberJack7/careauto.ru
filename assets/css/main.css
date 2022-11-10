@@ -21,13 +21,22 @@ h6 {
 body {
   background-color: #f2f2f2;
   height: 100vh;
-  display: flex;
   align-items: center;
   justify-content: center;
   font-family: Helvetica, sans-serif;
   color: #555;
   font-weight: 300;
   font-size: 16px;
+}
+
+body.reg,
+body.auth {
+  display: flex;
+}
+
+nav {
+  height: 70px;
+  padding: 30px;
 }
 
 a {

@@ -87,7 +87,7 @@ require_once 'vendor/connect.php';
     <title>careauto</title>
 </head>
 
-<body>
+<body class="reg">
     <div class="mx-auto">
         <h1>Регистрация</h1>
         <p>Выберите тип пользователя</p>
@@ -184,7 +184,7 @@ require_once 'vendor/connect.php';
                     class="btn btn-primary">Зарегистрироваться</button>
             </div>
         </form>
-        <p>У вас уже есть аккаунт? - <a href="/careauto.ru/index.php">Авторизируйтесь</a>
+        <p>У вас уже есть аккаунт? - <a href="/careauto.ru/authoriz_page.php">Авторизируйтесь</a>
         </p>
         <?php
         if (isset($_SESSION['message'])) {

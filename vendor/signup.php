@@ -39,14 +39,19 @@ function email_check($email, $pdo)
     }
     return;
 }
+
 function password_check($pass, $pass_confirm)
 {
-    if ($pass === $pass_confirm) {
-        return;
-    } else {
+    if ($pass !== $pass_confirm) {
         $_SESSION['message'] = "Пароли не совпадают";
         header('Location: ../reg_page.php');
         exit;
+    } elseif (strlen($pass) < 5 || strlen($pass) > 20) {
+        $_SESSION['message'] = "Длина пароля должна быть от 5 до 20 символов <br> включительно";
+        header('Location: ../reg_page.php');
+        exit;
+    } else {
+        return;
     }
 }
 $user_type = $_POST['reg_button'];
@@ -85,3 +90,5 @@ if ($user_type == "client") { // для клиента
     header('Location: ../check_code.php');
     exit;
 }
+    
+    
