@@ -45,9 +45,9 @@ if (password_verify($password, $result['password_admin'])) {
         $sql_ban_client = "SELECT * FROM public.ban_list
         WHERE user_id = '$user_id'";
         $ban_result = $pdo->query($sql_ban_client)->fetch();
-        if (!empty($ban_result)){
-            $_SESSION['message'] = "Данный аккаунт заблокирован " .  $ban_result['date'] . 
-            " по причине: " . $ban_result['text'];
+        if (!empty($ban_result)) {
+            $_SESSION['message'] = "Данный аккаунт заблокирован " .  $ban_result['date'] .
+                " по причине: " . $ban_result['text'];
             header('Location: ../authoriz_page.php');
             exit;
         }
@@ -73,9 +73,9 @@ if (password_verify($password, $result['password_admin'])) {
         $sql_ban_client = "SELECT * FROM public.ban_list
         WHERE user_id = '$user_id'";
         $ban_result = $pdo->query($sql_ban_client)->fetch();
-        if (!empty($ban_result)){
-            $_SESSION['message'] = "Данный аккаунт заблокирован " .  $ban_result['date'] . 
-            " по причине: " . $ban_result['text'];
+        if (!empty($ban_result)) {
+            $_SESSION['message'] = "Данный аккаунт заблокирован " .  $ban_result['date'] .
+                " по причине: " . $ban_result['text'];
             header('Location: ../authoriz_page.php');
             exit;
         }
@@ -88,7 +88,7 @@ if (password_verify($password, $result['password_admin'])) {
             "city_id" => $user['city_id']
         ];
         $_SESSION['message'] = "Вы авторизованы как сервисный центр!";
-        header('Location: ../index.php');
+        header('Location: ../autoservice_application_page.php');
     } else {
         $_SESSION['message'] = "Неверный логин или пароль! <br>
             Если данные введены верно, смените тип пользователя";
