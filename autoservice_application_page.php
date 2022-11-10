@@ -59,13 +59,12 @@ session_start();
                     </li>
                 </ul>
             </div>
-            <a href="authoriz_page.php" class="btn btn-primary">Профиль</a>
+            <a href="autoservice_profile_page.php" class="btn btn-primary">Профиль</a>
         </div>
     </nav>
     <!-- для заявок -->
-    <div class="container">
-
-        <nav>
+    <nav>
+        <div class="container">
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
                 <button class="nav-link active" id="nav-new-tab" data-bs-toggle="tab" data-bs-target="#nav-new"
                     type="button" role="tab" aria-controls="nav-new" aria-selected="true">Ожидает подтверждения</button>
@@ -77,9 +76,11 @@ session_start();
                     role="tab" aria-controls="nav-done" aria-selected="false">Выполнено</button>
 
             </div>
-        </nav>
+        </div>
+    </nav>
+    <div class="container">
 
-        <div class="tab-content" id="nav-tabContent" style="margin-left: 30px">
+        <div class="tab-content" id="nav-tabContent">
             <div class="tab-pane fade show active" id="nav-new" role="tabpanel" aria-labelledby="nav-new-tab"
                 tabindex="0">
                 Это текст с отступом.
@@ -95,6 +96,7 @@ session_start();
 
 
     </div>
+
     <!-- для заявок end -->
     <div class="container text-center my-5">
         <?php
