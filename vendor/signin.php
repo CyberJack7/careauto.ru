@@ -37,7 +37,7 @@ if (password_verify($password, $result['password_admin'])) {
         "email" => $user['email_admin']
     ];
     $_SESSION['message'] = "Вы авторизованы как администратор!";
-    header('Location: ../index.php');
+    header('Location: /');
 } elseif ($user_type) { //client
     $result = $pdo->query($sql_client)->fetch();
     if (password_verify($password, $result['password_client'])) {
@@ -48,7 +48,7 @@ if (password_verify($password, $result['password_admin'])) {
         if (!empty($ban_result)) {
             $_SESSION['message'] = "Данный аккаунт заблокирован " .  $ban_result['date'] .
                 " по причине: " . $ban_result['text'];
-            header('Location: ../authoriz_page.php');
+            header('Location: /authoriz_page.php');
             exit;
         }
         $_SESSION['user'] = [
@@ -60,11 +60,11 @@ if (password_verify($password, $result['password_admin'])) {
             "city_id" => $user['city_id']
         ];
         $_SESSION['message'] = "Вы авторизованы как автовладелец!";
-        header('Location: ../my_auto.php');
+        header('Location: /my_auto.php');
     } else {
         $_SESSION['message'] = "Неверный логин или пароль! <br>
             Если данные введены верно, смените тип пользователя";
-        header('Location: ../authoriz_page.php');
+        header('Location: /authoriz_page.php');
     }
 } else { //autoservice
     $result = $pdo->query($sql_autoservice)->fetch();
@@ -76,7 +76,7 @@ if (password_verify($password, $result['password_admin'])) {
         if (!empty($ban_result)) {
             $_SESSION['message'] = "Данный аккаунт заблокирован " .  $ban_result['date'] .
                 " по причине: " . $ban_result['text'];
-            header('Location: ../authoriz_page.php');
+            header('Location: /authoriz_page.php');
             exit;
         }
         $_SESSION['user'] = [
@@ -88,11 +88,11 @@ if (password_verify($password, $result['password_admin'])) {
             "city_id" => $user['city_id']
         ];
         $_SESSION['message'] = "Вы авторизованы как сервисный центр!";
-        header('Location: ../autoservice_application_page.php');
+        header('Location: /autoservice_application_page.php');
     } else {
         $_SESSION['message'] = "Неверный логин или пароль! <br>
             Если данные введены верно, смените тип пользователя";
-        header('Location: ../authoriz_page.php');
+        header('Location: /authoriz_page.php');
     }
 }
 // }

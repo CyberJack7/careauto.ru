@@ -11,7 +11,7 @@ require_once 'vendor/connect.php';
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/careauto.ru/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/main.css">
 
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -80,10 +80,10 @@ require_once 'vendor/connect.php';
         });
     });
     </script>
-    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
-    <link rel="manifest" href="images/site.webmanifest">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+    <link rel="manifest" href="/images/site.webmanifest">
     <title>careauto</title>
 </head>
 
@@ -99,7 +99,7 @@ require_once 'vendor/connect.php';
             <input type="radio" value="autoservice" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
             <label class="btn btn-outline-primary" for="btnradio2">Сервисный центр</label>
         </div>
-        <form id=client class="radio-blocks" action="/careauto.ru/vendor/signup.php" method="post"
+        <form id=client class="radio-blocks" action="/vendor/signup.php" method="post"
             enctype="multipart/form-data">
             <div class="form_box">
 
@@ -147,7 +147,7 @@ require_once 'vendor/connect.php';
                     class="btn btn-primary">Зарегистрироваться</button>
             </div>
         </form>
-        <form id="autoservice" class="radio-blocks" style="display:none" action="/careauto.ru/vendor/signup.php"
+        <form id="autoservice" class="radio-blocks" style="display:none" action="/vendor/signup.php"
             method="post" enctype="multipart/form-data">
             <div class="form_box">
                 <div class="mb-3">
@@ -184,7 +184,7 @@ require_once 'vendor/connect.php';
                     class="btn btn-primary">Зарегистрироваться</button>
             </div>
         </form>
-        <p>У вас уже есть аккаунт? - <a href="/careauto.ru/authoriz_page.php">Авторизируйтесь</a>
+        <p>У вас уже есть аккаунт? - <a href="/authoriz_page.php">Авторизируйтесь</a>
         </p>
         <?php
         if (isset($_SESSION['message'])) {

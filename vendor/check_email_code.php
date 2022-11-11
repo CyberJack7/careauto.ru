@@ -6,7 +6,7 @@ $code_inp = $_POST['code'];
 if ($_POST['resend']) {
     $_SESSION['new_user']['code'] = send_email($_SESSION['new_user']['email']);
     $_SESSION['message'] = "Отправлен новый код!";
-    header('Location: ../check_code.php');
+    header('Location: /check_code.php');
     exit;
 }
 if ($_SESSION['new_user']['attempt'] > 1) { // 3 попытки на ввод кода!
@@ -25,9 +25,9 @@ if ($_SESSION['new_user']['attempt'] > 1) { // 3 попытки на ввод к
                 'city_id' => $_SESSION['new_user']['city_id']
             ]);
             $_SESSION['message'] = "Регистрация прошла успешно!";
-            header('Location: ../index.php');
+            header('Location: /authoriz_page.php');
             exit;
-        } elseif ($_SESSION['new_user']['type'] == "autoservice") {
+        } elseif ($_SESSION['new_user']['type'] == "autoservice") { //автосервис
             $sql = "INSERT INTO Public.autoservice_in_check(name_autoservice,email_autoservice,
             password_autoservice,phone_autoservice,document) VALUES (:name_autoservice,:email,
             :pass,:phone,:document)";
@@ -40,7 +40,7 @@ if ($_SESSION['new_user']['attempt'] > 1) { // 3 попытки на ввод к
                 'document' => $_SESSION['new_user']['document']
             ]);
             $_SESSION['message'] = "Регистрация прошла успешно!";
-            header('Location: ../index.php');
+            header('Location: /authoriz_page.php');
             exit;
         }
     } else {
@@ -49,11 +49,11 @@ if ($_SESSION['new_user']['attempt'] > 1) { // 3 попытки на ввод к
             $_SESSION['message'] = "Код введен не верно! У вас осталось " . $_SESSION['new_user']['attempt'] . " попытка";
         else
             $_SESSION['message'] = "Код введен не верно! У вас осталось " . $_SESSION['new_user']['attempt'] . " попытки";
-        header('Location: ../check_code.php');
+        header('Location: /check_code.php');
         exit;
     }
 } else {
     $_SESSION['message'] = "Превышено число попыток ввода кода!Регистрируйтесь заново!";
-    header('Location: ../reg_page.php');
+    header('Location: /reg_page.php');
     exit;
 }

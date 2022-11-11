@@ -25,5 +25,3 @@ function send_email($email_to)
     mail($email_to, $subject, $message, $headers);
     return $code;
 }
-
-//send_email("etothezik@gmail.com"); //передать почту с формы

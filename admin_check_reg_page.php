@@ -12,7 +12,7 @@ require_once 'vendor/connect.php';
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/careauto.ru/assets/css/admin_page.css">
+    <link rel="stylesheet" href="/assets/css/admin_page.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous" />
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
@@ -30,9 +30,9 @@ require_once 'vendor/connect.php';
         return false;
     });
     </script>
-    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
     <link rel="manifest" href="images/site.webmanifest">
     <title>careauto</title>
 </head>
@@ -48,13 +48,13 @@ require_once 'vendor/connect.php';
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="/careauto.ru/admin_check_reg_page.php">Заявки на регистрацию</a>
+                        <a class="nav-link" href="/admin_check_reg_page.php">Заявки на регистрацию</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/careauto.ru/admin_complaint.php">Жалобы</a>
+                        <a class="nav-link" href="/admin_complaint.php">Жалобы</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/careauto.ru/admin_banlist.php">Бан-лист</a>
+                        <a class="nav-link" href="/admin_banlist.php">Бан-лист</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Выйти</a>
@@ -65,7 +65,7 @@ require_once 'vendor/connect.php';
     </nav>
 
     <div class="mx-auto">
-        <form action="/careauto.ru/vendor/admin_check_reg.php" method="post">
+        <form action="/vendor/admin_check_reg.php" method="post">
 
             <ol class="list-group list-group-numbered">
                 <?php
@@ -103,7 +103,7 @@ require_once 'vendor/connect.php';
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <a href="/careauto.ru/vendor/autoservice_to_base.php" class="btn btn-primary" tabindex="-1"
+                        <a href="/vendor/autoservice_to_base.php" class="btn btn-primary" tabindex="-1"
                             role="button" aria-disabled="true">Утвердить автосервис</a>
 
                     </div>
