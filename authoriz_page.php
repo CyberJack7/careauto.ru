@@ -9,7 +9,7 @@ session_start();
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/careauto.ru/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/main.css">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous" />
@@ -36,10 +36,10 @@ session_start();
     });
     </script>
 
-    <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon-16x16.png">
-    <link rel="manifest" href="images/site.webmanifest">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+    <link rel="manifest" href="/images/site.webmanifest">
     <title>careauto</title>
 </head>
 
@@ -48,7 +48,7 @@ session_start();
     <div class="mx-auto">
 
         <h1>Вход</h1>
-        <form action="/careauto.ru/vendor/signin.php" method="post" enctype="multipart/form-data">
+        <form action="/vendor/signin.php" method="post" enctype="multipart/form-data">
             <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
                 <input type="radio" class="btn-check" name="user_type" value="1" id="btnradio1" autocomplete="off"
                     checked>
@@ -70,7 +70,7 @@ session_start();
                 </div>
             </div>
             <button id="auth_button" name="auth_button" type="submit" class="btn btn-primary">Войти</button>
-            <p>У вас еще нет аккаунта? - <a href="/careauto.ru/reg_page.php">Зарегистрируйтесь</a>
+            <p>У вас еще нет аккаунта? - <a href="/reg_page.php">Зарегистрируйтесь</a>
                 <?php
                 if (isset($_SESSION['message'])) {
                     if (substr($_SESSION['message'], 0, 52) == "Данный аккаунт заблокирован") {

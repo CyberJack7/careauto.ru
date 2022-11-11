@@ -30,7 +30,8 @@ body {
 }
 
 body.reg,
-body.auth {
+body.auth,
+body.check_code {
   display: flex;
 }
 

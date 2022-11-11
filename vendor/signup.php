@@ -31,7 +31,7 @@ function email_check($email, $pdo)
         $check_user = $pdo->query($sql);
         if ($check_user->fetchColumn() > 0) {
             $_SESSION['message'] = "Пользователь с таким email уже зарегистрирован!";
-            header('Location: ../reg_page.php');
+            header('Location: /reg_page.php');
             exit;
         } else {
             continue;
@@ -44,11 +44,11 @@ function password_check($pass, $pass_confirm)
 {
     if ($pass !== $pass_confirm) {
         $_SESSION['message'] = "Пароли не совпадают";
-        header('Location: ../reg_page.php');
+        header('Location: /reg_page.php');
         exit;
     } elseif (strlen($pass) < 5 || strlen($pass) > 20) {
         $_SESSION['message'] = "Длина пароля должна быть от 5 до 20 символов <br> включительно";
-        header('Location: ../reg_page.php');
+        header('Location: /reg_page.php');
         exit;
     } else {
         return;
@@ -68,12 +68,12 @@ if ($user_type == "client") { // для клиента
         "code" => send_email($_POST['email']),
         "attempt" => 3
     ];
-    header('Location: ../check_code.php');
+    header('Location: /check_code.php');
     exit;
 } elseif ($user_type == "autoservice") { // для автосервиса
     if (!move_uploaded_file($_FILES['document']['tmp_name'], $path_uploads_temp . time() . $_FILES['document']['name'])) {
         $_SESSION['message'] = "Ошибка при загрузке файла!";
-        header('Location: ../reg_page.php');
+        header('Location: /reg_page.php');
     }
     $path_to_file = $path_uploads_temp . time() . $_FILES['document']['name'];
 
@@ -87,7 +87,7 @@ if ($user_type == "client") { // для клиента
         "code" => send_email($_POST['email']),
         "attempt" => 3
     ];
-    header('Location: ../check_code.php');
+    header('Location: /check_code.php');
     exit;
 }
     
