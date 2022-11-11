@@ -6,7 +6,6 @@
 .form_box .req:valid {
   border: 2px solid green;
 }
-
 h1,
 h2,
 h3,
@@ -24,7 +23,7 @@ body {
   align-items: center;
   justify-content: center;
   font-family: Helvetica, sans-serif;
-  color: #556;
+  color: #555;
   font-weight: 300;
   font-size: 16px;
 }
