@@ -1,6 +1,13 @@
 
 <?php
-session_start();
+  session_start();
+  require_once 'vendor/connect.php';
+
+  if (isset($_SESSION['user']['id'])) {
+    $user_id = $_SESSION['user']['id'];
+  } else {
+    $user_id = 23;
+  }
 ?>
 
 <!DOCTYPE html>
@@ -30,53 +37,81 @@ session_start();
 
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <div class="container">
-        <a class="navbar-brand p-0" href="/">
-          <img src="images/main_title.png" alt="careauto.ru" height="50" />
-        </a>
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="my_auto.php">Мои авто</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="musicians.html">Сервисные центры</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="musicians.html">Заявки</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="client_history.php">История обслуживания</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="musicians.html">Написать в техподдержку</a>
-            </li>
-          </ul>
-        </div>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand p-0" href="/">
+        <img src="images/main_title.png" alt="careauto.ru" height="50" />
+      </a>
+      <button 
+        class="navbar-toggler" 
+        type="button" 
+        data-bs-toggle="collapse" 
+        data-bs-target="#navbarSupportedContent" 
+        aria-controls="navbarSupportedContent" 
+        aria-expanded="false" 
+        aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="my_auto.php">Мои авто</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="">Сервисные центры</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/">Заявки</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="client_history.php">История обслуживания</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="musicians.html">Написать в техподдержку</a>
+          </li>
+        </ul>
         <a href="authoriz_page.php" class="btn btn-primary">Профиль</a>
       </div>
-    </nav>
-    <div class="container text-center my-5">        
-            <?php
-                if (isset($_SESSION['message'])) {
-                    echo '<p><div class="alert alert-success" role="alert">
-                    ' . $_SESSION['message'] . '</div></p>';
-                }
-                unset ($_SESSION['message']);                
-            ?>
-    </dev>
+    </div>
+  </nav>
+  
+  <div class="container">
+    <h1>Мои авто</h1>
+    <div class="row">
+      <div class="col-3">
+        <div id="list-example" class="list-group">
+          <?php
+            $sql = "SELECT auto_id FROM Public.automobile WHERE client_id = " . $user_id;
+            $cars = $pdo->query($sql); //список авто по id
+            $count = 0;
+            while ($row = $cars->fetch()) { //для каждого авто
+              $count++;
+              $sql_auto = "SELECT name_brand, name_model FROM automobile
+                JOIN brand USING(brand_id) JOIN model USING(model_id) 
+                WHERE auto_id = " . $row['auto_id'];
+              $auto = $pdo->query($sql_auto)->fetch(); //марка и брэнд авто
+              echo '<a class="list-group-item list-group-item-action" href="#list-item-' . $count . '">'
+              . $auto['name_brand'] . ' ' . $auto['name_model'] . '</a>';
+            }
+          ?>
+        </div>
+      </div>
+      <div class="col-8">
+        <div data-bs-spy="scroll" data-bs-target="#list-example" data-bs-smooth-scroll="true" class="scrollspy-example" tabindex="0">
+          <h4 id="list-item-1">Item 1</h4>
+          <p></p>
+          <h4 id="list-item-2">Item 2</h4>
+          <p>Lorem ipsum dolor sit amet.</p>
+        </div>
+      </div>
+    </div>
+      <?php
+        if (isset($_SESSION['message'])) {
+          echo '<p><div class="alert alert-success" role="alert">' . $_SESSION['message'] . '</div></p>';
+        }
+        unset ($_SESSION['message']);
+      ?>
+  </div>
 
 </body>
 
