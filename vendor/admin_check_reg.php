@@ -8,6 +8,7 @@ if (empty($id)) {
     echo "Что то не так";
     print_r($_POST);
 } else {
+    $pdo = conn();
     $sql = "SELECT name_autoservice,email_autoservice,phone_autoservice,document
     FROM Public.autoservice_in_check
     WHERE autoservice_temp_id ='$id'";

@@ -3,19 +3,20 @@
 session_start();
 
 require_once 'connect.php';
+$pdo = conn();
 
 $email = $_POST['email'];
 $password = $_POST['password'];
 $user_type = $_POST['user_type']; // 1 - client, 0 - autoservice
 
-$sql_admin = "SELECT * FROM public.admin 
-        WHERE email_admin = '$email'";
+$sql_admin = 'SELECT * FROM public.admin 
+        WHERE email_admin = ' . $email;
 
-$sql_client = "SELECT * FROM public.client 
-        WHERE email_client = '$email'";
+$sql_client = 'SELECT * FROM public.client 
+        WHERE email_client = ' . $email;
 
-$sql_autoservice = "SELECT * FROM public.autoservice 
-        WHERE email_autoservice = '$email'";
+$sql_autoservice = 'SELECT * FROM public.autoservice 
+        WHERE email_autoservice = ' . $email;
 
 $result = $pdo->query($sql_admin)->fetch();
 
@@ -85,4 +86,3 @@ if (password_verify($password, $result['password_admin'])) {
         header('Location: /authoriz_page.php');
     }
 }
-// }

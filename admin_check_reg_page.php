@@ -2,6 +2,7 @@
 session_start();
 
 require_once 'vendor/connect.php';
+$pdo = conn();
 
 ?>
 

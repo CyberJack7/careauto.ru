@@ -1,7 +1,7 @@
 
 <?php
   session_start();
-  require_once 'vendor/connect.php';
+  require_once 'vendor/queries.php';
 
   if (isset($_SESSION['user']['id'])) {
     $user_id = $_SESSION['user']['id'];
@@ -17,7 +17,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/careauto.ru/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/main.css">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous" />
@@ -83,22 +83,7 @@
       <div class="col-3">
         <div id="list-example" class="list-group">
           <?php
-            $sql = "SELECT auto_id FROM Public.automobile WHERE client_id = " . $user_id;
-            $cars = $pdo->query($sql); //список авто по id
-            if (!empty($cars)) {
-              echo '<p><div class="alert alert-primary" role="alert">Добавьте свой первый автомобиль!</div></p>';
-            } else {
-              $count = 0;
-              while ($row = $cars->fetch()) { //для каждого авто
-                  $count++;
-                  $sql_auto = "SELECT name_brand, name_model FROM automobile
-                  JOIN brand USING(brand_id) JOIN model USING(model_id) 
-                  WHERE auto_id = " . $row['auto_id'];
-                  $auto = $pdo->query($sql_auto)->fetch(); //марка и брэнд авто
-                  echo '<a class="list-group-item list-group-item-action" href="#list-item-' . $count . '">'
-                  . $auto['name_brand'] . ' ' . $auto['name_model'] . '</a>';
-              }
-            }
+            cars_list($user_id);
           ?>
         </div>
       </div>

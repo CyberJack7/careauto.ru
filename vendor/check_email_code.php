@@ -11,6 +11,7 @@ if ($_POST['resend']) {
 }
 if ($_SESSION['new_user']['attempt'] > 1) { // 3 попытки на ввод кода!
     if ($_SESSION['new_user']['code'] === $code_inp) { // если код введен верно
+        $pdo = conn();
         if ($_SESSION['new_user']['type'] == "client") { // если пользователь - клиент
             $sql = "INSERT INTO Public.client(name_client,phone_client,email_client,
               password_client,favorites,city_id) VALUES (:name_client,:phone,

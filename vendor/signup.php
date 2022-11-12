@@ -5,10 +5,11 @@ session_start();
 require_once 'connect.php';
 require_once 'path.php';
 require_once 'send_email.php';
+$pdo = conn();
 
 function email_check($email, $pdo)
 {
-
+    $pdo = conn();
     $sql_array_check = [
         "check_admin_sql" => "SELECT * 
     FROM Public.admin 
@@ -37,6 +38,7 @@ function email_check($email, $pdo)
             continue;
         }
     }
+    $pdo
     return;
 }
 
