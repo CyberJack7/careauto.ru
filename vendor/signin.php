@@ -8,16 +8,6 @@ $email = $_POST['email'];
 $password = $_POST['password'];
 $user_type = $_POST['user_type']; // 1 - client, 0 - autoservice
 
-// echo $password;
-
-// if (empty($email)) {
-//     $_SESSION['message'] = "Введите почту";
-//     header('Location: ../authoriz_page.php');
-// } elseif (empty($_POST['password'])) {
-//     $_SESSION['message'] = "Введите пароль";
-//     header('Location: ../authoriz_page.php');
-// } else {
-
 $sql_admin = "SELECT * FROM public.admin 
         WHERE email_admin = '$email'";
 

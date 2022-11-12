@@ -1,4 +1,5 @@
 <?php
+// расположения файлов
 $path_main = "/careauto.ru/";
 $path_vendor = "/careauto.ru/vendor/";
 $path_uploads_regular = "../uploads/regular"; // выйти из папки вендор и перейти в uploads
