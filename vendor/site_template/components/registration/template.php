@@ -1,7 +1,4 @@
-<?php
-    require_once __DIR__ . '/component.php';
-?>
-
+<?php require_once __DIR__ . '/component.php';?>
 <script src="<?=__DIR__?>/script.js"></script>
 <style src="<?=__DIR__?>/style.css"></style>
 
@@ -98,7 +95,7 @@
             </div>
             <button class="btn btn-primary" id="reg_button1" name="reg_button" value="autoservice" type="submit">Зарегистрироваться</button>
         </form>
-        <p>У вас уже есть аккаунт? - <a href="/authoriz_page.php">Авторизируйтесь</a>
+        <p>У вас уже есть аккаунт? - <a href="/authorization/">Авторизируйтесь</a>
         </p>
         <?php
         if (isset($_SESSION['message'])) {

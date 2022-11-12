@@ -10,7 +10,7 @@
   }
 ?>
 
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="navbar navbar-expand-lg navbar-dark bg-dark navbar_custom">
     <div class="container">
       <a class="navbar-brand p-0" href="/">
         <img src="images/main_title.png" alt="careauto.ru" height="50" />
@@ -43,10 +43,10 @@
             <a class="nav-link" href="">Написать в техподдержку</a>
           </li>
         </ul>
-        <a href="authoriz_page.php" class="btn btn-primary">Профиль</a>
+        <a href="" class="btn btn-primary">Профиль</a>
       </div>
     </div>
-  </nav>
+</div>
   
   <div class="container">
     <h1>Мои авто</h1>

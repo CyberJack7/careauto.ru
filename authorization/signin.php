@@ -37,7 +37,7 @@ if (password_verify($password, $result['password_admin'])) {
         if (!empty($ban_result)) {
             $_SESSION['message'] = "Данный аккаунт заблокирован " .  $ban_result['date'] .
                 " по причине: " . $ban_result['text'];
-            header('Location: /authoriz_page.php');
+            header('Location: /authorization/');
             exit;
         }
         $_SESSION['user'] = [
@@ -53,7 +53,7 @@ if (password_verify($password, $result['password_admin'])) {
     } else {
         $_SESSION['message'] = "Неверный логин или пароль! <br>
             Если данные введены верно, смените тип пользователя";
-        header('Location: /authoriz_page.php');
+        header('Location: /authorization/');
     }
 } else { //autoservice
     $result = $pdo->query($sql_autoservice)->fetch();
@@ -65,7 +65,7 @@ if (password_verify($password, $result['password_admin'])) {
         if (!empty($ban_result)) {
             $_SESSION['message'] = "Данный аккаунт заблокирован " .  $ban_result['date'] .
                 " по причине: " . $ban_result['text'];
-            header('Location: /authoriz_page.php');
+            header('Location: /authorization/');
             exit;
         }
         $_SESSION['user'] = [
@@ -81,6 +81,6 @@ if (password_verify($password, $result['password_admin'])) {
     } else {
         $_SESSION['message'] = "Неверный логин или пароль! <br>
             Если данные введены верно, смените тип пользователя";
-        header('Location: /authoriz_page.php');
+        header('Location: /authorization/');
     }
 }

@@ -7,7 +7,7 @@
   border: 2px solid green;
 }
 
-.reg_container {
+.auth_container {
   height: 100%;
   display: flex;
   align-items: center;

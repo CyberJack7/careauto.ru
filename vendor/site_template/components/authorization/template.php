@@ -1,12 +1,12 @@
-<?php
-    require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/site_template/header.php';
-?>
+<?php require_once __DIR__ . '/component.php';?>
+<script src="<?=__DIR__?>/script.js"></script>
+<style src="<?=__DIR__?>/style.css"></style>
 
 <div class="auth_container">
     <div class="mx-auto">
 
         <h1>Вход</h1>
-        <form action="/vendor/signin.php" method="post" enctype="multipart/form-data">
+        <form action="signin.php" method="post" enctype="multipart/form-data">
             <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
                 <input type="radio" class="btn-check" name="user_type" value="1" id="btnradio1" autocomplete="off" checked>
                 <label class="btn btn-outline-primary" for="btnradio1">Автовладелец</label>
@@ -27,7 +27,7 @@
                 </div>
             </div>
             <button id="auth_button" name="auth_button" type="submit" class="btn btn-primary">Войти</button>
-            <p>У вас еще нет аккаунта? - <a href="/reg_page.php">Зарегистрируйтесь</a>
+            <p>У вас еще нет аккаунта? - <a href="/registration/">Зарегистрируйтесь</a>
                 
             <?php
             if (isset($_SESSION['message'])) {
@@ -50,22 +50,3 @@
     </div>
 
 </div>
-<!-- подсветка полей -->
-<script type="text/javascript">
-    $('document').ready(function() {
-        $(':submit').on('click', function() {
-            $('input[required]').addClass('req');
-        });
-    });
-    </script>
-    <script type="text/javascript">
-    $('document').ready(function() {
-        $(':radio').on('click', function() {
-            $('input[required]').removeClass('req');
-        });
-    });
-</script>
-
-<?php
-  require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/site_template/footer.php';
-?>
