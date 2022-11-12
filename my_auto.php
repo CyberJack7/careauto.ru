@@ -27,6 +27,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js"
         integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk" crossorigin="anonymous">
     </script>
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script> 
 
     <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32x32.png">
@@ -83,15 +85,19 @@
           <?php
             $sql = "SELECT auto_id FROM Public.automobile WHERE client_id = " . $user_id;
             $cars = $pdo->query($sql); //список авто по id
-            $count = 0;
-            while ($row = $cars->fetch()) { //для каждого авто
-                $count++;
-                $sql_auto = "SELECT name_brand, name_model FROM automobile
-                JOIN brand USING(brand_id) JOIN model USING(model_id) 
-                WHERE auto_id = " . $row['auto_id'];
-                $auto = $pdo->query($sql_auto)->fetch(); //марка и брэнд авто
-                echo '<a class="list-group-item list-group-item-action" href="#list-item-' . $count . '">'
-                . $auto['name_brand'] . ' ' . $auto['name_model'] . '</a>';
+            if (!empty($cars)) {
+              echo '<p><div class="alert alert-primary" role="alert">Добавьте свой первый автомобиль!</div></p>';
+            } else {
+              $count = 0;
+              while ($row = $cars->fetch()) { //для каждого авто
+                  $count++;
+                  $sql_auto = "SELECT name_brand, name_model FROM automobile
+                  JOIN brand USING(brand_id) JOIN model USING(model_id) 
+                  WHERE auto_id = " . $row['auto_id'];
+                  $auto = $pdo->query($sql_auto)->fetch(); //марка и брэнд авто
+                  echo '<a class="list-group-item list-group-item-action" href="#list-item-' . $count . '">'
+                  . $auto['name_brand'] . ' ' . $auto['name_model'] . '</a>';
+              }
             }
           ?>
         </div>
