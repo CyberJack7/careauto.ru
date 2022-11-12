@@ -1,5 +1,6 @@
 <?php
-require_once 'connect.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/lib/defines.php';
+require_once PATH_CONNECT;
 
 function cars_list($user_id) {
     $pdo = conn();

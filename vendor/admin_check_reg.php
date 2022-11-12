@@ -1,6 +1,7 @@
 <?php
 session_start();
-require_once 'connect.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/lib/defines.php';
+require_once PATH_CONNECT;
 
 
 $id = $_POST["autoservice_id"];

@@ -2,21 +2,19 @@
 
 session_start();
 
-require_once 'connect.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/lib/defines.php';
+require_once PATH_CONNECT;
 $pdo = conn();
 
-$email = $_POST['email'];
+$email = htmlspecialchars($_POST['email']);
 $password = $_POST['password'];
 $user_type = $_POST['user_type']; // 1 - client, 0 - autoservice
 
-$sql_admin = 'SELECT * FROM public.admin 
-        WHERE email_admin = ' . $email;
+$sql_admin = "SELECT * FROM public.admin WHERE email_admin = '" . $email . "'";
 
-$sql_client = 'SELECT * FROM public.client 
-        WHERE email_client = ' . $email;
+$sql_client = "SELECT * FROM public.client WHERE email_client = '" . $email . "'";
 
-$sql_autoservice = 'SELECT * FROM public.autoservice 
-        WHERE email_autoservice = ' . $email;
+$sql_autoservice = "SELECT * FROM public.autoservice WHERE email_autoservice = '" . $email . "'";
 
 $result = $pdo->query($sql_admin)->fetch();
 

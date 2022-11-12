@@ -2,9 +2,9 @@
 
 session_start();
 
-require_once 'connect.php';
-require_once 'path.php';
-require_once 'send_email.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/lib/defines.php';
+require_once PATH_CONNECT;
+require_once PATH_SEND_EMAIL;
 $pdo = conn();
 
 function email_check($email, $pdo)
@@ -38,7 +38,6 @@ function email_check($email, $pdo)
             continue;
         }
     }
-    $pdo
     return;
 }
 
@@ -73,11 +72,11 @@ if ($user_type == "client") { // для клиента
     header('Location: /check_code.php');
     exit;
 } elseif ($user_type == "autoservice") { // для автосервиса
-    if (!move_uploaded_file($_FILES['document']['tmp_name'], $path_uploads_temp . time() . $_FILES['document']['name'])) {
+    if (!move_uploaded_file($_FILES['document']['tmp_name'], PATH_UPLOADS_TEMP . time() . $_FILES['document']['name'])) {
         $_SESSION['message'] = "Ошибка при загрузке файла!";
         header('Location: /reg_page.php');
     }
-    $path_to_file = $path_uploads_temp . time() . $_FILES['document']['name'];
+    $path_to_file = PATH_UPLOADS_TEMP . time() . $_FILES['document']['name'];
 
     $_SESSION['new_user'] = [
         "type" => "autoservice",

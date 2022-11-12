@@ -1,7 +1,10 @@
 <?php
 session_start();
-require_once 'send_email.php';
-require_once 'connect.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/lib/defines.php';
+require_once PATH_SEND_EMAIL;
+require_once PATH_CONNECT;
+
+
 $code_inp = $_POST['code'];
 if ($_POST['resend']) {
     $_SESSION['new_user']['code'] = send_email($_SESSION['new_user']['email']);
