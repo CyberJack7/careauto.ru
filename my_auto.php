@@ -85,13 +85,13 @@
             $cars = $pdo->query($sql); //список авто по id
             $count = 0;
             while ($row = $cars->fetch()) { //для каждого авто
-              $count++;
-              $sql_auto = "SELECT name_brand, name_model FROM automobile
+                $count++;
+                $sql_auto = "SELECT name_brand, name_model FROM automobile
                 JOIN brand USING(brand_id) JOIN model USING(model_id) 
                 WHERE auto_id = " . $row['auto_id'];
-              $auto = $pdo->query($sql_auto)->fetch(); //марка и брэнд авто
-              echo '<a class="list-group-item list-group-item-action" href="#list-item-' . $count . '">'
-              . $auto['name_brand'] . ' ' . $auto['name_model'] . '</a>';
+                $auto = $pdo->query($sql_auto)->fetch(); //марка и брэнд авто
+                echo '<a class="list-group-item list-group-item-action" href="#list-item-' . $count . '">'
+                . $auto['name_brand'] . ' ' . $auto['name_model'] . '</a>';
             }
           ?>
         </div>
