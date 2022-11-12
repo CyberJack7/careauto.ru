@@ -76,6 +76,9 @@ session_start();
                     if (substr($_SESSION['message'], 0, 52) == "Данный аккаунт заблокирован") {
                         echo '<p><div class="alert alert-danger" role="alert">
                         ' . $_SESSION['message'] . '</div></p>';
+                    } elseif (substr($_SESSION['message'], 0, 22) == "Регистрация") {
+                        echo '<p><div class="alert alert-success" role="alert">
+                        ' . $_SESSION['message'] . '</div></p>';
                     } else {
                         echo '<p><div class="alert alert-warning" role="alert">
                         ' . $_SESSION['message'] . '</div></p>';
