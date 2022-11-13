@@ -69,7 +69,7 @@ if ($user_type == "client") { // для клиента
         "code" => send_email($_POST['email']),
         "attempt" => 3
     ];
-    header('Location: /check_code.php');
+    header('Location: /confirmation.code/');
     exit;
 } elseif ($user_type == "autoservice") { // для автосервиса
     if (!move_uploaded_file($_FILES['document']['tmp_name'], PATH_UPLOADS_TEMP . time() . $_FILES['document']['name'])) {
@@ -88,7 +88,7 @@ if ($user_type == "client") { // для клиента
         "code" => send_email($_POST['email']),
         "attempt" => 3
     ];
-    header('Location: /check_code.php');
+    header('Location: /confirmation.code/');
     exit;
 }
     

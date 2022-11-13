@@ -33,8 +33,8 @@
 
 <body>
 <?php
-if (mb_strpos($_SERVER['REQUEST_URI'], '/registration/') === false 
-    && mb_strpos($_SERVER['REQUEST_URI'], '/authorization/') === false) {
-    Main::includeComponent('navigation.main');
-}
-
+// if (mb_strpos($_SERVER['REQUEST_URI'], '/registration/') === false 
+//     && mb_strpos($_SERVER['REQUEST_URI'], '/authorization/') === false) {
+//     Main::includeComponent('navigation.main');
+// }
+Main::includeComponent('navigation.main');
