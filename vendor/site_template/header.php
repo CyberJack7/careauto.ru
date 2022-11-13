@@ -4,6 +4,12 @@
   require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/lib/classes/Main.php';
 ?>
 
+<pre>
+    <?php
+    print_r($_SESSION);
+    ?>
+</pre>
+
 <!DOCTYPE html>
 <html lang="ru">
 

@@ -22,8 +22,8 @@ if (password_verify($password, $result['password_admin'])) {
     $_SESSION['user'] = [
         "user_type" => "admin",
         "id" => $result['admin_id'],
-        "name" => $user['name_admin'],
-        "email" => $user['email_admin']
+        "name" => $result['name_admin'],
+        "email" => $result['email_admin']
     ];
     $_SESSION['message'] = "Вы авторизованы как администратор!";
     header('Location: /');
@@ -43,13 +43,13 @@ if (password_verify($password, $result['password_admin'])) {
         $_SESSION['user'] = [
             "user_type" => "client",
             "id" => $result['client_id'],
-            "name" => $user['name_client'],
-            "email" => $user['email_client'],
-            "phone" => $user['phone_client'],
-            "city_id" => $user['city_id']
+            "name" => $result['name_client'],
+            "email" => $result['email_client'],
+            "phone" => $result['phone_client'],
+            "city_id" => $result['city_id']
         ];
         $_SESSION['message'] = "Вы авторизованы как автовладелец!";
-        header('Location: /my_auto.php');
+        header('Location: /my_auto/');
     } else {
         $_SESSION['message'] = "Неверный логин или пароль! <br>
             Если данные введены верно, смените тип пользователя";
@@ -71,10 +71,10 @@ if (password_verify($password, $result['password_admin'])) {
         $_SESSION['user'] = [
             "user_type" => "autoservice",
             "id" => $result['autoservice_id'],
-            "name" => $user['name_autoservice'],
-            "email" => $user['email_autoservice'],
-            "phone" => $user['phone_autoservice'],
-            "city_id" => $user['city_id']
+            "name" => $result['name_autoservice'],
+            "email" => $result['email_autoservice'],
+            "phone" => $result['phone_autoservice'],
+            "city_id" => $result['city_id']
         ];
         $_SESSION['message'] = "Вы авторизованы как сервисный центр!";
         header('Location: /autoservice_application_page.php');
