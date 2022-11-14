@@ -5,6 +5,7 @@
 <?php //на странице подтверждения регистрации может находиться только неавторизованный пользователь
     if (!empty($_SESSION['user'])) {
         header('Location: /');
+        exit;
     }
 ?>
 
@@ -20,7 +21,6 @@
             </div>
             <button name="confirm_code" type="submit" class="btn btn-primary">Подтвердить код</button>
         </form>
-
     </div>
     <form action="check_email_code.php" method="post">
         <div class="mb-3">

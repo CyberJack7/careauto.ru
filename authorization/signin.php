@@ -7,7 +7,7 @@ require_once PATH_CONNECT;
 $pdo = conn();
 
 $email = htmlspecialchars($_POST['email']);
-$password = $_POST['password'];
+$password = htmlspecialchars($_POST['password']);
 $user_type = $_POST['user_type']; // 1 - client, 0 - autoservice
 
 $sql_admin = "SELECT * FROM public.admin WHERE email_admin = '" . $email . "'";

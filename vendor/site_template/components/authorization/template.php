@@ -7,7 +7,6 @@
         header('Location: /');
     }
 ?>
-
 <div class="auth_container">
     <h1>Вход</h1>
     <form action="signin.php" method="post" enctype="multipart/form-data">
