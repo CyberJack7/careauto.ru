@@ -2,6 +2,13 @@
 <script src="<?php $_SERVER['DOCUMENT_ROOT']?>/vendor/site_template/components/my_auto/script.js"></script>
 <link rel="stylesheet" href="<?php $_SERVER['DOCUMENT_ROOT']?>/vendor/site_template/components/my_auto/style.css">
 
+<?php
+    //на странице автомобилей автовладельца может находиться только автовладелец
+    if (!($_SESSION['user']['user_type'] == 'client')) {
+        header('Location: /');
+    }
+?>
+
 <div class="container">
 <h1>Мои авто</h1>
     <div class="row">

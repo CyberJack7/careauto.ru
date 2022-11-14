@@ -2,6 +2,13 @@
 <script src="<?php $_SERVER['DOCUMENT_ROOT']?>/vendor/site_template/components/autoservice_applications/script.js"></script>
 <link rel="stylesheet" href="<?php $_SERVER['DOCUMENT_ROOT']?>/vendor/site_template/components/autoservice_applications/style.css">
 
+<?php
+    //на странице заявок автосервиса может находиться только автосервис
+    if (!($_SESSION['user']['user_type'] == 'autoservice')) {
+        header('Location: /');
+    }
+?>
+
 <nav>
     <div class="container">
         <div class="nav nav-tabs" id="nav-tab" role="tablist">

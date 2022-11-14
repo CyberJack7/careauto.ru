@@ -2,6 +2,12 @@
 <script src="<?php $_SERVER['DOCUMENT_ROOT']?>/vendor/site_template/components/confirmation.code/script.js"></script>
 <link rel="stylesheet" href="<?php $_SERVER['DOCUMENT_ROOT']?>/vendor/site_template/components/confirmation.code/style.css">
 
+<?php //на странице подтверждения регистрации может находиться только неавторизованный пользователь
+    if (!empty($_SESSION['user'])) {
+        header('Location: /');
+    }
+?>
+
 <div class="check_code_container">
     <div class="class mb-3">
         <h2>Подтверждение регистрации</h2>

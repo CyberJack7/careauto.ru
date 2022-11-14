@@ -2,6 +2,12 @@
 <script src="<?php $_SERVER['DOCUMENT_ROOT']?>/vendor/site_template/components/authorization/script.js"></script>
 <link rel="stylesheet" href="<?php $_SERVER['DOCUMENT_ROOT']?>/vendor/site_template/components/authorization/style.css">
 
+<?php //на странице авторизации может находиться только неавторизованный пользователь
+    if (!empty($_SESSION['user'])) {
+        header('Location: /');
+    }
+?>
+
 <div class="auth_container">
     <h1>Вход</h1>
     <form action="signin.php" method="post" enctype="multipart/form-data">

@@ -2,6 +2,12 @@
 <script src="<?php $_SERVER['DOCUMENT_ROOT']?>/vendor/site_template/components/registration/script.js"></script>
 <link rel="stylesheet" href="<?php $_SERVER['DOCUMENT_ROOT']?>/vendor/site_template/components/registration/style.css">
 
+<?php //на странице регистрации может находиться только неавторизованный пользователь
+    if (!empty($_SESSION['user'])) {
+        header('Location: /');
+    }
+?>
+
 <div class="reg_container">
     <h1>Регистрация</h1>
     <form id=client class="radio-blocks" action="signup.php" method="post" enctype="multipart/form-data">

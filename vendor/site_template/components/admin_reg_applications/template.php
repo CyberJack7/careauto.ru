@@ -5,6 +5,10 @@
 <?php
     require_once PATH_CONNECT;
     $pdo = conn();
+    //на странице заявок админа может находиться только админ
+    if (!($_SESSION['user']['user_type'] == 'admin')) {
+        header('Location: /');
+    }
 ?>
 
 <div class="container">
