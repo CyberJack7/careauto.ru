@@ -1,9 +1,9 @@
 <?php require_once __DIR__ . '/component.php';?>
-<script src="<?php $_SERVER['DOCUMENT_ROOT']?>/vendor/site_template/components/confirmation.code/script.js"></script>
-<link rel="stylesheet" href="<?php $_SERVER['DOCUMENT_ROOT']?>/vendor/site_template/components/confirmation.code/style.css">
+<script src="<?php $_SERVER['DOCUMENT_ROOT']?>/vendor/site_template/components/confirmation_code/script.js"></script>
+<link rel="stylesheet" href="<?php $_SERVER['DOCUMENT_ROOT']?>/vendor/site_template/components/confirmation_code/style.css">
 
 <?php //на странице подтверждения регистрации может находиться только неавторизованный пользователь
-    if (!empty($_SESSION['user'])) {
+    if (!empty($_SESSION['user']) || empty($_SESSION['new_user'])) {
         header('Location: /');
         exit;
     }

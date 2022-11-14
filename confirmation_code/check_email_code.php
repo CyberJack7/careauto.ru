@@ -9,7 +9,7 @@ $code_inp = $_POST['code'];
 if ($_POST['resend']) {
     $_SESSION['new_user']['code'] = send_email($_SESSION['new_user']['email']);
     $_SESSION['message'] = "Отправлен новый код!";
-    header('Location: /confirmation.code/');
+    header('Location: /confirmation_code/');
     exit;
 }
 if ($_SESSION['new_user']['attempt'] > 1) { // 3 попытки на ввод кода!
@@ -55,10 +55,11 @@ if ($_SESSION['new_user']['attempt'] > 1) { // 3 попытки на ввод к
             $_SESSION['message'] = "Код введен не верно! У вас осталось " . $_SESSION['new_user']['attempt'] . " попытка";
         else
             $_SESSION['message'] = "Код введен не верно! У вас осталось " . $_SESSION['new_user']['attempt'] . " попытки";
-        header('Location: /confirmation.code/');
+        header('Location: /confirmation_code/');
         exit;
     }
 } else {
+    unset($_SESSION['new_user']);
     $_SESSION['message'] = "Превышено число попыток ввода кода!<br>Выполните регистрацию повторно!";
     header('Location: /registration/');
     exit;

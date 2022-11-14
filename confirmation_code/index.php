@@ -3,7 +3,7 @@
 ?>
 
 <?php
-    Main::includeComponent('confirmation.code');
+    Main::includeComponent('confirmation_code');
 ?>
 
 <?php
