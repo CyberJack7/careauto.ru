@@ -4,12 +4,6 @@
   require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/lib/classes/Main.php';
 ?>
 
-<pre>
-    <?php
-    print_r($_SESSION);
-    ?>
-</pre>
-
 <!DOCTYPE html>
 <html lang="ru">
 
@@ -39,8 +33,4 @@
 
 <body>
 <?php
-// if (mb_strpos($_SERVER['REQUEST_URI'], '/registration/') === false 
-//     && mb_strpos($_SERVER['REQUEST_URI'], '/authorization/') === false) {
-//     Main::includeComponent('navigation.main');
-// }
 Main::includeComponent('navigation.main');

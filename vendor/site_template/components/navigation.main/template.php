@@ -45,17 +45,17 @@
                 </li>                
             </ul>
         </div>
-        <a class="btn btn-primary" href="/">Выйти</a>
+        <button class="btn btn-primary logout_btn" id="logout_btn" type="button">Выйти</button>
                 <?php
             } elseif ($_SESSION['user']['user_type'] == 'client') { //автовладелец
-                if (mb_strpos($_SERVER['REQUEST_URI'], '/profile/') !== false) {
+                if (mb_strpos($_SERVER['REQUEST_URI'], '/profile/') !== false) { //если в профиле
                 ?>
                 <li class="nav-item">
                     <a class="nav-link" href="">Написать в техподдержку</a>
                 </li>
             </ul>
         </div>
-        <a class="btn btn-primary" href="/">Выйти</a>
+        <button class="btn btn-primary logout_btn" id="logout_btn" type="button">Выйти</button>
                 <?php
                 } else {
                 ?>
@@ -81,14 +81,14 @@
         <a class="btn btn-primary" href="/profile/">Профиль</a>
             <?php }
         } else { //автосервис
-            if (mb_strpos($_SERVER['REQUEST_URI'], '/profile/') !== false) {
+            if (mb_strpos($_SERVER['REQUEST_URI'], '/profile/') !== false) { //если в профиле
                 ?>
                 <li class="nav-item">
                     <a class="nav-link" href="">Написать в техподдержку</a>
                 </li>
             </ul>
         </div>
-        <a class="btn btn-primary" href="">Выйти</a>
+        <button class="btn btn-primary logout_btn" id="logout_btn" type="button">Выйти</button>
                 <?php
                 } else {
                 ?>
