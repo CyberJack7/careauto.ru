@@ -1,0 +1,22 @@
+.admin_check_reg_form {
+  width: inherit !important;
+}
+
+.list_custom {
+  display: flex;
+  font-weight: bold;
+}
+
+.list_custom::before {
+  margin-right: 5px;
+}
+
+.autoserv_check {
+  display: flex;
+  justify-content: flex-end;
+  width: -webkit-fill-available;
+}
+
+.btn {
+  margin-left: 5px;
+}

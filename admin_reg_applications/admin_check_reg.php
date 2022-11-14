@@ -22,5 +22,5 @@ if (empty($id)) {
         "phone" => $result['phone_autoservice'],
         "document" => $result['document']
     ];
-    header("Location: /admin_check_reg_page.php");
+    header("Location: /admin_reg_applications/");
 }

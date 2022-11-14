@@ -22,3 +22,6 @@
         </div>
     </div>
 </div>
+
+<?php
+unset($_SESSION['message']);

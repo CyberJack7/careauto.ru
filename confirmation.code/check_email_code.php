@@ -28,6 +28,7 @@ if ($_SESSION['new_user']['attempt'] > 1) { // 3 попытки на ввод к
                 'favorites' => NULL,
                 'city_id' => $_SESSION['new_user']['city_id']
             ]);
+            unset($_SESSION['new_user']);
             $_SESSION['message'] = "Регистрация прошла успешно!";
             header('Location: /authorization/');
             exit;
@@ -43,6 +44,7 @@ if ($_SESSION['new_user']['attempt'] > 1) { // 3 попытки на ввод к
                 'pass' => $_SESSION['new_user']['password'],
                 'document' => $_SESSION['new_user']['document']
             ]);
+            unset($_SESSION['new_user']);
             $_SESSION['message'] = "Регистрация прошла успешно!";
             header('Location: /authorization/');
             exit;
@@ -57,7 +59,7 @@ if ($_SESSION['new_user']['attempt'] > 1) { // 3 попытки на ввод к
         exit;
     }
 } else {
-    $_SESSION['message'] = "Превышено число попыток ввода кода!Регистрируйтесь заново!";
+    $_SESSION['message'] = "Превышено число попыток ввода кода!<br>Выполните регистрацию повторно!";
     header('Location: /registration/');
     exit;
 }

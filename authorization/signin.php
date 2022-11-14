@@ -77,7 +77,7 @@ if (password_verify($password, $result['password_admin'])) {
             "city_id" => $result['city_id']
         ];
         $_SESSION['message'] = "Вы авторизованы как сервисный центр!";
-        header('Location: /autoservice_application_page.php');
+        header('Location: /autoservice_applications/');
     } else {
         $_SESSION['message'] = "Неверный логин или пароль! <br>
             Если данные введены верно, смените тип пользователя";

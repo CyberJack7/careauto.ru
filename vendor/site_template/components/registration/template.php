@@ -33,7 +33,7 @@
                 <label for="city" class="form-label">Выберите город</label>
                 <select required name="city_id" class="form-select" aria-label="Default select example" id="city">
                     <option value="" disabled selected>Выберите город</option>
-                    <?php
+                    <?php //вывод списка городов
                         foreach ($arResult['CITIES'] as $city_id => $arCity) {
                             ?>
                                 <option value="<?=$city_id?>"><?=$arCity['NAME']?></option>

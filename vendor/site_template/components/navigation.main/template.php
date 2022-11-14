@@ -35,7 +35,8 @@
             } elseif ($_SESSION['user']['user_type'] == 'admin') { //admin
                 ?>
                 <li class="nav-item">
-                    <a class="nav-link" href="/admin_check_reg_page.php">Заявки на регистрацию</a>
+                    <a class="nav-link <?php if (mb_strpos($_SERVER['REQUEST_URI'], '/admin_reg_applications/') !== false) {?>active<?php }?>" 
+                        href="/admin_reg_applications/">Заявки на регистрацию</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/admin_complaint.php">Жалобы</a>
@@ -93,7 +94,7 @@
                 } else {
                 ?>
                 <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="/autoservice_application_page.php">Заявки</a>
+                <a class="nav-link" aria-current="page" href="/autoservice_applications/">Заявки</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="">Услуги</a>
