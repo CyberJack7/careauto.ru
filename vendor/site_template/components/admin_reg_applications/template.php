@@ -45,7 +45,7 @@
                     Номер телефона: <?php echo $_SESSION['autoservice_in_check']['phone'] . '</br>' ?>
                     Документ на проверку:
                     <?php
-                    $doc = '/careauto.ru' . substr($_SESSION['autoservice_in_check']['document'], 2);
+                    $doc = $_SESSION['autoservice_in_check']['document'];
                     echo "<a target='_blank' href='$doc'> Ссылка на документ</a>" ?>
                 </div>
                 <div class="modal-footer">
