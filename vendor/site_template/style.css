@@ -45,3 +45,29 @@ input {
 .btn-group {
   margin-bottom: 10px;
 }
+
+.central {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  height: 85%;
+}
+
+.central > div {
+  display: flex;
+}
+
+.panel {
+  padding: 20px;
+  margin: 10px;
+  border: 1px solid #0d6efd;
+  border-radius: 10px;
+  width: 460px !important;
+  height: min-content;
+}
+
+.panel > button {
+  margin-top: 10px;
+  width: -webkit-fill-available;
+}

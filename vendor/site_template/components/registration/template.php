@@ -8,7 +8,7 @@
     }
 ?>
 
-<div class="reg_container">
+<div class="container central">
     <h1>Регистрация</h1>
     <form id=client class="radio-blocks" action="signup.php" method="post" enctype="multipart/form-data">
         <p>Выберите тип пользователя</p>
@@ -40,6 +40,7 @@
                 <select required name="city_id" class="form-select" aria-label="Default select example" id="city">
                     <option value="" disabled selected>Выберите город</option>
                     <?php //вывод списка городов
+                        $arResult = city_list();
                         foreach ($arResult['CITIES'] as $city_id => $arCity) {
                             ?>
                                 <option value="<?=$city_id?>"><?=$arCity['NAME']?></option>
@@ -51,12 +52,12 @@
 
             <div class="mb-3">
                 <label for="password" class="form-label">Пароль</label>
-                <input type="password" required placeholder="password 5 to 20 characters" name="password"
+                <input type="password" required placeholder="Пароль от 5 до 20 символов" name="password"
                     class="form-control" id="password" pattern=".{5,20}" />
             </div>
             <div class="mb-3">
                 <label for="password_confirm" class="form-label">Подтверждение пароля</label>
-                <input type="password" required placeholder="password confirm 5 to 20 characters"
+                <input type="password" required placeholder="Пароль подтверждения"
                     name="password_confirm" class="form-control" id="password_confirm" pattern=".{5,20}" />
             </div>
         </div>

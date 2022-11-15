@@ -15,7 +15,16 @@
         <div class="col-3">
             <div id="list-example" class="list-group">
                 <?php
-                cars_list($_SESSION['user']['id']);
+                $arResult = cars_list($_SESSION['user']['id']);
+                $count = 0;
+                if (empty($arResult)) {
+                    echo '<p><div class="alert alert-primary" role="alert">Добавьте свой первый автомобиль!</div></p>';
+                }
+                foreach ($arResult as $car) { 
+                    $count++;                   
+                    echo '<a class="list-group-item list-group-item-action" href="#list-item-' . $count . '">'
+                      . $car['brand'] . ' ' . $car['model'] . '</a>';
+                }
                 ?>
             </div>
         </div>
