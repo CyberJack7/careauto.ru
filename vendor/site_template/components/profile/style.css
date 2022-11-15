@@ -1,4 +1,15 @@
 h5 {
   color: #0d6efd;
-  margin-top: 8px;
+  margin: 9px 0 17px;
+}
+
+.form_box .req:invalid {
+  border: 2px solid red;
+}
+.form_box .req:valid {
+  border: 2px solid green;
+}
+
+.central > div {
+  display: flex;
 }

@@ -10,14 +10,14 @@ if (empty($_SESSION['user'])) {
 ?>
 <?php
         if ($_SESSION['user']['user_type'] == 'client') {
-            echo '<h1 class="container">Профиль личного кабинета автовладельца</h1>';
+            echo '<h1 class="container">Личный кабинет</h1>';
         } elseif ($_SESSION['user']['user_type'] == 'autoservice') {
-            echo '<h1 class="container">Профиль личного кабинета автовладельца</h1>';
+            echo '<h1 class="container">Личный кабинет</h1>';
         }
 ?>
 <div class="container central">
     <div>
-        <form class="panel">
+        <form class="panel" action="change_personal_data.php" method="post">
             <h3>Основная информация</h3>
             <?php
             if ($_SESSION['user']['user_type'] == 'client') {
@@ -35,10 +35,9 @@ if (empty($_SESSION['user'])) {
                 echo '<h5>Профиль личного кабинета автовладельца</h5>';
             }
             ?>
-            <p></p>
             <div class="mb-3">
-                <label class="form-label" for="FIO">ФИО</label>
-                <input class="form-control" id="FIO" name="password" type="text" value="<?=$_SESSION['user']['name']?>" placeholder="ФИО" required/>
+                <label class="form-label" for="name">ФИО</label>
+                <input class="form-control" id="name" name="name" type="text" value="<?=$_SESSION['user']['name']?>" placeholder="ФИО" required/>
             </div>
             <div class="mb-3">
                 <label class="form-label" for="email">Адрес электронной почты</label>
@@ -52,8 +51,8 @@ if (empty($_SESSION['user'])) {
             </div>
             <div class="mb-3">
                 <label class="form-label" for="city">Город</label>
-                <select class="form-select" id="city" name="city_id" aria-label="Default select example" required>
-                    <option value="" selected><?=city_id_name($_SESSION['user']['city_id']);?></option>
+                <select class="form-select" id="city_id" name="city_id" aria-label="Default select example" required>
+                    <option value="<?=$_SESSION['user']['city_id'];?>" selected><?=city_id_name($_SESSION['user']['city_id']);?></option>
                     <?php //вывод списка городов
                         $arResult = city_list();
                         foreach ($arResult['CITIES'] as $city_id => $arCity) {
@@ -64,7 +63,7 @@ if (empty($_SESSION['user'])) {
                     ?>
                 </select>
             </div>
-            <button class="btn btn-primary" id="save_btn" name="save_btn" type="button">Сохранить</button>
+            <button class="btn btn-primary" id="save_btn" name="save_btn" type="submit">Сохранить</button>
         </form>
         <div>
             <form class="panel">
@@ -81,7 +80,7 @@ if (empty($_SESSION['user'])) {
                     <label class="form-label" for="password">Подтверждение пароля</label>
                     <input class="form-control" id="password" name="conf_new_password" type="password" placeholder="Подтверждение пароля" pattern=".{5,20}" required/>
                 </div>
-                <button class="btn btn-primary" id="save_btn" name="save_btn" type="button">Сохранить</button>
+                <button class="btn btn-primary" id="save_btn" name="save_btn" type="submit">Сохранить</button>
             </form>
             <div class="panel" style="height: auto">
                 <h4>Удалить аккаунт</h4>

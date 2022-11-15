@@ -2,21 +2,26 @@
 <script src="<?php $_SERVER['DOCUMENT_ROOT']?>/vendor/site_template/components/confirmation_code/script.js"></script>
 <link rel="stylesheet" href="<?php $_SERVER['DOCUMENT_ROOT']?>/vendor/site_template/components/confirmation_code/style.css">
 
-<?php //на странице подтверждения регистрации может находиться только неавторизованный пользователь
-    if (!empty($_SESSION['user']) || empty($_SESSION['new_user'])) {
+<?php //на странице подтверждения регистрации может находиться только неавторизованный или меняющий почту пользователь
+    if (empty($_SESSION['user']['new_email']) && empty($_SESSION['new_user'])) {
         header('Location: /');
         exit;
     }
 ?>
 
-<div class="check_code_container">
+<div class="container central">
     <div class="class mb-3">
         <h2>Подтверждение регистрации</h2>
-        <p>Код был выслан на почту:<br><b><?php echo $_SESSION['new_user']['email']; ?></b></p>
+        <p>Код был выслан на почту:<br><b><?php
+            if (!empty($_SESSION['new_user']['email'])) {
+                echo $_SESSION['new_user']['email'];
+            } else {
+                echo $_SESSION['user']['new_email'];
+            } ?></b></p>
         <form action="check_email_code.php" method="post">
             <div class="mb-3">
                 <label for="code" class="form-label">Укажите код с почты</label>
-                <input type="text" data-phone-pattern required placeholder="Код с почты" name="code"
+                <input type="text" required placeholder="Код с почты" name="code"
                     class="form-control" id="code" />
             </div>
             <button name="confirm_code" type="submit" class="btn btn-primary">Подтвердить код</button>
