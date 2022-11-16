@@ -31,7 +31,8 @@ function email_check($email, $pdo)
     foreach ($sql_array_check as $sql) {
         $check_user = $pdo->query($sql);
         if ($check_user->fetchColumn() > 0) {
-            $_SESSION['message'] = "Пользователь с таким email уже зарегистрирован!";
+            $_SESSION['message']['text'] = "Пользователь с таким email уже зарегистрирован!";
+            $_SESSION['message']['type'] = 'warning';
             header('Location: /registration/');
             exit;
         } else {
@@ -44,11 +45,13 @@ function email_check($email, $pdo)
 function password_check($pass, $pass_confirm)
 {
     if ($pass !== $pass_confirm) {
-        $_SESSION['message'] = "Пароли не совпадают";
+        $_SESSION['message']['text'] = "Пароли не совпадают";
+        $_SESSION['message']['type'] = 'warning';
         header('Location: /registration/');
         exit;
     } elseif (strlen($pass) < 5 || strlen($pass) > 20) {
-        $_SESSION['message'] = "Длина пароля должна быть от 5 до 20 символов <br> включительно";
+        $_SESSION['message']['text'] = "Длина пароля должна быть от 5 до 20 символов <br> включительно";
+        $_SESSION['message']['type'] = 'warning';
         header('Location: /registration/');
         exit;
     } else {
@@ -73,7 +76,8 @@ if ($user_type == "client") { // для клиента
     exit;
 } elseif ($user_type == "autoservice") { // для автосервиса
     if (!move_uploaded_file($_FILES['document']['tmp_name'], PATH_UPLOADS_TEMP . time() . $_FILES['document']['name'])) {
-        $_SESSION['message'] = "Ошибка при загрузке файла!";
+        $_SESSION['message']['texr'] = "Не удалось загрузить файл!";
+        $_SESSION['message']['type'] = 'warning';
         header('Location: /registration/');
     }
     $path_to_file = PATH_UPLOADS_TEMP . time() . $_FILES['document']['name'];

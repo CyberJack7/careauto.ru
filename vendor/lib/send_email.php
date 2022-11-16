@@ -1,16 +1,24 @@
 <?php
 
-function send_email($email_to)
+function send_email($email_to, $message_type='reg')
 {
     $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $code = '';
     for ($i = 0; $i < 6; $i++) {
         $code .= $permitted_chars[rand(0, 66)];
     }
-    $subject = 'Подтверждение регистрации careauto.ru';
-    $message = "Привет!<br>Регистрация на платформе careauto.ru<br>
-    Твой код для подтверждения аккаунта: <b>$code</b><br>
-    Если ты не понимаешь, о чем идет речь, просто проигнорируй это письмо :)";
+    
+    if ($message_type == 'reg') {
+        $subject = 'Подтверждение регистрации careauto.ru';
+        $message = "Привет!<br>Регистрация на платформе careauto.ru<br>
+        Твой код для подтверждения аккаунта: <b>$code</b><br>
+        Если ты не понимаешь, о чем идет речь, просто проигнорируй это письмо :)";
+    } else {
+        $subject = 'Удаление аккаунта careauto.ru';
+        $message = "Привет!<br>Ты решил покинуть нашу платформу careauto.ru, в связи с чем твой аккаунт был удалён<br>
+        Нам будет тебя не хватать :(<br>
+        Но мы всегда будем рады, если ты решишь вернуться!";
+    }    
 
     $subject = '=?utf-8?b?' . base64_encode($subject) . '?=';
     $fromMail = 'autocare.ru@mail.ru'; //почта, с которой отправляешь

@@ -16,25 +16,29 @@ $name = htmlspecialchars($_POST['name']);
 $email = htmlspecialchars($_POST['email']);
 $phone = htmlspecialchars(str_replace(['(', ')', '-', ' '], '', $_POST['phone']));
 $city_id = htmlspecialchars($_POST['city_id']);
-
-// if ($email != $_SESSION['user']['name'])
 if ($name != $_SESSION['user']['name']) { //смена ФИО
     $sql_name = $pdo->quote($name);
     $sql = "UPDATE Public.client SET name_client = " . $sql_name . " WHERE client_id = " . $_SESSION['user']['id'];
     $stmt = $pdo->exec($sql);
     $_SESSION['user']['name'] = $name;
+    $_SESSION['message']['text'] = 'Данные изменены успешно!';
+    $_SESSION['message']['type'] = 'success';
 }
 if ($phone != $_SESSION['user']['phone']) { //смена номера телефона
     $sql_phone = $pdo->quote($phone);
     $sql = "UPDATE Public.client SET phone_client = " . $sql_phone . " WHERE client_id = " . $_SESSION['user']['id'];
     $stmt = $pdo->exec($sql);
     $_SESSION['user']['phone'] = $phone;
+    $_SESSION['message']['text'] = 'Данные изменены успешно!';
+    $_SESSION['message']['type'] = 'success';
 }
 if ($city_id != $_SESSION['user']['city_id']) { //смена города
     $sql_phone = $pdo->quote($city_id);
     $sql = "UPDATE Public.client SET city_id = " . $city_id . " WHERE client_id = " . $_SESSION['user']['id'];
     $stmt = $pdo->exec($sql);
     $_SESSION['user']['city_id'] = $city_id;
+    $_SESSION['message']['text'] = 'Данные изменены успешно!';
+    $_SESSION['message']['type'] = 'success';
 }
 if ($email != $_SESSION['user']['email']) { //смена почты через подтверждение
     $_SESSION['user'] += [
@@ -44,6 +48,7 @@ if ($email != $_SESSION['user']['email']) { //смена почты через �
     ];
     header('Location: /confirmation_code/');
     exit;
-}
+}    
+
 header('Location: /profile/');
 exit;

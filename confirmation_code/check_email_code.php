@@ -10,7 +10,8 @@ $code_inp = $_POST['code']; //введённый пользователем ко
 if (!empty($_SESSION['new_user'])) { //подтверждение регистрации новым пользователем
     if ($_POST['resend']) { //если повторная отправка кода подтверждения
         $_SESSION['new_user']['code'] = send_email($_SESSION['new_user']['email']);
-        $_SESSION['message'] = "Отправлен новый код!";
+        $_SESSION['message']['text'] = "Отправлен новый код!";
+        $_SESSION['message']['type'] = 'info';
         header('Location: /confirmation_code/');
         exit;
     }
@@ -31,7 +32,8 @@ if (!empty($_SESSION['new_user'])) { //подтверждение регистр
                     'city_id' => $_SESSION['new_user']['city_id']
                 ]);
                 unset($_SESSION['new_user']);
-                $_SESSION['message'] = "Регистрация прошла успешно!";
+                $_SESSION['message']['text'] = "Регистрация прошла успешно!";
+                $_SESSION['message']['type'] = 'success';
                 header('Location: /authorization/');
                 exit;
             } elseif ($_SESSION['new_user']['type'] == "autoservice") { //автосервис
@@ -47,29 +49,36 @@ if (!empty($_SESSION['new_user'])) { //подтверждение регистр
                     'document' => $_SESSION['new_user']['document']
                 ]);
                 unset($_SESSION['new_user']);
-                $_SESSION['message'] = "Регистрация прошла успешно!";
+                $_SESSION['message']['text'] = "Регистрация прошла успешно!";
+                $_SESSION['message']['type'] = 'success';
                 header('Location: /authorization/');
                 exit;
             }
         } else {
             $_SESSION['new_user']['attempt'] -= 1;
-            if ($_SESSION['new_user']['attempt'] == 1)
-                $_SESSION['message'] = "Код введен не верно! У вас осталось " . $_SESSION['new_user']['attempt'] . " попытка";
-            else
-                $_SESSION['message'] = "Код введен не верно! У вас осталось " . $_SESSION['new_user']['attempt'] . " попытки";
+            if ($_SESSION['new_user']['attempt'] == 1) {
+                $_SESSION['message']['text'] = "Код введен неверно! У вас осталось " . $_SESSION['new_user']['attempt'] . " попытка";
+                $_SESSION['message']['type'] = 'warning';
+            }
+            else {
+                $_SESSION['message']['text'] = "Код введен неверно! У вас осталось " . $_SESSION['new_user']['attempt'] . " попытки";
+                $_SESSION['message']['type'] = 'warning';
+            }
             header('Location: /confirmation_code/');
             exit;
         }
     } else {
         unset($_SESSION['new_user']);
-        $_SESSION['message'] = "Превышено число попыток ввода кода!<br>Выполните регистрацию повторно!";
+        $_SESSION['message']['text'] = "Превышено число попыток ввода кода!<br>Выполните регистрацию повторно!";
+        $_SESSION['message']['type'] = 'danger';
         header('Location: /registration/');
         exit;
     }
 } elseif (!empty($_SESSION['user'])) { //если пользователь меняет почту
     if ($_POST['resend']) { //если повторная отправка кода подтверждения
         $_SESSION['user']['code'] = send_email($_SESSION['user']['new_email']);
-        $_SESSION['message'] = "Отправлен новый код!";
+        $_SESSION['message']['text'] = "Отправлен новый код!";
+        $_SESSION['message']['type'] = 'info';
         header('Location: /confirmation_code/');
         exit;
     }
@@ -81,21 +90,28 @@ if (!empty($_SESSION['new_user'])) { //подтверждение регистр
             $sql = "UPDATE Public.client SET email_client = " . $sql_email . " WHERE client_id = " . $_SESSION['user']['id'];
             $stmt = $pdo->exec($sql);
             $_SESSION['user']['email'] = $email;
+            $_SESSION['message']['text'] = 'Данные изменены успешно!';
+            $_SESSION['message']['type'] = 'success';
             unset($_SESSION['user']['new_email'], $_SESSION['user']['code'], $_SESSION['user']['attempt']);
             header('Location: /profile/');
             exit;
         } else { //если код неверный
             $_SESSION['user']['attempt'] -= 1;
-            if ($_SESSION['user']['attempt'] == 1)
-                $_SESSION['message'] = "Код введен не верно! У вас осталось " . $_SESSION['user']['attempt'] . " попытка";
-            else
-                $_SESSION['message'] = "Код введен не верно! У вас осталось " . $_SESSION['user']['attempt'] . " попытки";
+            if ($_SESSION['new_user']['attempt'] == 1) {
+                $_SESSION['message']['text'] = "Код введен неверно! У вас осталось " . $_SESSION['new_user']['attempt'] . " попытка";
+                $_SESSION['message']['type'] = 'warning';
+            }
+            else {
+                $_SESSION['message']['text'] = "Код введен неверно! У вас осталось " . $_SESSION['new_user']['attempt'] . " попытки";
+                $_SESSION['message']['type'] = 'warning';
+            }
             header('Location: /confirmation_code/');
             exit;
         }
     } else {
         unset($_SESSION['user']['new_email'], $_SESSION['user']['code'], $_SESSION['user']['attempt']);
-        $_SESSION['message'] = "Превышено число попыток ввода кода подтверждения!<br>Попробуйте сменить адрес электронной почты снова";
+        $_SESSION['message']['text'] = "Превышено число попыток ввода кода подтверждения!<br>Попробуйте снова";
+        $_SESSION['message']['type'] = 'danger';
         header('Location: /profile/');
         exit;
     }

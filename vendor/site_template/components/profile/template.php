@@ -17,7 +17,7 @@ if (empty($_SESSION['user'])) {
 ?>
 <div class="container central">
     <div>
-        <form class="panel" action="change_personal_data.php" method="post">
+        <form class="panel" action="<?php $_SERVER['DOCUMENT_ROOT']?>/vendor/site_template/components/profile/change_personal_data.php" method="post">
             <h3>Основная информация</h3>
             <?php
             if ($_SESSION['user']['user_type'] == 'client') {
@@ -63,24 +63,24 @@ if (empty($_SESSION['user'])) {
                     ?>
                 </select>
             </div>
-            <button class="btn btn-primary" id="save_btn" name="save_btn" type="submit">Сохранить</button>
+            <button class="btn btn-primary" id="change_data" name="change_data" type="submit">Сохранить</button>
         </form>
         <div>
-            <form class="panel">
+            <form class="panel" action="<?php $_SERVER['DOCUMENT_ROOT']?>/vendor/site_template/components/profile/change_password.php" method="post">
                 <h3>Сменить пароль</h3>
                 <div class="mb-3">
                     <label class="form-label" for="password">Текущий пароль</label>
-                    <input class="form-control" id="password" name="current_password" type="password" placeholder="Текущий пароль" pattern=".{5,20}" required/>
+                    <input class="form-control" id="current_password" name="current_password" type="password" placeholder="Текущий пароль" pattern=".{5,20}" required/>
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="password">Новый пароль</label>
-                    <input class="form-control" id="password" name="new_password" type="password" placeholder="Новый пароль" pattern=".{5,20}" required/>
+                    <input class="form-control" id="new_password" name="new_password" type="password" placeholder="Новый пароль" pattern=".{5,20}" required/>
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="password">Подтверждение пароля</label>
-                    <input class="form-control" id="password" name="conf_new_password" type="password" placeholder="Подтверждение пароля" pattern=".{5,20}" required/>
+                    <input class="form-control" id="conf_new_password" name="conf_new_password" type="password" placeholder="Подтверждение пароля" pattern=".{5,20}" required/>
                 </div>
-                <button class="btn btn-primary" id="save_btn" name="save_btn" type="submit">Сохранить</button>
+                <button class="btn btn-primary" id="change_password" name="change_password" type="submit">Сохранить</button>
             </form>
             <div class="panel" style="height: auto">
                 <h4>Удалить аккаунт</h4>
@@ -89,7 +89,24 @@ if (empty($_SESSION['user'])) {
 
         </div>
     </div>
-    <?php
-        
-    ?>
+    <p class="message_window">
+        <?php //блок вывода сообщений
+        if (isset($_SESSION['message'])) {
+            if ($_SESSION['message']['type'] == 'success') {
+                echo '<p><div class="alert alert-success" role="alert">
+                ' . $_SESSION['message']['text'] . '</div></p>';
+            } elseif ($_SESSION['message']['type'] == 'warning') {
+                echo '<p><div class="alert alert-warning" role="alert">
+                ' . $_SESSION['message']['text'] . '</div></p>';
+            } elseif ($_SESSION['message']['type'] == 'danger') {
+                echo '<p><div class="alert alert-danger" role="alert">
+                ' . $_SESSION['message']['text'] . '</div></p>';
+            } elseif ($_SESSION['message']['type'] == 'info') {
+                echo '<p><div class="alert alert-info" role="alert">
+                ' . $_SESSION['message']['text'] . '</div></p>';
+            }
+        }
+        unset($_SESSION['message']);
+        ?>
+    </p>
 </div>

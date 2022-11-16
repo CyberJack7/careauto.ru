@@ -32,17 +32,20 @@
         <button id="auth_button" name="auth_button" type="submit" class="btn btn-primary">Войти</button>
         <p>У вас еще нет аккаунта? - <a href="/registration/">Зарегистрируйтесь</a>
             
-        <?php
+        <?php //блок вывода сообщений
         if (isset($_SESSION['message'])) {
-            if (substr($_SESSION['message'], 0, 52) == "Данный аккаунт заблокирован") {
-                echo '<p><div class="alert alert-danger" role="alert">
-                ' . $_SESSION['message'] . '</div></p>';
-            } elseif (substr($_SESSION['message'], 0, 22) == "Регистрация") {
+            if ($_SESSION['message']['type'] == 'success') {
                 echo '<p><div class="alert alert-success" role="alert">
-                ' . $_SESSION['message'] . '</div></p>';
-            } else {
+                ' . $_SESSION['message']['text'] . '</div></p>';
+            } elseif ($_SESSION['message']['type'] == 'warning') {
                 echo '<p><div class="alert alert-warning" role="alert">
-                ' . $_SESSION['message'] . '</div></p>';
+                ' . $_SESSION['message']['text'] . '</div></p>';
+            } elseif ($_SESSION['message']['type'] == 'danger') {
+                echo '<p><div class="alert alert-danger" role="alert">
+                ' . $_SESSION['message']['text'] . '</div></p>';
+            } elseif ($_SESSION['message']['type'] == 'info') {
+                echo '<p><div class="alert alert-info" role="alert">
+                ' . $_SESSION['message']['text'] . '</div></p>';
             }
         }
         unset($_SESSION['message']);
