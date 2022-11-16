@@ -10,7 +10,8 @@
 
 <div class="container central">
     <h1>Регистрация</h1>
-    <form id=client class="radio-blocks" action="signup.php" method="post" enctype="multipart/form-data">
+    <form id=client class="radio-blocks" action="/vendor/site_template/components/registration/signup.php" method="post" 
+        enctype="multipart/form-data">
         <p>Выберите тип пользователя</p>
         <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
             <input type="radio" value="client" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
@@ -64,7 +65,8 @@
         <button  class="btn btn-primary" id="reg_button" name="reg_button" value="client" type="submit">Зарегистрироваться</button>
     </form>
 
-    <form id="autoservice" class="radio-blocks" style="display:none" action="signup.php" method="post" enctype="multipart/form-data">
+    <form id="autoservice" class="radio-blocks" style="display:none" action="/vendor/site_template/components/registration/signup.php" 
+        method="post" enctype="multipart/form-data">
         <p>Выберите тип пользователя</p>
         <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
             <input type="radio" value="client" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off">

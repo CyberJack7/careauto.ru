@@ -40,8 +40,8 @@ if ($_SESSION['user']['user_type'] == 'client') { //автовладелец
     $result = $pdo->query($sql_autoservice)->fetch();
     if (password_verify($password, $result['password_autoservice'])) { //проверка текущего пароля
         if ($new_password === $conf_new_password) { //проверка соответствий нового пароля
-            $sql_password = $pdo->quote(password_hash($password, PASSWORD_DEFAULT));
-            $sql = "UPDATE public.autoservice SET password_autoservice = " . $sql_password . " WHERE autoservice_id = " . $_SESSION['user']['id'];
+            $sql_new_password = $pdo->quote(password_hash($new_password, PASSWORD_DEFAULT));
+            $sql = "UPDATE public.autoservice SET password_autoservice = " . $sql_new_password . " WHERE autoservice_id = " . $_SESSION['user']['id'];
             $stmt = $pdo->exec($sql);
             $_SESSION['message']['text'] = 'Пароль изменён успешно!';
             $_SESSION['message']['type'] = 'success';

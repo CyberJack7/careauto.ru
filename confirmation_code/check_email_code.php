@@ -87,7 +87,11 @@ if (!empty($_SESSION['new_user'])) { //подтверждение регистр
             $pdo = conn();
             $email = $_SESSION['user']['new_email'];
             $sql_email = $pdo->quote($email);
-            $sql = "UPDATE Public.client SET email_client = " . $sql_email . " WHERE client_id = " . $_SESSION['user']['id'];
+            if ($_SESSION['user']['user_type'] == 'client') {
+                $sql = "UPDATE Public.client SET email_client = " . $sql_email . " WHERE client_id = " . $_SESSION['user']['id'];
+            } else {
+                $sql = "UPDATE Public.autoservice SET email_autoservice = " . $sql_email . " WHERE autoservice_id = " . $_SESSION['user']['id'];
+            }
             $stmt = $pdo->exec($sql);
             $_SESSION['user']['email'] = $email;
             $_SESSION['message']['text'] = 'Данные изменены успешно!';
@@ -97,12 +101,12 @@ if (!empty($_SESSION['new_user'])) { //подтверждение регистр
             exit;
         } else { //если код неверный
             $_SESSION['user']['attempt'] -= 1;
-            if ($_SESSION['new_user']['attempt'] == 1) {
-                $_SESSION['message']['text'] = "Код введен неверно! У вас осталось " . $_SESSION['new_user']['attempt'] . " попытка";
+            if ($_SESSION['user']['attempt'] == 1) {
+                $_SESSION['message']['text'] = "Код введен неверно! У вас осталось " . $_SESSION['user']['attempt'] . " попытка";
                 $_SESSION['message']['type'] = 'warning';
             }
             else {
-                $_SESSION['message']['text'] = "Код введен неверно! У вас осталось " . $_SESSION['new_user']['attempt'] . " попытки";
+                $_SESSION['message']['text'] = "Код введен неверно! У вас осталось " . $_SESSION['user']['attempt'] . " попытки";
                 $_SESSION['message']['type'] = 'warning';
             }
             header('Location: /confirmation_code/');

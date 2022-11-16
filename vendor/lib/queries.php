@@ -43,3 +43,11 @@ function city_id_name($city_id){
   $city_name = $pdo->query($sql)->fetch()['name_city'];
   return $city_name;
 }
+
+//адрес по id
+function address_name($user_id){
+  $pdo = conn();
+  $sql = "SELECT address FROM Public.autoservice WHERE autoservice_id = " . $user_id;
+  $address = $pdo->query($sql)->fetch()['address'];
+  return $address;
+}

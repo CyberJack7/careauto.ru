@@ -18,7 +18,7 @@ if (empty($_SESSION['user'])) {
 <div class="container central">
     <div>
         <form class="panel" action="<?php $_SERVER['DOCUMENT_ROOT']?>/vendor/site_template/components/profile/change_personal_data.php" method="post">
-            <h3>Основная информация</h3>
+            <h3>Контактная информация</h3>
             <?php
             if ($_SESSION['user']['user_type'] == 'client') {
                 $amount_cars = count(cars_list($_SESSION['user']['id']));
@@ -36,7 +36,8 @@ if (empty($_SESSION['user'])) {
             }
             ?>
             <div class="mb-3">
-                <label class="form-label" for="name">ФИО</label>
+                <label class="form-label" for="name"><?php if ($_SESSION['user']['user_type'] == 'client') {echo 'ФИО';} 
+                    else {echo 'Название';}?></label>
                 <input class="form-control" id="name" name="name" type="text" value="<?=$_SESSION['user']['name']?>" placeholder="ФИО" required/>
             </div>
             <div class="mb-3">
@@ -51,9 +52,12 @@ if (empty($_SESSION['user'])) {
             </div>
             <div class="mb-3">
                 <label class="form-label" for="city">Город</label>
-                <select class="form-select" id="city_id" name="city_id" aria-label="Default select example" required>
-                    <option value="<?=$_SESSION['user']['city_id'];?>" selected><?=city_id_name($_SESSION['user']['city_id']);?></option>
-                    <?php //вывод списка городов
+                <select class="form-select" id="city_id" name="city_id" aria-label="Default select example">
+                    <option value=<?php if ($_SESSION['user']['city_id'] !== null) echo '"' . $_SESSION['user']['city_id'] . '"'; 
+                                        else echo '"" disabled ';?>selected>
+                        <?php if ($_SESSION['user']['city_id'] !== null) echo city_id_name($_SESSION['user']['city_id']); 
+                                else echo 'Выберите город';?></option>
+                        <?php //вывод списка городов
                         $arResult = city_list();
                         foreach ($arResult['CITIES'] as $city_id => $arCity) {
                             ?>
@@ -63,6 +67,14 @@ if (empty($_SESSION['user'])) {
                     ?>
                 </select>
             </div>
+            <?php
+            if ($_SESSION['user']['user_type'] == 'autoservice') {?>
+                <div class="mb-3">
+                    <label class="form-label" for="address">Адрес</label>
+                    <input class="form-control" id="address" name="address" type="text" value="<?=address_name($_SESSION['user']['id'])?>" 
+                        placeholder="Адрес сервисного центра"/>
+                </div>
+            <?php }?>
             <button class="btn btn-primary" id="change_data" name="change_data" type="submit">Сохранить</button>
         </form>
         <div>
