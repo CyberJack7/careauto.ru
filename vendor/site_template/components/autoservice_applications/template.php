@@ -1,12 +1,14 @@
-<?php require_once __DIR__ . '/component.php';?>
-<script src="<?php $_SERVER['DOCUMENT_ROOT']?>/vendor/site_template/components/autoservice_applications/script.js"></script>
-<link rel="stylesheet" href="<?php $_SERVER['DOCUMENT_ROOT']?>/vendor/site_template/components/autoservice_applications/style.css">
+<?php require_once __DIR__ . '/component.php'; ?>
+<script src="<?php $_SERVER['DOCUMENT_ROOT'] ?>/vendor/site_template/components/autoservice_applications/script.js">
+</script>
+<link rel="stylesheet"
+    href="<?php $_SERVER['DOCUMENT_ROOT'] ?>/vendor/site_template/components/autoservice_applications/style.css">
 
 <?php
-    //на странице заявок автосервиса может находиться только автосервис
-    if (!($_SESSION['user']['user_type'] == 'autoservice')) {
-        header('Location: /');
-    }
+//на странице заявок автосервиса может находиться только автосервис
+if (!($_SESSION['user']['user_type'] == 'autoservice')) {
+    header('Location: /');
+}
 ?>
 
 <nav>
@@ -27,9 +29,14 @@
 
 <div class="container">
     <div class="tab-content" id="nav-tabContent">
-        <div class="tab-pane fade show active" id="nav-new" role="tabpanel" aria-labelledby="nav-new-tab"
-            tabindex="0">
-            Это текст с отступом.
+        <div class="tab-pane fade show active" id="nav-new" role="tabpanel" aria-labelledby="nav-new-tab" tabindex="0">
+            <div class="col-3">
+                <div id="list-example" class="list-group">
+                    <?php
+                    appl_list($_SESSION['user']['id'], "Ожидает подтверждения");
+                    ?>
+                </div>
+            </div>
         </div>
         <div class="tab-pane fade" id="nav-wait" role="tabpanel" aria-labelledby="nav-wait-tab" tabindex="0">
             Какой то текст 2</div>
