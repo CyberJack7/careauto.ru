@@ -42,16 +42,27 @@ input {
   outline: none;
 }
 
+textarea {
+  height: 152px;
+}
+
 .btn-group {
   margin-bottom: 10px;
 }
 
 .central {
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   display: flex;
-  flex-direction: column;
   height: 85%;
+}
+.content {
+  height: auto;
+}
+
+.column {
+  flex-direction: column;
+  justify-content: center;
 }
 
 .panel {
@@ -59,11 +70,32 @@ input {
   margin: 10px;
   border: 1px solid #0d6efd;
   border-radius: 10px;
-  width: 460px !important;
+  width: 500px !important;
   height: min-content;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 50%);
+  justify-self: center;
+}
+
+.panel > form {
+  width: auto !important;
+}
+
+.navigation_profile {
+  margin: 10px 10px 10px 0;
+  padding: 0;
+  /* float: left; */
+  width: 300px !important;
+  align-self: flex-start;
 }
 
 .panel > button {
   margin-top: 10px;
   width: -webkit-fill-available;
+}
+
+.navigation_profile > a {
+  margin-bottom: 10px;
+  width: -webkit-fill-available;
+  text-align: left;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 50%);
 }

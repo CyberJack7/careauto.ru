@@ -80,7 +80,7 @@ if ($user_type == "client") { // для клиента
         $_SESSION['message']['type'] = 'warning';
         header('Location: /registration/');
     }
-    $path_to_file = PATH_UPLOADS_TEMP . time() . $_FILES['document']['name'];
+    $path_to_file = PATH_UPLOADS_TEMP . time() . '-' . $_FILES['document']['name'];
 
     $_SESSION['new_user'] = [
         "type" => "autoservice",

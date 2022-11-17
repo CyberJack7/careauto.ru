@@ -8,7 +8,7 @@
     }
 ?>
 
-<div class="container central">
+<div class="container central column">
     <h1>Регистрация</h1>
     <form id=client class="radio-blocks" action="/vendor/site_template/components/registration/signup.php" method="post" 
         enctype="multipart/form-data">
