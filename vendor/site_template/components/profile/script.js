@@ -11,17 +11,28 @@ $("document").ready(function () {
       location.href = "/"; //переход на главную страницу
     }
   };
+
+  let reset_requisites_btn = document.querySelector("#reset_requisites");
+  reset_requisites_btn.onclick = function () {
+    let req = new XMLHttpRequest();
+    req.open(
+      "POST",
+      "/vendor/site_template/components/profile/delete_requisites.php"
+    ); //файл удаления реквизитов аккаунта
+    req.send(null);
+    location.href = "/profile/"; //переход на главную страницу
+  };
 });
 
-var expanded = false;
+var expanded = true;
 
 function showCheckboxes() {
   var checkboxes = document.getElementById("checkboxes");
-  if (!expanded) {
+  if (expanded) {
     checkboxes.style.display = "block";
-    expanded = true;
+    expanded = false;
   } else {
     checkboxes.style.display = "none";
-    expanded = false;
+    expanded = true;
   }
 }

@@ -75,12 +75,12 @@ if ($user_type == "client") { // для клиента
     header('Location: /confirmation_code/');
     exit;
 } elseif ($user_type == "autoservice") { // для автосервиса
-    if (!move_uploaded_file($_FILES['document']['tmp_name'], PATH_UPLOADS_TEMP . time() . $_FILES['document']['name'])) {
+    if (!move_uploaded_file($_FILES['document']['tmp_name'], PATH_UPLOADS_REGULAR . time() . '-' . $_FILES['document']['name'])) {
         $_SESSION['message']['texr'] = "Не удалось загрузить файл!";
         $_SESSION['message']['type'] = 'warning';
         header('Location: /registration/');
     }
-    $path_to_file = PATH_UPLOADS_TEMP . time() . '-' . $_FILES['document']['name'];
+    $path_to_file = PATH_UPLOADS_REGULAR . time() . '-' . $_FILES['document']['name'];
 
     $_SESSION['new_user'] = [
         "type" => "autoservice",
