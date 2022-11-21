@@ -37,7 +37,7 @@ if (!empty($_SESSION['new_user'])) { //подтверждение регистр
                 header('Location: /authorization/');
                 exit;
             } elseif ($_SESSION['new_user']['type'] == "autoservice") { //автосервис
-                $sql = "INSERT INTO Public.autoservice(name_autoservice,email_autoservice,
+                $sql = "INSERT INTO Public.autoservice_in_check(name_autoservice,email_autoservice,
                 password_autoservice,phone_autoservice,document,city_id) VALUES (:name_autoservice,:email,
                 :pass,:phone,:document,:city_id)";
                 $stmt = $pdo->prepare($sql);

@@ -4,23 +4,23 @@ require_once PATH_CONNECT;
 
 //список автомобилей автовладельца (+ количество)
 function cars_list($user_id) {
-    $pdo = conn();
-    $sql = "SELECT auto_id FROM public.automobile WHERE client_id = " . $user_id;
-    $cars = $pdo->query($sql); //список авто по id
-    $arResult = [];
-    if (!empty($cars)) {     
-      while ($row = $cars->fetch()) { //для каждого авто
-          $sql_auto = "SELECT name_brand, name_model FROM public.automobile
-          JOIN public.brand USING(brand_id) JOIN public.model USING(model_id) 
-          WHERE auto_id = " . $row['auto_id'];
-          $auto = $pdo->query($sql_auto)->fetch(); //марка и брэнд авто
-          array_push($arResult, ['brand' => $auto['name_brand'], 'model' => $auto['name_model']]);
-      $auto = $pdo->query($sql_auto)->fetch(); //марка и брэнд авто
-      echo '<a class="list-group-item list-group-item-action" href="#list-item-' . $count . '">'
-        . $auto['name_brand'] . ' ' . $auto['name_model'] . '</a>';
+  $pdo = conn();
+  $sql = "SELECT auto_id FROM public.automobile WHERE client_id = " . $user_id;
+  $cars = $pdo->query($sql); //список авто по id
+  $arResult = [];
+  if (!empty($cars)) {     
+    while ($row = $cars->fetch()) { //для каждого авто
+        $sql_auto = "SELECT name_brand, name_model FROM public.automobile
+        JOIN public.brand USING(brand_id) JOIN public.model USING(model_id) 
+        WHERE auto_id = " . $row['auto_id'];
+        $auto = $pdo->query($sql_auto)->fetch(); //марка и брэнд авто
+        array_push($arResult, ['brand' => $auto['name_brand'], 'model' => $auto['name_model']]);
     }
   }
+  return $arResult;
 }
+
+
 function appl_list($user_id, $status)
 {
   $pdo = conn();
@@ -105,7 +105,7 @@ function appl_list($user_id, $status)
 
       echo '</div></div></div>';
     }
-    return $arResult;
+  }
 }
 
 

@@ -64,7 +64,7 @@ if (!($_SESSION['user']['user_type'] == 'autoservice')) {
 <!-- для заявок end -->
 <div class="container text-center my-5">
     <?php //блок вывода сообщений
-        if (isset($_SESSION['message'])) {
+        if (isset($_SESSION['message']['text'])) {
             if ($_SESSION['message']['type'] == 'success') {
                 echo '<p><div class="alert alert-success" role="alert">
                 ' . $_SESSION['message']['text'] . '</div></p>';
