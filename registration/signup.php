@@ -82,6 +82,7 @@ if ($user_type == "client") { // для клиента
         "type" => "autoservice",
         "name" => $_POST['name_autoservice'],
         "email" => $_POST['email'],
+        "city_id" => $_POST['city_id'],
         "phone" => str_replace(['(', ')', '-', '+', ' '], '', $_POST['phone']),
         "password" => password_hash($_POST['password'], PASSWORD_DEFAULT),
         "document" => $path_to_file,
@@ -91,5 +92,3 @@ if ($user_type == "client") { // для клиента
     header('Location: /confirmation_code/');
     exit;
 }
-    
-    

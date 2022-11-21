@@ -77,11 +77,33 @@ function appl_list($user_id, $status)
       echo  'Стоимость услуг: ' . $appl_info['price'] . '</br> 
             Дата заявки: ' . $appl_info['date'] . '</br> 
             Комментарий к заявке: ' . $appl_info['text'] . '</br>';
-      echo '<form action="/vendor/site_template/components/autoservice_applications/component.php" method="post">
+      switch ($status) {
+        case "Ожидает подтверждения":
+          $button_name = "Подтвердить";
+          break;
+        case "Подтверждено":
+          $button_name = "Начать работу";
+          break;
+        case "В работе":
+          $button_name = "Выполнено";
+          break;
+        case "Выполнено":
+          $button_name = "Завершить";
+          break;
+      }
+      if ($status == "Ожидает подтверждения") {
+        echo '<div class="con1"><form action="/vendor/site_template/components/autoservice_applications/component.php" method="post">
+            <input name="status" type="hidden" value="Отказ"</input>
+            <input name="appl_id" type="hidden" value="' . $row['application_id'] . '"</input>
+            <button class="btn btn-secondary" type="submit" >Отклонить заявку</button>      
+            </form></div>';
+      }
+      echo '<div class="con1"> <form action="/vendor/site_template/components/autoservice_applications/component.php" method="post">
       <input name="status" type="hidden" value="' . $status . '"</input>
       <input name="appl_id" type="hidden" value="' . $row['application_id'] . '"</input>
-      <button class="btn btn-primary" type="submit" >Подтвердить</button>      
-      </form>';
+      <button class="btn btn-primary" type="submit" >' . $button_name . '</button>      
+      </form></div>';
+
       echo '</div></div></div>';
     }
   }
