@@ -1,11 +1,12 @@
 <?php
-  require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/site_template/header.php';
-?>
-    
-<?php
-    Main::includeComponent('autoservice_applications');
+require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/site_template/header.php';
+include_once PATH_QUERIES;
 ?>
 
 <?php
-  require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/site_template/footer.php';
+Main::includeComponent('autoservice_applications');
+?>
+
+<?php
+require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/site_template/footer.php';
 ?>

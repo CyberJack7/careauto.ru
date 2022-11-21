@@ -1,14 +1,16 @@
-<?php require_once __DIR__ . '/component.php';?>
-<script src="<?php $_SERVER['DOCUMENT_ROOT']?>/vendor/site_template/components/admin_reg_applications/script.js"></script>
-<link rel="stylesheet" href="<?php $_SERVER['DOCUMENT_ROOT']?>/vendor/site_template/components/admin_reg_applications/style.css">
+<?php require_once __DIR__ . '/component.php'; ?>
+<script src="<?php $_SERVER['DOCUMENT_ROOT'] ?>/vendor/site_template/components/admin_reg_applications/script.js">
+</script>
+<link rel="stylesheet"
+    href="<?php $_SERVER['DOCUMENT_ROOT'] ?>/vendor/site_template/components/admin_reg_applications/style.css">
 
 <?php
-    require_once PATH_CONNECT;
-    $pdo = conn();
-    //на странице заявок админа может находиться только админ
-    if (!($_SESSION['user']['user_type'] == 'admin')) {
-        header('Location: /');
-    }
+require_once PATH_CONNECT;
+$pdo = conn();
+//на странице заявок админа может находиться только админ
+if (!($_SESSION['user']['user_type'] == 'admin')) {
+    header('Location: /');
+}
 ?>
 
 <div class="container">
@@ -50,8 +52,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <a href="/vendor/autoservice_to_base.php" class="btn btn-primary" tabindex="-1"
-                        role="button" aria-disabled="true">Утвердить автосервис</a>
+                    <a href="/vendor/autoservice_to_base.php" class="btn btn-primary" tabindex="-1" role="button"
+                        aria-disabled="true">Утвердить автосервис</a>
 
                 </div>
             </div>
