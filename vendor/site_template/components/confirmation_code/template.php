@@ -38,7 +38,7 @@
     </form>
     <p>
         <?php //блок вывода сообщений
-        if (isset($_SESSION['message'])) {
+        if (isset($_SESSION['message']['text'])) {
             if ($_SESSION['message']['type'] == 'success') {
                 echo '<p><div class="alert alert-success" role="alert">
                 ' . $_SESSION['message']['text'] . '</div></p>';
@@ -53,7 +53,7 @@
                 ' . $_SESSION['message']['text'] . '</div></p>';
             }
         }
-        unset($_SESSION['message']);
+        unset($_SESSION['message']['text'], $_SESSION['message']['type']);
         ?>
     </p>
 </div>

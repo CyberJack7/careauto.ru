@@ -82,6 +82,7 @@ function requisites($autoservice_id){
   }
 }
 
+//полная информация о пользователе
 function get_all_userinfo($user_id, $user_type=null) {
   $pdo = conn();
   $sql_array_check = [
@@ -119,4 +120,68 @@ function get_all_userinfo($user_id, $user_type=null) {
       } 
   }
   return null;
+}
+
+//массив расположения фотографий автосервиса
+function get_ar_photos($autoservice_id) {
+  $pdo = conn();
+  $sql = "SELECT photos FROM public.autoservice WHERE autoservice_id = " . $autoservice_id;
+  $str_photos = $pdo->query($sql)->fetch()['photos'];
+  if ($str_photos != null) {
+    $photos = str_replace(['{', '}', "'"], '', $str_photos); //готовим строку к превращению в массив
+    $ar_photos = explode(',', $photos); //превращаем в массив
+    return $ar_photos;
+  } else {
+    return null;
+  }
+}
+
+//массив названий фотографий автосервиса
+function get_ar_name_photos($autoservice_id) {
+  $ar_photos = get_ar_photos($autoservice_id);
+  if (!empty($ar_photos)) {
+    $ar_name_photos = [];
+    foreach ($ar_photos as $photo) {
+      $name_photo = substr($photo, stripos($photo, '-')+1);
+      array_push($ar_name_photos, $name_photo);
+    }
+    return $ar_name_photos;
+  }
+  return null;
+}
+
+//обслуживаемые автосервисом марки авто
+function get_autoservice_brands($autoservice_id) {
+  $pdo = conn();
+  $sql = "SELECT brand_id, name_brand FROM brand JOIN autoservice_brand USING(brand_id) WHERE autoservice_id = " . $autoservice_id;
+  $brands = $pdo->query($sql);
+  $arResult = [];
+  if (!empty($brands)) {     
+    while ($brand = $brands->fetch()) { //для каждого авто
+      array_push($arResult, ['id' => $brand['brand_id'], 'name' => $brand['name_brand']]);
+    }
+  }
+  if (!empty($arResult)) {
+    return $arResult;
+  } else {
+    return null;
+  }
+}
+
+//все марки авто
+function brands() {
+  $pdo = conn();
+  $sql = "SELECT * FROM brand";
+  $brands = $pdo->query($sql);
+  $arResult = [];
+  if (!empty($brands)) {     
+    while ($brand = $brands->fetch()) { //для каждого авто
+      array_push($arResult, ['id' => $brand['brand_id'], 'name' => $brand['name_brand']]);
+    }
+  }
+  if (!empty($arResult)) {
+    return $arResult;
+  } else {
+    return null;
+  }
 }

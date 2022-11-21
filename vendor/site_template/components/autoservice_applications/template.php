@@ -59,6 +59,6 @@
                 ' . $_SESSION['message']['text'] . '</div></p>';
             }
         }
-        unset($_SESSION['message']);
+        unset($_SESSION['message']['text'], $_SESSION['message']['type']);
     ?>
 </div>

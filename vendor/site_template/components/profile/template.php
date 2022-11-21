@@ -18,7 +18,7 @@ if (empty($_SESSION['user'])) {
         <a class="btn btn-outline-primary" id="delete_account_caption" name="delete_account_caption" type="button" href="#delete_account">Удаление аккаунта</a>
         <p class="message_window">
             <?php //блок вывода сообщений
-            if (isset($_SESSION['message'])) {
+            if (isset($_SESSION['message']['text'])) {
                 if ($_SESSION['message']['type'] == 'success') {
                     echo '<p><div class="alert alert-success" role="alert">
                     ' . $_SESSION['message']['text'] . '</div></p>';
@@ -33,7 +33,7 @@ if (empty($_SESSION['user'])) {
                     ' . $_SESSION['message']['text'] . '</div></p>';
                 }
             }
-            unset($_SESSION['message']);
+            unset($_SESSION['message']['text'], $_SESSION['message']['type']);
             ?>
         </p>
     </div>
@@ -57,33 +57,56 @@ if (empty($_SESSION['user'])) {
                 <textarea class="form-control" id="description" name="description" type="textarea" placeholder="Описание Вашего сервисного центра"><?=$autoservice['text']?></textarea>
             </div>
             <div class="mb-3">
-                <label class="form-label" for="photos">Фотографии</label>
+                <label class="form-label" for="photos">Фотографии (до 5 шт)</label>
                 <input class="form-control" id="photos" name="photos[]" type="file" accept="image/jpeg" multiple/>
+                <div class="photos">  
+                    <?php //фотографии
+                    $ar_photos = get_ar_photos($_SESSION['user']['id']);                
+                    if (!empty($ar_photos)) {
+                        $ar_name_photos = get_ar_name_photos($_SESSION['user']['id']);
+                        echo '<img class="major_photo" id="photo_main" src="' . $ar_photos[0] . '" alt="' . $ar_name_photos[0] . '">';
+                        for ($photo_number = 0; $photo_number < count($ar_photos); $photo_number++){
+                            echo '<img class="minor_photo" id="photo_' . $photo_number . '" src="' . $ar_photos[$photo_number] . '" alt="' . $ar_name_photos[$photo_number] . '" onclick="gallery(this)">';
+                        }
+                    }?>
+                </div>
+                <?php
+                    if (!empty($ar_photos)) { //вывод кнопок
+                        echo '<div class="btn_div">
+                                <button class="btn btn-secondary" id="del_photo" name="del_photo" type="button">Удалить фото</button>
+                                <button class="btn btn-secondary" id="del_all_photos" name="del_all_photos" type="button">Удалить все фото</button>
+                            </div>';
+                    }
+                ?>
             </div>
-            <form>
-                <div class="multiselect">
-                    <div class="selectBox" onclick="showCheckboxes()">
-                        <select>
-                            <option>Select an option</option>
-                        </select>
-                        <div class="overSelect"></div>
-                    </div>
-                    <div id="checkboxes">
-
-                        <label for="one">
-                            <input type="checkbox" id="one" />First checkbox</label>
-                        <label for="two">
-                            <input type="checkbox" id="two" />Second checkbox</label>
-                        <label for="three">
-                            <input type="checkbox" id="three" />Third checkbox</label>
-                    </div>
+            <div class="multiselect mb-3">
+                <label class="form-label" for="brands">Обслуживаемые марки авто</label>
+                <div class="form-select selectBox" onclick="showCheckboxes()">
+                    <option>Выбрано марок авто: <?php $autoserv_brands = get_autoservice_brands($_SESSION['user']['id']); 
+                    if ($autoserv_brands == null) {
+                        $autoserv_brands = [];
+                    }
+                    echo count($autoserv_brands);?></option>
                 </div>
-                <div class="mb-3">
-                    <label class="form-label" for="doc">Документ: <?php $doc_path = doc_path($_SESSION['user']['id']);
-                        echo '<a target="_blank" href="' . doc_path($_SESSION['user']['id']) . '">' . substr($doc_path, stripos($doc_path, '-')+1) . '</a>';?></label>                    
+                <div id="checkboxes">
+                    <?php //вывод обслуживаемых марок
+                    $brands = brands();
+                    foreach ($brands as $brand) {
+                        if (in_array($brand, $autoserv_brands)) {
+                            echo '<label for="' . $brand['id'] . '">
+                                <input type="checkbox" id="' . $brand['id'] . '" onclick="set_brand(this)" checked/>' . $brand['name'] . '</label>';
+                        } else {
+                            echo '<label for="' . $brand['id'] . '">
+                                <input type="checkbox" id="' . $brand['id'] . '" onclick="set_brand(this)"/>' . $brand['name'] . '</label>';
+                        }
+                    }?>
                 </div>
-                <button class="btn btn-primary" id="change_main_data" name="change_main_data" type="submit">Сохранить</button>
-            </form>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="doc">Документ: <?php $doc_path = doc_path($_SESSION['user']['id']);
+                    echo '<a target="_blank" href="' . doc_path($_SESSION['user']['id']) . '">' . substr($doc_path, stripos($doc_path, '-')+1) . '</a>';?></label>                    
+            </div>
+            <button class="btn btn-primary" id="change_main_data" name="change_main_data" type="submit">Сохранить</button>
         </form>
         <?php } ?>
         
