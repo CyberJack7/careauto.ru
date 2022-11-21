@@ -25,7 +25,8 @@ if (password_verify($password, $result['password_admin'])) {
         "name" => $result['name_admin'],
         "email" => $result['email_admin']
     ];
-    $_SESSION['message'] = "Вы авторизованы как администратор!";
+    $_SESSION['message']['text'] = "Вы авторизованы как администратор!";
+    $_SESSION['message']['type'] = 'success';
     header('Location: /');
 } elseif ($user_type) { //client
     $result = $pdo->query($sql_client)->fetch();
@@ -35,8 +36,9 @@ if (password_verify($password, $result['password_admin'])) {
         WHERE user_id = '$user_id'";
         $ban_result = $pdo->query($sql_ban_client)->fetch();
         if (!empty($ban_result)) {
-            $_SESSION['message'] = "Данный аккаунт заблокирован " .  $ban_result['date'] .
+            $_SESSION['message']['text'] = "Данный аккаунт заблокирован " .  $ban_result['date'] .
                 " по причине: " . $ban_result['text'];
+            $_SESSION['message']['type'] = 'danger';
             header('Location: /authorization/');
             exit;
         }
@@ -48,11 +50,13 @@ if (password_verify($password, $result['password_admin'])) {
             "phone" => $result['phone_client'],
             "city_id" => $result['city_id']
         ];
-        $_SESSION['message'] = "Вы авторизованы как автовладелец!";
+        $_SESSION['message']['text'] = "Вы авторизованы как автовладелец!";
+        $_SESSION['message']['type'] = 'success';
         header('Location: /my_auto/');
     } else {
-        $_SESSION['message'] = "Неверный логин или пароль! <br>
+        $_SESSION['message']['text'] = "Неверный логин или пароль! <br>
             Если данные введены верно, смените тип пользователя";
+        $_SESSION['message']['type'] = 'warning';
         header('Location: /authorization/');
     }
 } else { //autoservice
@@ -63,8 +67,9 @@ if (password_verify($password, $result['password_admin'])) {
         WHERE user_id = '$user_id'";
         $ban_result = $pdo->query($sql_ban_client)->fetch();
         if (!empty($ban_result)) {
-            $_SESSION['message'] = "Данный аккаунт заблокирован " .  $ban_result['date'] .
+            $_SESSION['message']['text'] = "Данный аккаунт заблокирован " .  $ban_result['date'] .
                 " по причине: " . $ban_result['text'];
+            $_SESSION['message']['type'] = 'danger';
             header('Location: /authorization/');
             exit;
         }
@@ -76,11 +81,13 @@ if (password_verify($password, $result['password_admin'])) {
             "phone" => $result['phone_autoservice'],
             "city_id" => $result['city_id']
         ];
-        $_SESSION['message'] = "Вы авторизованы как сервисный центр!";
+        $_SESSION['message']['text'] = "Вы авторизованы как сервисный центр!";
+        $_SESSION['message']['type'] = 'success';
         header('Location: /autoservice_applications/');
     } else {
-        $_SESSION['message'] = "Неверный логин или пароль! <br>
+        $_SESSION['message']['text'] = "Неверный логин или пароль! <br>
             Если данные введены верно, смените тип пользователя";
+        $_SESSION['message']['type'] = 'warning';
         header('Location: /authorization/');
     }
 }

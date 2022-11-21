@@ -8,9 +8,10 @@ if (!empty($_SESSION['user'])) {
 }
 ?>
 
-<div class="reg_container">
+<div class="container central column">
     <h1>Регистрация</h1>
-    <form id=client class="radio-blocks" action="signup.php" method="post" enctype="multipart/form-data">
+    <form id=client class="radio-blocks" action="/vendor/site_template/components/registration/signup.php" method="post" 
+        enctype="multipart/form-data">
         <p>Выберите тип пользователя</p>
         <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
             <input type="radio" value="client" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off"
@@ -41,23 +42,24 @@ if (!empty($_SESSION['user'])) {
                 <select required name="city_id" class="form-select" aria-label="Default select example" id="city">
                     <option value="" disabled selected>Выберите город</option>
                     <?php //вывод списка городов
-                    foreach ($arResult['CITIES'] as $city_id => $arCity) {
-                    ?>
-                    <option value="<?= $city_id ?>"><?= $arCity['NAME'] ?></option>
-                    <?php
-                    }
+                        $arResult = city_list();
+                        foreach ($arResult['CITIES'] as $city_id => $arCity) {
+                            ?>
+                                <option value="<?=$city_id?>"><?=$arCity['NAME']?></option>
+                            <?php
+                        }
                     ?>
                 </select>
             </div>
 
             <div class="mb-3">
                 <label for="password" class="form-label">Пароль</label>
-                <input type="password" required placeholder="password 5 to 20 characters" name="password"
+                <input type="password" required placeholder="Пароль от 5 до 20 символов" name="password"
                     class="form-control" id="password" pattern=".{5,20}" />
             </div>
             <div class="mb-3">
                 <label for="password_confirm" class="form-label">Подтверждение пароля</label>
-                <input type="password" required placeholder="password confirm 5 to 20 characters"
+                <input type="password" required placeholder="Пароль подтверждения"
                     name="password_confirm" class="form-control" id="password_confirm" pattern=".{5,20}" />
             </div>
         </div>
@@ -65,8 +67,8 @@ if (!empty($_SESSION['user'])) {
             type="submit">Зарегистрироваться</button>
     </form>
 
-    <form id="autoservice" class="radio-blocks" style="display:none" action="signup.php" method="post"
-        enctype="multipart/form-data">
+    <form id="autoservice" class="radio-blocks" style="display:none" action="/vendor/site_template/components/registration/signup.php" 
+        method="post" enctype="multipart/form-data">
         <p>Выберите тип пользователя</p>
         <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
             <input type="radio" value="client" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off">
@@ -125,11 +127,22 @@ if (!empty($_SESSION['user'])) {
             type="submit">Зарегистрироваться</button>
     </form>
     <p>У вас уже есть аккаунт? - <a href="/authorization/">Авторизируйтесь</a></p>
-    <?php
-    if (isset($_SESSION['message'])) {
-        echo '<p><div class="alert alert-warning" role="alert">
-        ' . $_SESSION['message'] . '</div></p>';
-    }
-    unset($_SESSION['message']);
-    ?>
+        <?php //блок вывода сообщений
+        if (isset($_SESSION['message']['text'])) {
+            if ($_SESSION['message']['type'] == 'success') {
+                echo '<p><div class="alert alert-success" role="alert">
+                ' . $_SESSION['message']['text'] . '</div></p>';
+            } elseif ($_SESSION['message']['type'] == 'warning') {
+                echo '<p><div class="alert alert-warning" role="alert">
+                ' . $_SESSION['message']['text'] . '</div></p>';
+            } elseif ($_SESSION['message']['type'] == 'danger') {
+                echo '<p><div class="alert alert-danger" role="alert">
+                ' . $_SESSION['message']['text'] . '</div></p>';
+            } elseif ($_SESSION['message']['type'] == 'info') {
+                echo '<p><div class="alert alert-info" role="alert">
+                ' . $_SESSION['message']['text'] . '</div></p>';
+            }
+        }
+        unset($_SESSION['message']['text'], $_SESSION['message']['type']);
+        ?>
 </div>

@@ -6,11 +6,3 @@
 .form_box .req:valid {
   border: 2px solid green;
 }
-
-.auth_container {
-  align-items: center;
-  justify-content: center;
-  display: flex;
-  flex-direction: column;
-  height: 90%;
-}

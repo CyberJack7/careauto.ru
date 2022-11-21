@@ -46,10 +46,10 @@
                 <li class="nav-item">
                     <a class="nav-link <?php if (mb_strpos($_SERVER['REQUEST_URI'], '/ /') !== false) {?>active<?php }?>" 
                     href="">Бан-лист</a>
-                </li>                
+                </li>
                 </ul>
                 </div>
-                <button class="btn btn-primary logout_btn" id="logout_btn" type="button">Выйти</button>
+                <button class="btn btn-primary" id="logout_btn" type="button">Выйти</button>
             <?php
             } elseif ($_SESSION['user']['user_type'] == 'client') { //автовладелец
                 if (mb_strpos($_SERVER['REQUEST_URI'], '/profile/') !== false) { //если в профиле?>
@@ -59,7 +59,7 @@
                     </li>
                 </ul>
                 </div>
-                <button class="btn btn-primary logout_btn" id="logout_btn" type="button">Выйти</button>
+                <button class="btn btn-primary" id="logout_btn" type="button">Выйти</button>
                 <?php
                 } else {?>
                     <li class="nav-item">
@@ -98,7 +98,7 @@
                     </li>
                 </ul>
                 </div>
-                <button class="btn btn-primary logout_btn" id="logout_btn" type="button">Выйти</button>
+                <button class="btn btn-primary" id="logout_btn" type="button">Выйти</button>
                 <?php
                 } else {?>
                     <li class="nav-item">
