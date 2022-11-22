@@ -3,31 +3,32 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/lib/defines.php';
 require_once PATH_CONNECT;
 
 //список автомобилей автовладельца (+ количество)
-function cars_list($user_id) {
+function cars_list($user_id)
+{
   $pdo = conn();
   $sql = "SELECT auto_id FROM public.automobile WHERE client_id = " . $user_id;
   $cars = $pdo->query($sql); //список авто по id
   $arResult = [];
-  if (!empty($cars)) {     
+  if (!empty($cars)) {
     while ($row = $cars->fetch()) { //для каждого авто
-        $sql_auto = "SELECT name_brand, name_model FROM public.automobile
+      $sql_auto = "SELECT name_brand, name_model FROM public.automobile
         JOIN public.brand USING(brand_id) JOIN public.model USING(model_id) 
         WHERE auto_id = " . $row['auto_id'];
-        $auto = $pdo->query($sql_auto)->fetch(); //марка и брэнд авто
-        array_push($arResult, ['brand' => $auto['name_brand'], 'model' => $auto['name_model']]);
+      $auto = $pdo->query($sql_auto)->fetch(); //марка и брэнд авто
+      array_push($arResult, ['brand' => $auto['name_brand'], 'model' => $auto['name_model']]);
     }
   }
   return $arResult;
 }
 
-
+// вывод заявок с определенным статусом
 function appl_list($user_id, $status)
 {
   $pdo = conn();
   $sql_status = $pdo->quote($status);
   $sql = "SELECT application_id FROM Public.application WHERE autoservice_id=" . $user_id . " AND status = " . $sql_status;
   $appl = $pdo->query($sql);
-  if (empty($appl)) {
+  if ($appl->rowCount() == 0) {
     echo '<p><div class="alert alert-primary" role="alert">Заявок нет!</div></p>';
   } else {
     $count = 0;
@@ -110,22 +111,24 @@ function appl_list($user_id, $status)
 
 
 //список городов
-function city_list(){
+function city_list()
+{
   $pdo = conn();
   $arResult = [];
   $sql = "SELECT city_id, name_city FROM public.city ORDER BY name_city asc";
   $city = $pdo->query($sql);
   while ($res_city = $city->fetch()) {
-      $arResult['CITIES'][$res_city["city_id"]] = [
-          'ID' => $res_city["city_id"],
-          'NAME' => $res_city["name_city"]
-      ];
+    $arResult['CITIES'][$res_city["city_id"]] = [
+      'ID' => $res_city["city_id"],
+      'NAME' => $res_city["name_city"]
+    ];
   }
   return $arResult;
 }
 
 //название города по city_id
-function city_id_name($city_id){
+function city_id_name($city_id)
+{
   $pdo = conn();
   $sql = "SELECT name_city FROM public.city WHERE city_id = " . $city_id;
   $city_name = $pdo->query($sql)->fetch()['name_city'];
@@ -133,7 +136,8 @@ function city_id_name($city_id){
 }
 
 //адрес по autoservice_id
-function address_name($autoservice_id){
+function address_name($autoservice_id)
+{
   $pdo = conn();
   $sql = "SELECT address FROM public.autoservice WHERE autoservice_id = " . $autoservice_id;
   $address = $pdo->query($sql)->fetch()['address'];
@@ -141,7 +145,8 @@ function address_name($autoservice_id){
 }
 
 //путь к файлу по user_id
-function doc_path($user_id){
+function doc_path($user_id)
+{
   $pdo = conn();
   $sql = "SELECT document FROM public.autoservice WHERE autoservice_id = " . $user_id;
   $doc_name = $pdo->query($sql)->fetch()['document'];
@@ -149,7 +154,8 @@ function doc_path($user_id){
 }
 
 //requisites_id по autoservice_id
-function requisites_id($autoservice_id) {
+function requisites_id($autoservice_id)
+{
   $pdo = conn();
   $sql_find_requisites_id = "SELECT requisites_id FROM public.autoservice WHERE autoservice_id = " . $autoservice_id;
   $requisites_id = $pdo->query($sql_find_requisites_id)->fetch()['requisites_id'];
@@ -157,7 +163,8 @@ function requisites_id($autoservice_id) {
 }
 
 //реквизиты по autoservice_id
-function requisites($autoservice_id){
+function requisites($autoservice_id)
+{
   $pdo = conn();
   $requisites_id = requisites_id($autoservice_id);
 
@@ -171,7 +178,8 @@ function requisites($autoservice_id){
 }
 
 //полная информация о пользователе
-function get_all_userinfo($user_id, $user_type=null) {
+function get_all_userinfo($user_id, $user_type = null)
+{
   $pdo = conn();
   $sql_array_check = [
     "check_admin_sql" => "SELECT * FROM public.admin WHERE admin_id = " . $user_id,
@@ -202,16 +210,17 @@ function get_all_userinfo($user_id, $user_type=null) {
   }
 
   foreach ($sql_array_check as $sql) {
-      $check_user = $pdo->query($sql)->fetch();
-      if (!empty($check_user)) {
-          return $check_user;
-      } 
+    $check_user = $pdo->query($sql)->fetch();
+    if (!empty($check_user)) {
+      return $check_user;
+    }
   }
   return null;
 }
 
 //массив расположения фотографий автосервиса
-function get_ar_photos($autoservice_id) {
+function get_ar_photos($autoservice_id)
+{
   $pdo = conn();
   $sql = "SELECT photos FROM public.autoservice WHERE autoservice_id = " . $autoservice_id;
   $str_photos = $pdo->query($sql)->fetch()['photos'];
@@ -225,12 +234,13 @@ function get_ar_photos($autoservice_id) {
 }
 
 //массив названий фотографий автосервиса
-function get_ar_name_photos($autoservice_id) {
+function get_ar_name_photos($autoservice_id)
+{
   $ar_photos = get_ar_photos($autoservice_id);
   if (!empty($ar_photos)) {
     $ar_name_photos = [];
     foreach ($ar_photos as $photo) {
-      $name_photo = substr($photo, stripos($photo, '-')+1);
+      $name_photo = substr($photo, stripos($photo, '-') + 1);
       array_push($ar_name_photos, $name_photo);
     }
     return $ar_name_photos;
@@ -239,12 +249,13 @@ function get_ar_name_photos($autoservice_id) {
 }
 
 //обслуживаемые автосервисом марки авто
-function get_autoservice_brands($autoservice_id) {
+function get_autoservice_brands($autoservice_id)
+{
   $pdo = conn();
   $sql = "SELECT brand_id, name_brand FROM brand JOIN autoservice_brand USING(brand_id) WHERE autoservice_id = " . $autoservice_id;
   $brands = $pdo->query($sql);
   $arResult = [];
-  if (!empty($brands)) {     
+  if (!empty($brands)) {
     while ($brand = $brands->fetch()) { //для каждого авто
       array_push($arResult, ['id' => $brand['brand_id'], 'name' => $brand['name_brand']]);
     }
@@ -257,12 +268,13 @@ function get_autoservice_brands($autoservice_id) {
 }
 
 //все марки авто
-function brands() {
+function brands()
+{
   $pdo = conn();
   $sql = "SELECT * FROM brand";
   $brands = $pdo->query($sql);
   $arResult = [];
-  if (!empty($brands)) {     
+  if (!empty($brands)) {
     while ($brand = $brands->fetch()) { //для каждого авто
       array_push($arResult, ['id' => $brand['brand_id'], 'name' => $brand['name_brand']]);
     }
@@ -271,5 +283,53 @@ function brands() {
     return $arResult;
   } else {
     return null;
+  }
+}
+
+// Вывод заявок на регистрацию СЦ для админа
+function admin_appl_list()
+{
+  $pdo = conn();
+  $sql = "SELECT autoservice_temp_id FROM Public.autoservice_in_check";
+  $appl = $pdo->query($sql);
+  if ($appl->rowCount() == 0) {
+    echo '<p><div class="alert alert-primary" role="alert">Заявок нет!</div></p>';
+  } else {
+    $count = 0;
+    while ($row = $appl->fetch()) {
+      $count++;
+      $sql_info = "SELECT name_autoservice,email_autoservice,phone_autoservice,document,city_id FROM Public.autoservice_in_check 
+      WHERE autoservice_temp_id=" . $row['autoservice_temp_id'];
+      $autoserv_info = $pdo->query($sql_info)->fetch();
+      $sql_city = "SELECT name_city FROM Public.city WHERE city_id=" . $autoserv_info['city_id'];
+      $city = $pdo->query($sql_city)->fetch();
+      echo '<div class="accordion-item">
+                    <h2 class="accordion-header" id="panelsStayOpen-heading' . $count . '">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse' . $count . '" aria-expanded="false" aria-controls="#panelsStayOpen-collapse' . $count . '">' .
+        $count . '. ' . $autoserv_info['name_autoservice'] . ' ' . $autoserv_info['email_autoservice'] .
+        '</button>
+                    </h2>
+                    <div id="panelsStayOpen-collapse' . $count . '" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading' . $count . '">
+                        <div class="accordion-body">' .
+        'Название СЦ: ' . $autoserv_info['name_autoservice'] . '</br> ' .
+        'Почта СЦ: ' . $autoserv_info['email_autoservice'] . '</br> ' .
+        'Телефон СЦ: ' . $autoserv_info['phone_autoservice'] . '</br> ' .
+        'Город: ' . $city['name_city'] . '</br> ' .
+        'Документ: ' . '<a href="' . $autoserv_info['document'] . '" target="_blank">Ссылка на документ</a>' . '</br> ';
+
+      echo '<div class="con1"><form action="/vendor/site_template/components/admin_reg_applications/component.php" method="post">
+        <input name="status" type="hidden" value="Отказ"</input>
+        <input name="email" type="hidden" value="' . $autoserv_info['email_autoservice'] . '"</input>
+        <input name="autoserv_temp_id" type="hidden" value="' . $row['autoservice_temp_id'] . '"</input>
+        <button class="btn btn-secondary" type="submit" >Отклонить заявку</button>      
+        </form></div>';
+      echo '<div class="con1"> <form action="/vendor/site_template/components/admin_reg_applications/component.php" method="post">
+        <input name="autoserv_temp_id" type="hidden" value="' . $row['autoservice_temp_id'] . '"</input>
+        <input name="status" type="hidden" value="Принять"</input>
+        <input name="email" type="hidden" value="' . $autoserv_info['email_autoservice'] . '"</input>
+        <button class="btn btn-primary" type="submit" >Зарегистрировать СЦ</button>      
+        </form></div>';
+      echo '</div></div></div>';
+    }
   }
 }

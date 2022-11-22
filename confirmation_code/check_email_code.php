@@ -47,10 +47,10 @@ if (!empty($_SESSION['new_user'])) { //подтверждение регистр
                     'email' => $_SESSION['new_user']['email'],
                     'pass' => $_SESSION['new_user']['password'],
                     'document' => $_SESSION['new_user']['document'],
-                'city_id' => $_SESSION['new_user']['city_id']
+                    'city_id' => $_SESSION['new_user']['city_id']
                 ]);
                 unset($_SESSION['new_user']);
-                $_SESSION['message']['text'] = "Регистрация прошла успешно!";
+                $_SESSION['message']['text'] = "Заявка на регистрацию отправлена.Ожидайте ответа администратора на почту!";
                 $_SESSION['message']['type'] = 'success';
                 header('Location: /authorization/');
                 exit;
@@ -60,8 +60,7 @@ if (!empty($_SESSION['new_user'])) { //подтверждение регистр
             if ($_SESSION['new_user']['attempt'] == 1) {
                 $_SESSION['message']['text'] = "Код введен неверно! У вас осталось " . $_SESSION['new_user']['attempt'] . " попытка";
                 $_SESSION['message']['type'] = 'warning';
-            }
-            else {
+            } else {
                 $_SESSION['message']['text'] = "Код введен неверно! У вас осталось " . $_SESSION['new_user']['attempt'] . " попытки";
                 $_SESSION['message']['type'] = 'warning';
             }
@@ -105,8 +104,7 @@ if (!empty($_SESSION['new_user'])) { //подтверждение регистр
             if ($_SESSION['user']['attempt'] == 1) {
                 $_SESSION['message']['text'] = "Код введен неверно! У вас осталось " . $_SESSION['user']['attempt'] . " попытка";
                 $_SESSION['message']['type'] = 'warning';
-            }
-            else {
+            } else {
                 $_SESSION['message']['text'] = "Код введен неверно! У вас осталось " . $_SESSION['user']['attempt'] . " попытки";
                 $_SESSION['message']['type'] = 'warning';
             }
