@@ -6,11 +6,3 @@
 .form_box .req:valid {
   border: 2px solid green;
 }
-
-.reg_container {
-  height: 90%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}

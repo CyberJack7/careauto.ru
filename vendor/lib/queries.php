@@ -259,12 +259,30 @@ function get_autoservice_brands($autoservice_id) {
 //все марки авто
 function brands() {
   $pdo = conn();
-  $sql = "SELECT * FROM brand";
+  $sql = "SELECT * FROM public.brand";
   $brands = $pdo->query($sql);
   $arResult = [];
   if (!empty($brands)) {     
     while ($brand = $brands->fetch()) { //для каждого авто
       array_push($arResult, ['id' => $brand['brand_id'], 'name' => $brand['name_brand']]);
+    }
+  }
+  if (!empty($arResult)) {
+    return $arResult;
+  } else {
+    return null;
+  }
+}
+
+//модели авто по id марки
+function modelById($brand_id) {
+  $pdo = conn();
+  $sql = "SELECT model_id, name_model FROM public.model WHERE brand_id = " . $brand_id;
+  $models = $pdo->query($sql);
+  $arResult = [];
+  if (!empty($models)) {     
+    while ($model = $models->fetch()) { //для каждой модели
+      array_push($arResult, ['id' => $model['model_id'], 'name' => $model['name_model']]);
     }
   }
   if (!empty($arResult)) {

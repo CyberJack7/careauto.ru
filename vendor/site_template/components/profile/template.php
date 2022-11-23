@@ -9,13 +9,22 @@ if (empty($_SESSION['user'])) {
 }
 ?>
 <h1 class="container">Настройки</h1>
-<div class="container central content">
-    <div class="navigation_profile">
-        <a class="btn btn-outline-primary" id="main_data_caption" name="main_data_caption" type="button" href="#main_data">Основная информация</a>
-        <a class="btn btn-outline-primary" id="contacts_caption" name="contacts_caption" type="button" href="#contacts">Контакты</a>
-        <a class="btn btn-outline-primary" id="requisites_caption" name="requisites_caption" type="button" href="#requisites">Реквизиты</a>
-        <a class="btn btn-outline-primary" id="change_password_caption" name="change_password_caption" type="button" href="#change_password">Смена пароля</a>
-        <a class="btn btn-outline-primary" id="delete_account_caption" name="delete_account_caption" type="button" href="#delete_account">Удаление аккаунта</a>
+<div class="container central">
+    <div class="navigation">
+        <?php 
+        if ($_SESSION['user']['user_type'] == 'autoservice') { ?>
+            <a class="btn btn-outline-primary" id="main_data_caption" name="main_data_caption" type="button" href="#main_data">Основная информация</a>
+            <a class="btn btn-outline-primary" id="contacts_caption" name="contacts_caption" type="button" href="#contacts">Контакты</a>
+            <a class="btn btn-outline-primary" id="requisites_caption" name="requisites_caption" type="button" href="#requisites">Реквизиты</a>
+            <a class="btn btn-outline-primary" id="change_password_caption" name="change_password_caption" type="button" href="#change_password">Смена пароля</a>
+            <a class="btn btn-outline-primary" id="delete_account_caption" name="delete_account_caption" type="button" href="#delete_account">Удаление аккаунта</a>
+        <?php } else { ?>
+            <a class="btn btn-outline-primary" id="main_data_caption" name="main_data_caption" type="button" href="#main_data">Основная информация</a>
+            <a class="btn btn-outline-primary" id="change_password_caption" name="change_password_caption" type="button" href="#change_password">Смена пароля</a>
+            <a class="btn btn-outline-primary" id="delete_account_caption" name="delete_account_caption" type="button" href="#delete_account">Удаление аккаунта</a>
+        <?php 
+        }
+        ?>
         <p class="message_window">
             <?php //блок вывода сообщений
             if (isset($_SESSION['message']['text'])) {
@@ -125,7 +134,7 @@ if (empty($_SESSION['user'])) {
                     echo '<h5>Коллекционер автомобилей</h5>';
                 }
                 echo '<div class="mb-3">
-                            <label class="form-label" for="name">Название</label>
+                            <label class="form-label" for="name">ФИО</label>
                             <input class="form-control" id="name" name="name" type="text" value="' . $_SESSION['user']['name'] . 
                                 '"placeholder="Название Вашего сервисного центра" required/>
                         </div>';

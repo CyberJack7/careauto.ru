@@ -27,3 +27,12 @@ $(document).ready(function () {
     );
   });
 });
+
+function getAjax(url, data_send) {
+  $.ajax({
+    url: url,
+    method: "post",
+    dataType: "html",
+    data: data_send,
+  });
+}

@@ -27,8 +27,8 @@ $("document").ready(function () {
   load_photos.onchange = function () {
     let amount = document
       .getElementsByClassName("photos")[0]
-      .getElementsByTagName("img").length;
-    if (load_photos.files.length > 5 - (amount - 1)) {
+      .getElementsByClassName("minor_photo").length;
+    if (load_photos.files.length > 5 - amount) {
       alert("Можно загрузить до 5 фотографий");
       load_photos.value = "";
     }
@@ -96,18 +96,6 @@ $("document").ready(function () {
     };
   }
 });
-function getAjax(url, data_send) {
-  $.ajax({
-    url: url,
-    method: "post",
-    dataType: "html",
-    data: data_send,
-    success: function (data) {
-      /* функция которая будет выполнена после успешного запроса.  */
-      console.log(data); /* В переменной data содержится ответ от index.php. */
-    },
-  });
-}
 
 function gallery(photo) {
   let major_photo = document.getElementsByClassName("major_photo")[0];
