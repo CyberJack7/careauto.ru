@@ -56,10 +56,14 @@ function appl_list($user_id, $status)
       }
       $sql_appl = "SELECT date,text,price FROM Public.application WHERE application_id = " . $row['application_id'];
       $appl_info = $pdo->query($sql_appl)->fetch(); // Дата, комментарий, цена
+      $space_ind = strpos($appl_info['date'], ' ');
+      $date = mb_substr($appl_info['date'], 0, $space_ind);
+      $time = mb_substr($appl_info['date'], $space_ind + 1);
+
       echo '<div class="accordion-item">
                     <h2 class="accordion-header" id="panelsStayOpen-heading' . $count . '">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse' . $count . '" aria-expanded="false" aria-controls="#panelsStayOpen-collapse' . $count . '">' .
-        $count . '. ' . $client['name_client'] . ' ' . $auto['name_brand'] . ' ' . $auto['name_model'] .
+        $count . '. ' . $auto['name_brand'] . ' ' . $auto['name_model'] . ' ' . $client['name_client'] . ' ' . $client['phone_client'] .
         '</button>
                     </h2>
                     <div id="panelsStayOpen-collapse' . $count . '" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading' . $count . '">
@@ -74,9 +78,16 @@ function appl_list($user_id, $status)
         $serv_count++;
         echo $serv_count . ' ' . $row_serv . '</br>';
       }
-      echo  'Стоимость услуг: ' . $appl_info['price'] . '</br> 
-            Дата заявки: ' . $appl_info['date'] . '</br> 
+      echo  'Стоимость услуг: ' . $appl_info['price'] . '</br>
             Комментарий к заявке: ' . $appl_info['text'] . '</br>';
+      if ($status == "Ожидает подтверждения") {
+        echo 'Дата заявки: <input name="date" form="confirm_form" type="date" value="' . $date . '"</input></br>
+        Время заявки: <input name="time"  form="confirm_form" type="datetime" value="' . $time . '"</input></br>';
+      } else {
+        echo 'Дата заявки: ' . $date . '</br>
+              Время заявки: ' . $time . '</br>';
+      }
+
       switch ($status) {
         case "Ожидает подтверждения":
           $button_name = "Подтвердить";
@@ -92,13 +103,13 @@ function appl_list($user_id, $status)
           break;
       }
       if ($status == "Ожидает подтверждения") {
-        echo '<div class="con1"><form action="/vendor/site_template/components/autoservice_applications/component.php" method="post">
+        echo '<div class="con1"><form id="cancel_form" action="/vendor/site_template/components/autoservice_applications/component.php" method="post">
             <input name="status" type="hidden" value="Отказ"</input>
             <input name="appl_id" type="hidden" value="' . $row['application_id'] . '"</input>
             <button class="btn btn-secondary" type="submit" >Отклонить заявку</button>      
             </form></div>';
       }
-      echo '<div class="con1"> <form action="/vendor/site_template/components/autoservice_applications/component.php" method="post">
+      echo '<div class="con1"> <form id="confirm_form" action="/vendor/site_template/components/autoservice_applications/component.php" method="post">
       <input name="status" type="hidden" value="' . $status . '"</input>
       <input name="appl_id" type="hidden" value="' . $row['application_id'] . '"</input>
       <button class="btn btn-primary" type="submit" >' . $button_name . '</button>      
@@ -326,6 +337,7 @@ function admin_appl_list()
       echo '<div class="con1"> <form action="/vendor/site_template/components/admin_reg_applications/component.php" method="post">
         <input name="autoserv_temp_id" type="hidden" value="' . $row['autoservice_temp_id'] . '"</input>
         <input name="status" type="hidden" value="Принять"</input>
+        <input name="document" type="hidden" value="' . $autoserv_info['document'] . '"</input>
         <input name="email" type="hidden" value="' . $autoserv_info['email_autoservice'] . '"</input>
         <button class="btn btn-primary" type="submit" >Зарегистрировать СЦ</button>      
         </form></div>';
