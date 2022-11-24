@@ -1,1 +1,13 @@
+.text_list {
+  margin-right: 20px;
+}
 
+.name {
+  color: rgb(100, 100, 100);
+}
+
+#show_tires > button,
+#add_tires > button {
+  margin-top: 10px;
+  width: -webkit-fill-available;
+}

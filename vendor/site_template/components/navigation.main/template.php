@@ -51,79 +51,65 @@
                 </div>
                 <button class="btn btn-primary" id="logout_btn" type="button">Выйти</button>
             <?php
-            } elseif ($_SESSION['user']['user_type'] == 'client') { //автовладелец
-                if (mb_strpos($_SERVER['REQUEST_URI'], '/profile/') !== false) { //если в профиле?>
-                    <li class="nav-item">
-                        <a class="nav-link <?php if (mb_strpos($_SERVER['REQUEST_URI'], '/ /') !== false) {?>active<?php }?>" 
-                            href="">Помощь</a>
-                    </li>
-                </ul>
-                </div>
-                <button class="btn btn-primary" id="logout_btn" type="button">Выйти</button>
-                <?php
-                } else {?>
-                    <li class="nav-item">
-                        <a class="nav-link <?php if (mb_strpos($_SERVER['REQUEST_URI'], '/my_auto/') !== false) {?>active<?php }?>" 
-                            aria-current="page" href="/my_auto/">Мои авто</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link <?php if (mb_strpos($_SERVER['REQUEST_URI'], '/ /') !== false) {?>active<?php }?>" 
-                            href="">Сервисные центры</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link <?php if (mb_strpos($_SERVER['REQUEST_URI'], '/ /') !== false) {?>active<?php }?>" 
-                            href="">Заявки</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link <?php if (mb_strpos($_SERVER['REQUEST_URI'], '/cars_serv_history/') !== false) {?>active<?php }?>" 
-                            href="/cars_serv_history/">История обслуживания</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link <?php if (mb_strpos($_SERVER['REQUEST_URI'], '/ /') !== false) {?>active<?php }?>" 
-                            href="">Сообщения</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link <?php if (mb_strpos($_SERVER['REQUEST_URI'], '/ /') !== false) {?>active<?php }?>" 
-                            href="">Помощь</a>
-                    </li>                
-                </ul>
-                </div>
-                <a class="btn btn-primary" href="/profile/">Профиль</a>
+            } elseif ($_SESSION['user']['user_type'] == 'client') { //автовладелец ?>
+                <li class="nav-item">
+                    <a class="nav-link <?php if (mb_strpos($_SERVER['REQUEST_URI'], '/my_auto/') !== false) {?>active<?php }?>" 
+                        aria-current="page" href="/my_auto/">Мои авто</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?php if (mb_strpos($_SERVER['REQUEST_URI'], '/ /') !== false) {?>active<?php }?>" 
+                        href="">Сервисные центры</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?php if (mb_strpos($_SERVER['REQUEST_URI'], '/ /') !== false) {?>active<?php }?>" 
+                        href="">Заявки</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?php if (mb_strpos($_SERVER['REQUEST_URI'], '/cars_serv_history/') !== false) {?>active<?php }?>" 
+                        href="/cars_serv_history/">История обслуживания</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?php if (mb_strpos($_SERVER['REQUEST_URI'], '/ /') !== false) {?>active<?php }?>" 
+                        href="">Сообщения</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?php if (mb_strpos($_SERVER['REQUEST_URI'], '/ /') !== false) {?>active<?php }?>" 
+                        href="">Помощь</a>
+                </li>                
+            </ul>
+            </div>
+            <?php if (mb_strpos($_SERVER['REQUEST_URI'], '/profile/') !== false) { //если в профиле?>
+            <button class="btn btn-primary" id="logout_btn" type="button">Выйти</button>
+            <?php } else {?>
+            <a class="btn btn-primary" href="/profile/">Профиль</a>
             <?php }
-            } else { //автосервис
-                if (mb_strpos($_SERVER['REQUEST_URI'], '/profile/') !== false) { //если в профиле?>
-                    <li class="nav-item">
-                        <a class="nav-link <?php if (mb_strpos($_SERVER['REQUEST_URI'], '/ /') !== false) {?>active<?php }?>" 
-                            href="">Помощь</a>
-                    </li>
-                </ul>
-                </div>
-                <button class="btn btn-primary" id="logout_btn" type="button">Выйти</button>
-                <?php
-                } else {?>
-                    <li class="nav-item">
-                        <a class="nav-link <?php if (mb_strpos($_SERVER['REQUEST_URI'], '/ /') !== false) {?>active<?php }?>" 
-                            aria-current="page" href="/autoservice_applications/">Заявки</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link <?php if (mb_strpos($_SERVER['REQUEST_URI'], '/ /') !== false) {?>active<?php }?>" 
-                            href="">Услуги</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link <?php if (mb_strpos($_SERVER['REQUEST_URI'], '/ /') !== false) {?>active<?php }?>" 
-                            href="">Сообщения</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link <?php if (mb_strpos($_SERVER['REQUEST_URI'], '/ /') !== false) {?>active<?php }?>" 
-                            href="">Аналитика</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link <?php if (mb_strpos($_SERVER['REQUEST_URI'], '/ /') !== false) {?>active<?php }?>" 
-                            href="">Помощь</a>
-                    </li>                
-                </ul>
-                </div>
-                <a class="btn btn-primary" href="/profile/">Профиль</a>                    
+            } else { //автосервис ?>
+                <li class="nav-item">
+                    <a class="nav-link <?php if (mb_strpos($_SERVER['REQUEST_URI'], '/ /') !== false) {?>active<?php }?>" 
+                        aria-current="page" href="/autoservice_applications/">Заявки</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?php if (mb_strpos($_SERVER['REQUEST_URI'], '/ /') !== false) {?>active<?php }?>" 
+                        href="">Услуги</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?php if (mb_strpos($_SERVER['REQUEST_URI'], '/ /') !== false) {?>active<?php }?>" 
+                        href="">Сообщения</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?php if (mb_strpos($_SERVER['REQUEST_URI'], '/ /') !== false) {?>active<?php }?>" 
+                        href="">Аналитика</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?php if (mb_strpos($_SERVER['REQUEST_URI'], '/ /') !== false) {?>active<?php }?>" 
+                        href="">Помощь</a>
+                </li>                
+            </ul>
+            </div>
+            <?php if (mb_strpos($_SERVER['REQUEST_URI'], '/profile/') !== false) { //если в профиле?>
+            <button class="btn btn-primary" id="logout_btn" type="button">Выйти</button>
+            <?php } else {?>
+            <a class="btn btn-primary" href="/profile/">Профиль</a>                    
             <?php
                 }
             }?>

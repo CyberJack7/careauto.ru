@@ -16,7 +16,7 @@ h5 {
 
 /*фотографии*/
 .photos {
-  margin: 10px 0px;
+  margin: 13px 0px 0px;
 }
 
 .photos > img {
@@ -45,15 +45,6 @@ h5 {
 }
 .photos > img:last-child {
   margin: 2px 0 0 0;
-}
-
-.btn_div {
-  display: flex;
-}
-
-.btn_div > button {
-  width: 50%;
-  margin: 0 1px;
 }
 
 /*выпадающее окно с чекбоксами*/

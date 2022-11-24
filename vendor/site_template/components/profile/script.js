@@ -28,6 +28,9 @@ $("document").ready(function () {
     let amount = document
       .getElementsByClassName("photos")[0]
       .getElementsByClassName("minor_photo").length;
+    if (amount == null) {
+      amount = 0;
+    }
     if (load_photos.files.length > 5 - amount) {
       alert("Можно загрузить до 5 фотографий");
       load_photos.value = "";
@@ -87,7 +90,6 @@ $("document").ready(function () {
         }
       }
       let src_photos = JSON.stringify(ar_src_photos);
-      console.log(src_photos);
       data_send = { dataQuery: src_photos };
       getAjax(
         "/vendor/site_template/components/profile/delete_info.php",

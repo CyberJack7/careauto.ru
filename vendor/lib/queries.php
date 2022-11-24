@@ -8,19 +8,20 @@ function cars_list($user_id) {
   $sql = "SELECT auto_id FROM public.automobile WHERE client_id = " . $user_id;
   $cars = $pdo->query($sql); //список авто по id
   $arResult = [];
-  if (!empty($cars)) {     
+  if (!empty($cars)) {
     while ($row = $cars->fetch()) { //для каждого авто
-        $sql_auto = "SELECT name_brand, name_model FROM public.automobile
+        $sql_auto = "SELECT auto_id, name_brand, name_model FROM public.automobile
         JOIN public.brand USING(brand_id) JOIN public.model USING(model_id) 
         WHERE auto_id = " . $row['auto_id'];
         $auto = $pdo->query($sql_auto)->fetch(); //марка и брэнд авто
-        array_push($arResult, ['brand' => $auto['name_brand'], 'model' => $auto['name_model']]);
+        array_push($arResult, ['id' => $auto['auto_id'], 'brand' => $auto['name_brand'], 'model' => $auto['name_model']]);
     }
+    return $arResult;
   }
-  return $arResult;
+  return null;
 }
 
-
+//вывод списка заявок автосервиса
 function appl_list($user_id, $status)
 {
   $pdo = conn();
@@ -248,12 +249,160 @@ function get_autoservice_brands($autoservice_id) {
     while ($brand = $brands->fetch()) { //для каждого авто
       array_push($arResult, ['id' => $brand['brand_id'], 'name' => $brand['name_brand']]);
     }
-  }
-  if (!empty($arResult)) {
     return $arResult;
-  } else {
-    return null;
   }
+  return null;
+}
+
+//модели авто по id марки
+function getModelById($brand_id) {
+  $pdo = conn();
+  $sql = "SELECT model_id, name_model FROM public.model WHERE brand_id = " . $brand_id;
+  $models = $pdo->query($sql);
+  $arResult = [];
+  if (!empty($models)) {     
+    while ($model = $models->fetch()) { //для каждой модели
+      array_push($arResult, ['id' => $model['model_id'], 'name' => $model['name_model']]);
+    }
+    return $arResult;
+  }
+  return null;
+}
+
+//информация об авто по id авто
+function getAutoInfoById($auto_id) {
+  $pdo = conn();
+  $sql = "SELECT * FROM public.automobile WHERE auto_id = " . $auto_id;
+  $auto_info = $pdo->query($sql);
+  $arResult = [];
+  if (!empty($auto_info)) {     
+    $auto = $auto_info->fetch();
+    $str_tires_id = str_replace(['{', '}'], '', $auto['tires_id']); //готовим строку к превращению в массив
+    $ar_tires_id = explode(',', $str_tires_id); //превращаем в массив 
+    $arResult = [
+      'id' => $auto['auto_id'],
+      'client_id' => $auto['client_id'],
+      'brand_id' => $auto['brand_id'],
+      'model_id' => $auto['model_id'],
+      'configuration' => $auto['configuration'],
+      'auto_year' => $auto['auto_year'],
+      'date_buy' => $auto['date_buy'],
+      'mileage' => $auto['mileage'],
+      'body_id' => $auto['body_id'],
+      'color' => $auto['color'],
+      'engine_id' => $auto['engine_id'],
+      'engine_volume' => $auto['engine_volume'],
+      'engine_power' => $auto['engine_power'],
+      'gearbox_id' => $auto['gearbox_id'],
+      'drive_id' => $auto['drive_id'],
+      'tires_id' => $ar_tires_id,
+      'pts' => $auto['pts'],
+      'vin' => $auto['vin']
+    ];
+    return $arResult;
+  }
+  return null;
+}
+
+//Название марки по id марки
+function getBrandNameById($brand_id) {
+  $pdo = conn();
+  $sql = "SELECT name_brand FROM public.brand WHERE brand_id = " . $brand_id;
+  $brand = $pdo->query($sql);
+  if (!empty($brand)) {
+    return $brand->fetch()['name_brand'];
+  }
+  return null;
+}
+
+//Название модели по id модели
+function getModelNameById($model_id) {
+  $pdo = conn();
+  $sql = "SELECT name_model FROM public.model WHERE model_id = " . $model_id;
+  $model = $pdo->query($sql);
+  if (!empty($model)) {
+    return $model->fetch()['name_model'];
+  }
+  return null;
+}
+
+//Название кузова по id кузова
+function getBodyNameById($body_id) {
+  $pdo = conn();
+  $sql = "SELECT name_body FROM public.body WHERE body_id = " . $body_id;
+  $body = $pdo->query($sql);
+  if (!empty($body)) {
+    return $body->fetch()['name_body'];
+  }
+  return null;
+}
+
+//Название типа двигателя по id двигателя
+function getEngineNameById($engine_id) {
+  $pdo = conn();
+  $sql = "SELECT name_engine FROM public.engine WHERE engine_id = " . $engine_id;
+  $engine = $pdo->query($sql);
+  if (!empty($engine)) {
+    return $engine->fetch()['name_engine'];
+  }
+  return null;
+}
+
+//Название типа коробки по id коробки
+function getGearboxNameById($gearbox_id) {
+  $pdo = conn();
+  $sql = "SELECT name_gearbox FROM public.gearbox WHERE gearbox_id = " . $gearbox_id;
+  $gearbox = $pdo->query($sql);
+  if (!empty($gearbox)) {
+    return $gearbox->fetch()['name_gearbox'];
+  }
+  return null;
+}
+
+//Название типа привода по id привода
+function getDriveNameById($drive_id) {
+  $pdo = conn();
+  $sql = "SELECT name_drive FROM public.drive WHERE drive_id = " . $drive_id;
+  $drive = $pdo->query($sql);
+  if (!empty($drive)) {
+    return $drive->fetch()['name_drive'];
+  }
+  return null;
+}
+
+//Список комплектов резины по id автомобиля
+function getTiresListById($auto_id) {
+  $pdo = conn();
+  $sql = "SELECT tires_id FROM public.automobile WHERE auto_id = " . $auto_id;
+  $tires = $pdo->query($sql);
+  $str_tires = str_replace(['{', '}'], '', $tires->fetch()['tires_id']); //готовим строку к превращению в массив
+  $ar_tires = explode(',', $str_tires); //превращаем в массив
+  if (!empty($ar_tires)) {
+    return $ar_tires;
+  }
+  return null;
+}
+
+//Полная информация о комплекте резины id комплекта
+function getTiresInfoById($tires_id) {
+  $pdo = conn();
+  $sql = "SELECT * FROM public.tires WHERE tires_id = " . $tires_id;
+  $drive = $pdo->query($sql);
+  if (!empty($drive)) {
+    return $drive->fetch();
+  }
+  return null;
+}
+
+//Название типа резины по id типа
+function getTiresTypeNameById($tire_type_id) {
+  $pdo = conn();
+  $sql = "SELECT name_tire_type FROM public.tire_type WHERE tire_type_id = " . $tire_type_id;
+  $tire_type = $pdo->query($sql);
+  if (!empty($tire_type)) {
+    return $tire_type->fetch()['name_tire_type'];
+  }
+  return null;
 }
 
 //все марки авто
@@ -266,28 +415,82 @@ function brands() {
     while ($brand = $brands->fetch()) { //для каждого авто
       array_push($arResult, ['id' => $brand['brand_id'], 'name' => $brand['name_brand']]);
     }
-  }
-  if (!empty($arResult)) {
     return $arResult;
-  } else {
-    return null;
   }
+  return null;
 }
 
-//модели авто по id марки
-function modelById($brand_id) {
+//все типы кузова
+function bodies() {
   $pdo = conn();
-  $sql = "SELECT model_id, name_model FROM public.model WHERE brand_id = " . $brand_id;
-  $models = $pdo->query($sql);
+  $sql = "SELECT * FROM public.body";
+  $bodies = $pdo->query($sql);
   $arResult = [];
-  if (!empty($models)) {     
-    while ($model = $models->fetch()) { //для каждой модели
-      array_push($arResult, ['id' => $model['model_id'], 'name' => $model['name_model']]);
+  if (!empty($bodies)) {     
+    while ($body = $bodies->fetch()) { //для каждого кузова
+      array_push($arResult, ['id' => $body['body_id'], 'name' => $body['name_body']]);
     }
-  }
-  if (!empty($arResult)) {
     return $arResult;
-  } else {
-    return null;
   }
+  return null;
+}
+
+//все типы двигателя
+function engines() {
+  $pdo = conn();
+  $sql = "SELECT * FROM public.engine";
+  $engines = $pdo->query($sql);
+  $arResult = [];
+  if (!empty($engines)) {     
+    while ($engine = $engines->fetch()) { //для каждого типа двигателя
+      array_push($arResult, ['id' => $engine['engine_id'], 'name' => $engine['name_engine']]);
+    }
+    return $arResult;
+  }
+  return null;
+}
+
+//все типы КПП
+function gearboxes() {
+  $pdo = conn();
+  $sql = "SELECT * FROM public.gearbox";
+  $gearboxes = $pdo->query($sql);
+  $arResult = [];
+  if (!empty($gearboxes)) {
+    while ($gearbox = $gearboxes->fetch()) { //для каждого типа КПП
+      array_push($arResult, ['id' => $gearbox['gearbox_id'], 'name' => $gearbox['name_gearbox']]);
+    }
+    return $arResult;
+  }
+  return null;
+}
+
+//все типы приводов
+function drives() {
+  $pdo = conn();
+  $sql = "SELECT * FROM public.drive";
+  $drives = $pdo->query($sql);
+  $arResult = [];
+  if (!empty($drives)) {     
+    while ($drive = $drives->fetch()) { //для каждого привода
+      array_push($arResult, ['id' => $drive['drive_id'], 'name' => $drive['name_drive']]);
+    }
+    return $arResult;
+  }
+  return null;
+}
+
+//все типы резины
+function tires() {
+  $pdo = conn();
+  $sql = "SELECT * FROM public.tire_type";
+  $tire_types = $pdo->query($sql);
+  $arResult = [];
+  if (!empty($tire_types)) {     
+    while ($tire_type = $tire_types->fetch()) { //для каждого типа
+      array_push($arResult, ['id' => $tire_type['tire_type_id'], 'name' => $tire_type['name_tire_type']]);
+    }
+    return $arResult;
+  }
+  return null;
 }
