@@ -273,28 +273,35 @@ function getModelById($brand_id) {
 function getAutoInfoById($auto_id) {
   $pdo = conn();
   $sql = "SELECT * FROM public.automobile WHERE auto_id = " . $auto_id;
-  $auto_info = $pdo->query($sql);
+  $auto = $pdo->query($sql)->fetch();
   $arResult = [];
-  if (!empty($auto_info)) {     
-    $auto = $auto_info->fetch();
+  if ($auto != null) {
     $str_tires_id = str_replace(['{', '}'], '', $auto['tires_id']); //готовим строку к превращению в массив
-    $ar_tires_id = explode(',', $str_tires_id); //превращаем в массив 
+    $ar_tires_id = explode(',', $str_tires_id); //превращаем в массив
+    foreach ($ar_tires_id as $item) {
+      if ($item == null) {
+        $item = "-";
+      }
+    }
+    if ($ar_tires_id == "-") {
+      $ar_tires_id = null;
+    }
     $arResult = [
       'id' => $auto['auto_id'],
       'client_id' => $auto['client_id'],
-      'brand_id' => $auto['brand_id'],
-      'model_id' => $auto['model_id'],
+      'brand' => getBrandNameById($auto['brand_id']),
+      'model' => getModelNameById($auto['model_id']),
       'configuration' => $auto['configuration'],
       'auto_year' => $auto['auto_year'],
       'date_buy' => $auto['date_buy'],
       'mileage' => $auto['mileage'],
-      'body_id' => $auto['body_id'],
+      'body_id' => getBodyNameById($auto['body_id']),
       'color' => $auto['color'],
-      'engine_id' => $auto['engine_id'],
+      'engine_id' => getEngineNameById($auto['engine_id']),
       'engine_volume' => $auto['engine_volume'],
       'engine_power' => $auto['engine_power'],
-      'gearbox_id' => $auto['gearbox_id'],
-      'drive_id' => $auto['drive_id'],
+      'gearbox_id' => getGearboxNameById($auto['gearbox_id']),
+      'drive_id' => getDriveNameById($auto['drive_id']),
       'tires_id' => $ar_tires_id,
       'pts' => $auto['pts'],
       'vin' => $auto['vin']
@@ -374,22 +381,36 @@ function getDriveNameById($drive_id) {
 function getTiresListById($auto_id) {
   $pdo = conn();
   $sql = "SELECT tires_id FROM public.automobile WHERE auto_id = " . $auto_id;
-  $tires = $pdo->query($sql);
-  $str_tires = str_replace(['{', '}'], '', $tires->fetch()['tires_id']); //готовим строку к превращению в массив
-  $ar_tires = explode(',', $str_tires); //превращаем в массив
-  if (!empty($ar_tires)) {
+  $tires = $pdo->query($sql)->fetch()['tires_id'];
+  if ($tires != null) {
+    $str_tires = str_replace(['{', '}'], '', $tires); //готовим строку к превращению в массив
+    $ar_tires = explode(',', $str_tires); //превращаем в массив
     return $ar_tires;
+  } else {
+    return null;
   }
-  return null;
 }
 
 //Полная информация о комплекте резины id комплекта
 function getTiresInfoById($tires_id) {
   $pdo = conn();
   $sql = "SELECT * FROM public.tires WHERE tires_id = " . $tires_id;
-  $drive = $pdo->query($sql);
-  if (!empty($drive)) {
-    return $drive->fetch();
+  $tires = $pdo->query($sql)->fetch();
+  if ($tires != null) {
+    if ($tires['marking'] == null) {
+        $tires['marking'] = "-";
+    }
+    if ($tires['date_buy'] == null) {
+        $tires['date_buy'] = "-";
+    }
+    $arResult = [
+      'tires_id' => $tires['tires_id'],
+      'brand_tires' => $tires['brand_tires'],
+      'tire_type' => getTiresTypeNameById($tires['tire_type_id']),
+      'marking' => $tires['marking'],
+      'date_buy' => $tires['date_buy']
+    ];
+    return $arResult;
   }
   return null;
 }

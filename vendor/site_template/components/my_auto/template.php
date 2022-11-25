@@ -17,12 +17,17 @@
             $cars = cars_list($_SESSION['user']['id']);
             $count = 0;
             if (empty($cars)) { //Если авто нет
-                echo '<p class="message_window"><div class="alert alert-info" role="alert">Добавьте свой первый автомобиль!</div></p>';
+                echo '<p class="message_window"><div class="alert alert-info" role="alert">Список автомобилей пуст</div></p>';
             }
             foreach ($cars as $car) { 
+                if ($count == 0) {
+                    echo '<button class="list-group-item list-group-item-action item_active" id="' . $car['id'] . '" onclick="showAuto(this)">'
+                    . $car['brand'] . ' ' . $car['model'] . '</button>';
+                } else {
+                    echo '<button class="list-group-item list-group-item-action" id="' . $car['id'] . '" onclick="showAuto(this)">'
+                    . $car['brand'] . ' ' . $car['model'] . '</button>';
+                }
                 $count++;
-                echo '<button class="list-group-item list-group-item-action" id="' . $car['id'] . '" onclick="showAuto(this)">'
-                  . $car['brand'] . ' ' . $car['model'] . '</button>';
             }
             ?>
         </div>
@@ -83,8 +88,8 @@
                 <input class="form-control" id="date_buy" name="date_buy" type="date" min="1886-01-29" max="<?=date('Y-m-d')?>" placeholder="Дата покупки автомобиля"/>
             </div>
             <div class="mb-3">
-                <label class="form-label" for="mileage">Пробег</label>
-                <input class="form-control" id="mileage" name="mileage" type="number" min="0" step="100" placeholder="Пробег"/>
+                <label class="form-label" for="mileage">Пробег (км)</label>
+                <input class="form-control" id="mileage" name="mileage" type="number" min="0" step="100" placeholder="Пробег (км)"/>
             </div>
             <div class="mb-3">
                 <label class="form-label" for="body">Кузов</label>
@@ -164,9 +169,9 @@
                 foreach ($cars as $car) {                
                     $auto = getAutoInfoById($car['id']);
                     if ($count == 0) {
-                        echo '<div class="show_auto" id="show_auto_' . $car['id'] . '" style="display: block;">';
+                        echo '<div class="show_auto" id="info_auto_id_' . $car['id'] . '" style="display: block;">';
                     } else {
-                        echo '<div class="show_auto" id="show_auto_' . $car['id'] . '" style="display: none;">';
+                        echo '<div class="show_auto" id="info_auto_id_' . $car['id'] . '" style="display: none;">';
                     }
                         echo '<h3>' . getBrandNameById($auto['brand_id']) . ' ' . getModelNameById($auto['model_id']) . '</h3>
                                 <div class="central">
@@ -195,67 +200,27 @@
     </div>
 
     <div class="panel" id="tires">
-        <h3>Комплекты резины</h3>
-        <?php /*создание панелей комплектов резины для каждого автомобиля*/
-            if (!empty($cars)) { //Если список автомобилей не пуст
-                $count = 0;
-                foreach ($cars as $car) { //для каждого автомобиля
-                    if ($count == 0) {
-                        echo '<div class="show_tires" id="show_tires_' . $car['id'] . '" style="display: block;">';
-                    } else {
-                        echo '<div class="show_tires" id="show_tires_' . $car['id'] . '" style="display: none;">';
-                    }
-                    $tires_id_list = getTiresListById($car['id']);
-                    foreach($tires_id_list as $tire_id) {
-                        $tires = getTiresInfoById($tire_id);
-                        echo '<div class="plate" onclick="showTires(this)">
-                                <div class="btn_div">
-                                    <h5>' . $tires['brand_tires'] . '</h5>
-                                    <div>
-                                        <img class="edit_img" id="tires_' . $tires['tires_id'] . '" src="/images/edit.png" onclick="editTires(this)">
-                                        <img class="delete_img" id="tires_' . $tires['tires_id'] . '" src="/images/delete.png" onclick="deleteTires(this)">
-                                    </div>
-                                </div>
-                                <div class="central" style="display: none;">
-                                    <div class="text_list name">
-                                        <p>Тип резины</p><p>Маркировка</p><p>Дата покупки</p>
-                                    </div>
-                                    <div class="text_list value">
-                                        <p>' . getTiresTypeNameById($tires['tire_type_id']) . '</p>
-                                        <p>' . $tires['marking'] . '</p>
-                                        <p>' . $tires['date_buy'] . '</p>
-                                    </div>
-                                </div>
-                            </div>';
-                    }
-                    $count++;
-                    echo '</div>';
-                }
-            }?>
-            <button class="btn btn-primary" id="show_add_tires" name="show_add_tires" type="button" onclick="showAddTires(this)">Добавить новый комплект</button>           
-        
-        
-        <div id="add_tires" style="display: none;">
+        <div id="add_tires" style="display: none;"> <?php /*панель добавления комплекта резины*/ ?>
             <h3 style="margin-bottom: 15px;">Добавление комплекта резины</h3>
             <div class="mb-3">
                 <label class="form-label" for="tires_brand">Марка</label>
-                <input class="form-control" id="tires_brand" name="tires_brand" type="text" placeholder="Марка резины" require/>
-            </div>
-            <div class="mb-3">
-                <label class="form-label" for="marking">Маркировка</label>
-                <input class="form-control" id="marking" name="marking" type="text" placeholder="Маркировка резины"/>
+                <input class="form-control" id="tires_brand" name="tires_brand" type="text" placeholder="Марка резины"/>
             </div>
             <div class="mb-3">
                 <label class="form-label" for="tires_type">Тип резины</label>
-                <select class="form-select" id="tires_type" name="tires_type" aria-label="Default select example" require>
+                <select class="form-select" id="tires_type" name="tires_type" aria-label="Default select example">
                     <option value="" disabled selected>Выберите тип резины</option>
                     <?php //вывод списка типов резины
                     $tires = tires();
                     foreach ($tires as $tire) { 
-                     echo '<option value="' . $tire['id'] . '">' . $tire['name'] . '</option>';
+                        echo '<option value="' . $tire['id'] . '">' . $tire['name'] . '</option>';
                     }
                     ?>
                 </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="marking">Маркировка</label>
+                <input class="form-control" id="marking" name="marking" type="text" placeholder="Маркировка резины"/>
             </div>
             <div class="mb-3">
                 <label class="form-label" for="tires_date_buy">Дата покупки</label>
@@ -263,6 +228,54 @@
             </div>
             <button class="btn btn-primary" id="add_tires" name="add_tires" type="button" onclick="addTires(this)">Добавить</button>
         </div>
+
+        <?php /*создание панелей комплектов резины для каждого автомобиля*/
+            if (!empty($cars)) { //Если список автомобилей не пуст
+                $count = 0;
+                foreach ($cars as $car) { //для каждого автомобиля
+                    if ($count == 0) {
+                        echo '<div class="show_tires" id="tires_auto_id_' . $car['id'] . '" style="display: block;">';
+                    } else {
+                        echo '<div class="show_tires" id="tires_auto_id_' . $car['id'] . '" style="display: none;">';
+                    }
+                    echo '<h3>Комплекты резины</h3>';
+                    $tires_id_list = getTiresListById($car['id']);
+                    if ($tires_id_list != null) {
+                        foreach($tires_id_list as $tire_id) {
+                            $tires = getTiresInfoById($tire_id);
+                            echo '<div class="plate" id="tires_id_' . $tire_id . '" onclick="showTires(this)">
+                                    <div class="btn_div">
+                                        <h5>' . $tires['brand_tires'] . '</h5>
+                                        <div>
+                                            <img class="edit_img" id="tires_' . $tires['tires_id'] . '" src="/images/edit.png" onclick="editTires(this)">
+                                            <img class="delete_img" id="tires_' . $tires['tires_id'] . '" src="/images/delete.png" onclick="deleteTires(this)">
+                                        </div>
+                                    </div>
+                                    <div class="central" style="display: none;">
+                                        <div class="text_list name">
+                                            <p>Тип резины</p><p>Маркировка</p><p>Дата покупки</p>
+                                        </div>
+                                        <div class="text_list value">
+                                            <p>' . $tires['tire_type'] . '</p>
+                                            <p>' . $tires['marking'] . '</p>
+                                            <p>' . $tires['date_buy'] . '</p>
+                                        </div>
+                                    </div>
+                                </div>';
+                        }
+                        $count++;                               
+                        echo '<button class="btn btn-primary" id="show_add_tires" name="show_add_tires" type="button" onclick="showAddTires(this)">Добавить новый комплект</button>
+                            </div>';
+                    } else { //если для данного авто нет комплектов резины
+                        echo '<div class="alert alert-info" role="alert">Список комплектов резины пуст</div>';
+                        echo '<button class="btn btn-primary" id="show_add_tires" name="show_add_tires" type="button" onclick="showAddTires(this)">Добавить новый комплект</button></div>';
+                        $count++;
+                    }
+                }
+            }?>
+        
+        
+        
 
     </div>
 

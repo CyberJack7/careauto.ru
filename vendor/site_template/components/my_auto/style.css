@@ -7,7 +7,8 @@
 }
 
 #show_tires > button,
-#add_tires > button {
+#add_tires > button,
+.show_tires > button {
   margin-top: 10px;
   width: -webkit-fill-available;
 }
