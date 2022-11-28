@@ -3,13 +3,11 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/lib/defines.php';
 require_once PATH_CONNECT;
 
 //список автомобилей автовладельца (+ количество)
-function cars_list($user_id)
-{
+function cars_list($user_id) {
   $pdo = conn();
   $sql = "SELECT auto_id FROM public.automobile WHERE client_id = " . $user_id;
   $cars = $pdo->query($sql); //список авто по id
   $arResult = [];
-  if (!empty($cars)) {
   if (!empty($cars)) {
     while ($row = $cars->fetch()) { //для каждого авто
       $sql_auto = "SELECT auto_id, name_brand, name_model FROM public.automobile
@@ -564,54 +562,6 @@ function tires() {
   return null;
 }
 
-// Вывод заявок на регистрацию СЦ для админа
-function admin_appl_list()
-{
-  $pdo = conn();
-  $sql = "SELECT autoservice_temp_id FROM Public.autoservice_in_check";
-  $appl = $pdo->query($sql);
-  if ($appl->rowCount() == 0) {
-    echo '<p><div class="alert alert-primary" role="alert">Заявок нет!</div></p>';
-  } else {
-    $count = 0;
-    while ($row = $appl->fetch()) {
-      $count++;
-      $sql_info = "SELECT name_autoservice,email_autoservice,phone_autoservice,document,city_id FROM Public.autoservice_in_check 
-      WHERE autoservice_temp_id=" . $row['autoservice_temp_id'];
-      $autoserv_info = $pdo->query($sql_info)->fetch();
-      $sql_city = "SELECT name_city FROM Public.city WHERE city_id=" . $autoserv_info['city_id'];
-      $city = $pdo->query($sql_city)->fetch();
-      echo '<div class="accordion-item">
-                    <h2 class="accordion-header" id="panelsStayOpen-heading' . $count . '">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse' . $count . '" aria-expanded="false" aria-controls="#panelsStayOpen-collapse' . $count . '">' .
-        $count . '. ' . $autoserv_info['name_autoservice'] . ' ' . $autoserv_info['email_autoservice'] .
-        '</button>
-                    </h2>
-                    <div id="panelsStayOpen-collapse' . $count . '" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading' . $count . '">
-                        <div class="accordion-body">' .
-        'Название СЦ: ' . $autoserv_info['name_autoservice'] . '</br> ' .
-        'Почта СЦ: ' . $autoserv_info['email_autoservice'] . '</br> ' .
-        'Телефон СЦ: ' . $autoserv_info['phone_autoservice'] . '</br> ' .
-        'Город: ' . $city['name_city'] . '</br> ' .
-        'Документ: ' . '<a href="' . $autoserv_info['document'] . '" target="_blank">Ссылка на документ</a>' . '</br> ';
-
-      echo '<div class="con1"><form action="/vendor/site_template/components/admin_reg_applications/component.php" method="post">
-        <input name="status" type="hidden" value="Отказ"</input>
-        <input name="email" type="hidden" value="' . $autoserv_info['email_autoservice'] . '"</input>
-        <input name="autoserv_temp_id" type="hidden" value="' . $row['autoservice_temp_id'] . '"</input>
-        <button class="btn btn-secondary" type="submit" >Отклонить заявку</button>      
-        </form></div>';
-      echo '<div class="con1"> <form action="/vendor/site_template/components/admin_reg_applications/component.php" method="post">
-        <input name="autoserv_temp_id" type="hidden" value="' . $row['autoservice_temp_id'] . '"</input>
-        <input name="status" type="hidden" value="Принять"</input>
-        <input name="email" type="hidden" value="' . $autoserv_info['email_autoservice'] . '"</input>
-        <button class="btn btn-primary" type="submit" >Зарегистрировать СЦ</button>      
-        </form></div>';
-      echo '</div></div></div>';
-    }
-  }
-  return null;
-}
 
 // Вывод заявок на регистрацию СЦ для админа
 function admin_appl_list()
