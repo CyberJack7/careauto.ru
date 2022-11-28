@@ -16,7 +16,7 @@ h5 {
 
 /*фотографии*/
 .photos {
-  margin: 10px 0px;
+  margin: 13px 0px 0px;
 }
 
 .photos > img {
@@ -47,15 +47,6 @@ h5 {
   margin: 2px 0 0 0;
 }
 
-.btn_div {
-  display: flex;
-}
-
-.btn_div > button {
-  width: 50%;
-  margin: 0 1px;
-}
-
 /*выпадающее окно с чекбоксами*/
 .multiselect {
   width: 50%;
@@ -69,14 +60,6 @@ h5 {
   width: 100%;
   font-weight: bold;
 }
-
-/* .overSelect {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-} */
 
 #checkboxes {
   display: none;

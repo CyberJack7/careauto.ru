@@ -7,7 +7,7 @@
         header('Location: /');
     }
 ?>
-<div class="container central column">
+<div class="container central content column">
     <h1>Вход</h1>
     <form action="signin.php" method="post" enctype="multipart/form-data">
         <div class="btn-group" role="group" aria-label="Basic radio toggle button group">

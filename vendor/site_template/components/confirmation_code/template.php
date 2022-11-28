@@ -9,7 +9,7 @@
     }
 ?>
 
-<div class="container central column">
+<div class="container central content column">
     <div class="class mb-3">
         <h2>Подтверждение регистрации</h2>
         <p>Код был выслан на почту:<br><b><?php

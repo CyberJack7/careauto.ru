@@ -25,8 +25,6 @@ if (password_verify($password, $result['password_admin'])) {
         "name" => $result['name_admin'],
         "email" => $result['email_admin']
     ];
-    $_SESSION['message']['text'] = "Вы авторизованы как администратор!";
-    $_SESSION['message']['type'] = 'success';
     header('Location: /');
 } elseif ($user_type) { //client
     $result = $pdo->query($sql_client)->fetch();
