@@ -1,0 +1,26 @@
+/*#search_autoservices,
+#show_autoservice {
+  width: 50% !important;
+}
+
+#search_autoservices {
+  margin-left: 0;
+}
+
+#show_autoservice {
+  margin-right: 0;
+}*/
+
+
+.search {
+  padding: 10px;
+  margin: 10px 10px 10px 0;
+  width: 300px !important;
+  align-self: flex-start;
+}
+
+.search > button {
+  margin: 10px 0;
+  width: -webkit-fill-available;
+  text-align: center;
+}

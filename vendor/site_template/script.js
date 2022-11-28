@@ -36,3 +36,16 @@ function getAjax(url, data_send) {
     data: data_send,
   });
 }
+
+
+var expanded = true;
+function showCheckboxes() {
+  let checkboxes = document.getElementById("checkboxes");
+  if (expanded) {
+    checkboxes.style.display = "block";
+    expanded = false;
+  } else {
+    checkboxes.style.display = "none";
+    expanded = true;
+  }
+}

@@ -444,6 +444,23 @@ function getTiresTypeNameById($tire_type_id) {
   return null;
 }
 
+
+//Список автомобилей по id автовладельца
+function getAutosById($client_id) {
+  $pdo = conn();
+  $sql = "SELECT auto_id, brand_id, model_id FROM public.automobile WHERE client_id = " . $client_id;
+  $autos = $pdo->query($sql);
+  $arResult = [];
+  while ($auto = $autos->fetch()) {
+    $arResult[$auto['auto_id']] = ['brand' => getBrandNameById($auto['brand_id']), 'model' => getModelNameById($auto['model_id'])];
+  }
+  if (!empty($arResult)) {
+    return $arResult;
+  }
+  return null;
+}
+
+
 //все марки авто
 function brands() {
   $pdo = conn();

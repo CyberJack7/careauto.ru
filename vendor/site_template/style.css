@@ -137,6 +137,41 @@ textarea {
   margin-left: 0;
 }
 
+/*выпадающее окно с чекбоксами*/
+.multiselect {
+  width: 100%;
+}
+
+.selectBox {
+  position: relative;
+  width: 100% !important;
+}
+
+.selectBox select {
+  width: 100%;
+  font-weight: bold;
+}
+
+#checkboxes {
+  display: none;
+  border: 1px #dadada solid;
+  overflow: auto;
+  height: 195px;
+}
+
+#checkboxes label {
+  display: block;
+}
+
+#checkboxes label > input {
+  margin: 2px 4px;
+}
+
+#checkboxes label:hover {
+  background-color: #0d6efd;
+  color: white;
+}
+
 /*всё что касается plate*/
 .plate {
   margin: 10px 0;
