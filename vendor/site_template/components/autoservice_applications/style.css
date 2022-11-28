@@ -18,3 +18,9 @@
 #spinner {
   visibility: hidden;
 }
+#accept_btn {
+  margin-top: 20px;
+}
+#cancel_btn {
+  margin-top: 20px;
+}

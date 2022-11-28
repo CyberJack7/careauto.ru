@@ -80,8 +80,8 @@ function appl_list($user_id, $status)
       echo  'Стоимость услуг: ' . $appl_info['price'] . '</br>
             Комментарий к заявке: ' . $appl_info['text'] . '</br>';
       if ($status == "Ожидает подтверждения") {
-        echo 'Дата заявки: <input name="date" form="confirm_form" type="date" value="' . $date . '"</input></br>
-        Время заявки: <input name="time"  form="confirm_form" type="datetime" value="' . $time . '"</input></br>';
+        echo 'Дата заявки: <input name="date" type="date" value="' . $date . '"</input></br>
+        Время заявки: <input name="time" type="datetime" value="' . $time . '"</input></br>';
       } else {
         echo 'Дата заявки: ' . $date . '</br>
               Время заявки: ' . $time . '</br>';
@@ -101,18 +101,16 @@ function appl_list($user_id, $status)
           $button_name = "Завершить";
           break;
       }
-      if ($status == "Ожидает подтверждения") {
-        echo '<div class="con1"><form id="cancel_form" action="/vendor/site_template/components/autoservice_applications/component.php" method="post">
-            <input name="status" type="hidden" value="Отказ"</input>
-            <input name="appl_id" type="hidden" value="' . $row['application_id'] . '"</input>
-            <button class="btn btn-secondary" type="submit" >Отклонить заявку</button>      
-            </form></div>';
+      if ($status == "Ожидает подтверждения" or $status == "Подтверждено") {
+        echo '<div class="con1">
+            <button id="cancel_btn" class="btn btn-secondary" type="button" >Отклонить заявку</button>      
+            </div>';
       }
-      echo '<div class="con1"> <form id="confirm_form" action="/vendor/site_template/components/autoservice_applications/component.php" method="post">
+      echo '<div class="con1">
       <input name="status" type="hidden" value="' . $status . '"</input>
       <input name="appl_id" type="hidden" value="' . $row['application_id'] . '"</input>
-      <button class="btn btn-primary" type="submit" >' . $button_name . '</button>      
-      </form></div>';
+      <button id="accept_btn" class="btn btn-primary" type="button" >' . $button_name . '</button>      
+      </div>';
 
       echo '</div></div></div>';
     }
@@ -327,19 +325,13 @@ function admin_appl_list()
         'Город: ' . $city['name_city'] . '</br> ' .
         'Документ: ' . '<a href="' . $autoserv_info['document'] . '" target="_blank">Ссылка на документ</a>' . '</br> ';
 
-      echo '<div class="con1"><form action="/vendor/site_template/components/admin_reg_applications/component.php" method="post">
-        <input name="status" type="hidden" value="Отказ"</input>
-        <input name="email" type="hidden" value="' . $autoserv_info['email_autoservice'] . '"</input>
+      echo '<div class="con1">
         <input name="autoserv_temp_id" type="hidden" value="' . $row['autoservice_temp_id'] . '"</input>
-        <button class="btn btn-secondary" type="submit" >Отклонить заявку</button>      
-        </form></div>';
-      echo '<div class="con1"> <form action="/vendor/site_template/components/admin_reg_applications/component.php" method="post">
-        <input name="autoserv_temp_id" type="hidden" value="' . $row['autoservice_temp_id'] . '"</input>
-        <input name="status" type="hidden" value="Принять"</input>
         <input name="document" type="hidden" value="' . $autoserv_info['document'] . '"</input>
         <input name="email" type="hidden" value="' . $autoserv_info['email_autoservice'] . '"</input>
-        <button class="btn btn-primary" type="submit" >Зарегистрировать СЦ</button>      
-        </form></div>';
+        <button id="cancel_btn" class="btn btn-secondary" type="button" >Отклонить заявку</button>
+        <button id="accept_btn" class="btn btn-primary" type="button" >Зарегистрировать СЦ</button>      
+        </div>';
       echo '</div></div></div>';
     }
   }

@@ -13,7 +13,6 @@ $(document).ready(function () {
       $("#edit").attr("status", "off");
       event.preventDefault();
       var fdata = new FormData();
-      // var valueCertification = $('input[id="certification"]').prop("files")[0];
       fdata.append("price", $('input[id="price"]').val());
       fdata.append("text", $('input[id="text"]').val());
       fdata.append("service_id", $('select[name="autoserv_service"]').val());
@@ -117,15 +116,18 @@ $(document).ready(function () {
     event.preventDefault();
     var fdata = new FormData();
     fdata.append("del_service_id", $('button[id="del_service"]').val());
-    $.ajax({
-      type: "POST",
-      url: "/vendor/site_template/components/autoservice_service/component.php",
-      data: fdata,
-      processData: false,
-      contentType: false,
-      success: function (responce) {
-        location.reload();
-      },
-    });
+    if (confirm("Вы действительно хотите удалить услугу?")) {
+      $.ajax({
+        type: "POST",
+        url: "/vendor/site_template/components/autoservice_service/component.php",
+        data: fdata,
+        processData: false,
+        contentType: false,
+        success: function (responce) {
+          location.reload();
+        },
+      });
+    } else {
+    }
   });
 });

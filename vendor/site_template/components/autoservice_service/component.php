@@ -31,8 +31,8 @@ function service_info($autoservice_id, $service_id)
         $arService['price'] = '';
         $arService['text'] = '';
         $arService['certification'] = '';
-        echo '<div id="con2" class="con2"> Стоимость услуги: ' . '<input required name="add_price" id="add_price" class="form-control" type="text" value="' . $arService['price'] . '">' . '</br>' .
-            'Описание услуги: ' . '<input required name="add_text" id="add_text" class="form-control" type="add_text" value="' . $arService['text'] . '">' . '</br>' .
+        echo '<div id="con2" class="con2"> Стоимость услуги(обязательно): ' . '<input name="add_price" id="add_price" class="form-control" type="text" value="' . $arService['price'] . '">' . '</br>' .
+            'Описание услуги(необязательно): ' . '<input name="add_text" id="add_text" class="form-control" type="add_text" value="' . $arService['text'] . '">' . '</br>' .
             'Сертификация(необязательно): ' .
             '<input name="add_certification" id="add_certification" accept="application/pdf" class="form-control" type="file">
         <button id="add_service" type="button" class="btn btn-outline-primary">Добавить услугу</button>
@@ -137,7 +137,7 @@ if (!empty($_POST['price']) and !empty($_POST['text']) and !empty($_POST['servic
 if (!empty($_POST['service_id']) and empty($_POST['price'])) {
     service_info($_SESSION['user']['id'], $_POST['service_id']);
 }
-if (!empty($_POST['add_price']) and !empty($_POST['add_text']) and !empty($_POST['add_service_id'])) {
+if (!empty($_POST['add_price']) and !empty($_POST['add_service_id'])) {
     if (!empty($_FILES['add_certification']))
         service_add($_SESSION['user']['id'], $_POST['add_service_id'], $_POST['add_price'], $_POST['add_text'], $_FILES['add_certification']);
     else
