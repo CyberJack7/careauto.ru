@@ -15,17 +15,15 @@ if (!($_SESSION['user']['user_type'] == 'autoservice')) {
 <div class="container" id="main_con">
     <div id="show_autoserv_serv" class="panel">
         <h3>Список категорий автосервиса</h3>
-        <div id="test-div">
-            <select id="autoserv_category" name="autoserv_category" class="form-select" size="4"
-                aria-label="size 4 select example">
-                <?php
-                $arAutoServCategory = get_autoservice_category_list($_SESSION['user']['id']);
-                foreach ($arAutoServCategory as $key => $value) {
-                    echo '<option value="' . $key . '">' . $value . '</option>';
-                }
-                ?>
-            </select>
-        </div>
+        <select id="autoserv_category" name="autoserv_category" class="form-select" size="4"
+            aria-label="size 4 select example">
+            <?php
+            $arAutoServCategory = get_autoservice_category_list($_SESSION['user']['id']);
+            foreach ($arAutoServCategory as $key => $value) {
+                echo '<option value="' . $key . '">' . $value . '</option>';
+            }
+            ?>
+        </select>
         <h3>Список услуг автосервиса</h3>
         <div id="test-div-2">
             <select id="autoserv_service" name="autoserv_service" class="form-select" size="4"

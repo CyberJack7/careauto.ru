@@ -43,7 +43,7 @@ function service_info($autoservice_id, $service_id)
             'Сертификация: ' . '<a id="link" target="_blank" href="' . $arService['certification'] . '">' . mb_substr($arService['certification'], 1 + strpos($arService['certification'], '-')) . '</a></br>
         <input disabled name="certification" id="certification" accept="application/pdf" class="form-control" type="file">
         <button id="edit" type="button" class="btn btn-outline-primary" status="off">Редактировать</button>
-        <button type="button" class="btn btn-outline-danger">Удалить</button>
+        <button id="del_service" value="' . $service_id . '" type="button" class="btn btn-outline-danger">Удалить</button>
         </div>';
     }
 }
@@ -73,8 +73,7 @@ function service_update($autoservice_id, $service_id, $price, $text, $certificat
             "WHERE autoservice_id=" . $autoservice_id .
             "AND service_id=" . $service_id;
         $res = $pdo->exec($sql);
-        if (is_dir(($_SERVER['DOCUMENT_ROOT'] . $res_file['certification'])))
-            unlink($_SERVER['DOCUMENT_ROOT'] . $res_file['certification']);
+        unlink($_SERVER['DOCUMENT_ROOT'] . $res_file['certification']);
     } else {
         $sql = "UPDATE Public.autoservice_service 
         SET price=" . $pdo->quote($price) .
@@ -110,7 +109,17 @@ function service_add($autoservice_id, $service_id, $price, $text, $certification
     VALUES($autoservice_id,$service_id,$price,$text)";
     }
     $res = $pdo->exec($sql);
-    echo $res;
+}
+function del_serv($autoservice_id, $service_id)
+{
+    $pdo = conn();
+    $sql_get_old_file = "SELECT certification FROM Public.autoservice_service
+        WHERE autoservice_id=" . $autoservice_id . "AND service_id=" . $service_id;
+    $res_file = $pdo->query($sql_get_old_file)->fetch();
+    unlink($_SERVER['DOCUMENT_ROOT'] . $res_file['certification']);
+    $sql = "DELETE FROM Public.autoservice_service
+    WHERE autoservice_id=" . $autoservice_id . "AND service_id=" . $service_id;
+    $res = $pdo->exec($sql);
 }
 
 if (!empty($_POST['category_id'])) {
@@ -133,4 +142,8 @@ if (!empty($_POST['add_price']) and !empty($_POST['add_text']) and !empty($_POST
         service_add($_SESSION['user']['id'], $_POST['add_service_id'], $_POST['add_price'], $_POST['add_text'], $_FILES['add_certification']);
     else
         service_add($_SESSION['user']['id'], $_POST['add_service_id'], $_POST['add_price'], $_POST['add_text']);
+}
+
+if (!empty($_POST['del_service_id'])) {
+    del_serv($_SESSION['user']['id'], $_POST['del_service_id']);
 }

@@ -109,7 +109,22 @@ $(document).ready(function () {
       processData: false,
       contentType: false,
       success: function (responce) {
-        $("#test-div").load(" #test-div");
+        location.reload();
+      },
+    });
+  });
+  $(document).on("click", "#del_service", function (event) {
+    event.preventDefault();
+    var fdata = new FormData();
+    fdata.append("del_service_id", $('button[id="del_service"]').val());
+    $.ajax({
+      type: "POST",
+      url: "/vendor/site_template/components/autoservice_service/component.php",
+      data: fdata,
+      processData: false,
+      contentType: false,
+      success: function (responce) {
+        location.reload();
       },
     });
   });
