@@ -278,7 +278,7 @@ function getAutoInfoById($auto_id) {
   if ($auto != null) {
     $str_tires_id = str_replace(['{', '}'], '', $auto['tires_id']); //готовим строку к превращению в массив
     $ar_tires_id = explode(',', $str_tires_id); //превращаем в массив
-    foreach ($ar_tires_id as $item) {
+    foreach ($auto as &$item) {
       if ($item == null) {
         $item = "-";
       }
@@ -286,22 +286,40 @@ function getAutoInfoById($auto_id) {
     if ($ar_tires_id == "-") {
       $ar_tires_id = null;
     }
+    if ($auto['brand_id'] != '-') {
+      $auto['brand_id'] = getBrandNameById($auto['brand_id']);
+    }
+    if ($auto['model_id'] != '-') {
+      $auto['model_id'] = getModelNameById($auto['model_id']);
+    }
+    if ($auto['body_id'] != '-') {
+      $auto['body_id'] = getBodyNameById($auto['body_id']);
+    }
+    if ($auto['engine_id'] != '-') {
+      $auto['engine_id'] = getEngineNameById($auto['engine_id']);
+    }
+    if ($auto['gearbox_id'] != '-') {
+      $auto['gearbox_id'] = getGearboxNameById($auto['gearbox_id']);
+    }
+    if ($auto['drive_id'] != '-') {
+      $auto['drive_id'] = getDriveNameById($auto['drive_id']);
+    }
     $arResult = [
       'id' => $auto['auto_id'],
       'client_id' => $auto['client_id'],
-      'brand' => getBrandNameById($auto['brand_id']),
-      'model' => getModelNameById($auto['model_id']),
+      'brand' => $auto['brand_id'],
+      'model' => $auto['model_id'],
       'configuration' => $auto['configuration'],
       'auto_year' => $auto['auto_year'],
       'date_buy' => $auto['date_buy'],
       'mileage' => $auto['mileage'],
-      'body_id' => getBodyNameById($auto['body_id']),
+      'body' => $auto['body_id'],
       'color' => $auto['color'],
-      'engine_id' => getEngineNameById($auto['engine_id']),
+      'engine' => $auto['engine_id'],
       'engine_volume' => $auto['engine_volume'],
       'engine_power' => $auto['engine_power'],
-      'gearbox_id' => getGearboxNameById($auto['gearbox_id']),
-      'drive_id' => getDriveNameById($auto['drive_id']),
+      'gearbox' => $auto['gearbox_id'],
+      'drive' => $auto['drive_id'],
       'tires_id' => $ar_tires_id,
       'pts' => $auto['pts'],
       'vin' => $auto['vin']

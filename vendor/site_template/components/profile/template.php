@@ -173,13 +173,13 @@ if (empty($_SESSION['user'])) {
                     placeholder="БИК организации" maxlength="9" required/>
             </div>
             <div class="mb-3">
-                <label class="form-label" for="check_acc">Рассчётный адрес</label>
+                <label class="form-label" for="check_acc">Расчётный счёт</label>
                 <input class="form-control" id="check_acc" name="check_acc" type="text" value="<?php 
                     if (!empty(requisites($_SESSION['user']['id']))) {echo requisites($_SESSION['user']['id'])['check_acc'];}?>" 
                     placeholder="Рассчётный счёт организации" maxlength="20" required/>
             </div>
             <div class="mb-3">
-                <label class="form-label" for="corr_acc">Корреспондентский адрес</label>
+                <label class="form-label" for="corr_acc">Корреспондентский счёт</label>
                 <input class="form-control" id="corr_acc" name="corr_acc" type="text" value="<?php 
                     if (!empty(requisites($_SESSION['user']['id']))) {echo requisites($_SESSION['user']['id'])['corr_acc'];}?>" 
                     placeholder="Корреспонденсткий счёт организации" maxlength="20"/>

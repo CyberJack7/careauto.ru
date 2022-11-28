@@ -86,23 +86,6 @@ textarea {
   width: -webkit-fill-available;
 }
 
-.plate {
-  margin: 10px 0;
-  padding: 15px;
-  width: auto !important;
-  border: 1px solid #808080;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-.plate > h5 {
-  margin: 0;
-}
-
-.plate:hover {
-  background-color: #f8f9fa;
-}
-
 .navigation {
   margin: 10px 10px 10px 0;
   padding: 0;
@@ -120,7 +103,7 @@ textarea {
 .navigation > button {
   margin: 10px 0;
   width: -webkit-fill-available;
-  text-align: left;
+  text-align: center;
 }
 
 .list-group {
@@ -154,19 +137,54 @@ textarea {
   margin-left: 0;
 }
 
+/*всё что касается plate*/
+.plate {
+  margin: 10px 0;
+  padding: 15px;
+  width: auto !important;
+  border: 1px solid #808080;
+  border-radius: 10px;
+}
+
+.plate > h5 {
+  margin: 0;
+  
+}
+
+.plate:hover {
+  background-color: #f8f9fa;
+}
+
 .plate > .btn_div {
   justify-content: space-between;
 }
 
+.dropdown_img {
+  padding: 2px 5px 2px 2px;
+  display: flex;
+  cursor: pointer;
+  border-radius: 3px;
+  border: 1px solid rgba(0,0,0,0);
+}
+
+.dropdown_img > h5 {
+  margin: 0;
+  user-select: none;
+}
+
+.dropdown_img > img,
 .edit_img,
 .delete_img {
   width: 24px;
   height: 24px;
   padding: 2px;
   opacity: 0.7;
-  border-radius: 3px;
+  border-radius: 3px;  
+  cursor: pointer;
+  user-select: none;
 }
 
+.dropdown_img:hover,
 .edit_img:hover {
   background-color: #bebebe;
   border: 1px solid #838383;

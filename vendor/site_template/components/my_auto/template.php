@@ -31,7 +31,7 @@
             }
             ?>
         </div>
-        <button class="btn btn-primary" id="start_add_automobile" name="start_add_automobile" type="button">Добавить автомобиль</button>
+        <button class="btn btn-primary" id="start_add_automobile" type="button">Добавить автомобиль</button>
         <p class="message_window">
             <?php //блок вывода сообщений
             if (isset($_SESSION['message']['text'])) {
@@ -55,10 +55,10 @@
     </div>
 
     <div>
-        <div class="panel" id="add_auto" style="display: none;"> <? //панель добавления автомобиля ?>
+        <form class="panel" id="add_auto" action="/vendor/site_template/components/my_auto/add_new_auto.php" method="post" style="display: none;"> <? //панель добавления автомобиля ?>
             <h3>Добавление автомобиля</h3>
             <div class="mb-3">
-                <label class="form-label" for="brand">Марка</label>
+                <label class="form-label" for="brand">Марка*</label>
                 <select class="form-select" id="brand" name="brand" aria-label="Default select example" onchange="getBrandId(this)" required>
                     <option value="" disabled selected>Выберите марку</option>
                     <?php //вывод списка марок
@@ -70,7 +70,7 @@
                 </select>
             </div>
             <div class="mb-3">
-                <label class="form-label" for="model">Модель</label>
+                <label class="form-label" for="model">Модель*</label>
                 <select class="form-select" id="model" name="model" aria-label="Default select example" required>
                     <option value="" disabled selected>Выберите модель</option>
                 </select>
@@ -89,7 +89,7 @@
             </div>
             <div class="mb-3">
                 <label class="form-label" for="mileage">Пробег (км)</label>
-                <input class="form-control" id="mileage" name="mileage" type="number" min="0" step="100" placeholder="Пробег (км)"/>
+                <input class="form-control" id="mileage" name="mileage" type="number" min="0" max="1000000" placeholder="Пробег (км)"/>
             </div>
             <div class="mb-3">
                 <label class="form-label" for="body">Кузов</label>
@@ -105,7 +105,7 @@
             </div>
             <div class="mb-3">
                 <label class="form-label" for="color">Цвет</label>
-                <input class="form-control" id="color" name="color" type="text" placeholder="Цвет автомобиля"/>
+                <input class="form-control" id="color" name="color" type="text" maxlength="30" placeholder="Цвет автомобиля"/>
             </div>
             <div class="mb-3">
                 <label class="form-label" for="engine">Двигатель</label>
@@ -113,7 +113,7 @@
                     <option value="" disabled selected>Выберите тип двигателя</option>
                     <?php //вывод списка двигателей
                     $engines = engines();
-                    foreach ($engines as $engine) { 
+                    foreach ($engines as $engine) {
                      echo '<option value="' . $engine['id'] . '">' . $engine['name'] . '</option>';
                     }
                     ?>
@@ -153,14 +153,17 @@
             </div>
             <div class="mb-3">
                 <label class="form-label" for="PTS">ПТС</label>
-                <input class="form-control" id="PTS" name="PTS" type="text" maxlength="15" placeholder="ПТС автомобиля" required/>
+                <input class="form-control" id="PTS" name="PTS" type="text" minlength="15" maxlength="15" placeholder="ПТС автомобиля"/>
             </div>
             <div class="mb-3">
                 <label class="form-label" for="VIN">VIN</label>
-                <input class="form-control" id="VIN" name="VIN" type="text" maxlength="17" placeholder="VIN номер автомобиля" required/>
+                <input class="form-control" id="VIN" name="VIN" type="text" minlength="17" maxlength="17" placeholder="VIN номер автомобиля"/>
             </div>
-            <button class="btn btn-primary" id="add_automobile" name="add_automobile" type="button">Добавить</button>
-        </div>
+            <div class="btn_div">
+                <button class="btn btn-primary" id="add_auto" name="add_auto" type="submit">Добавить</button>
+                <button class="btn btn-secondary" id="cancel_add_car" type="button" onclick="cancelAddAuto(this)">Отменить</button>
+            </div>
+        </form>
 
         <?php /*создание панелей информации о каждом автомобиле*/
             if (!empty($cars)) { //Если список автомобилей не пуст
@@ -173,18 +176,20 @@
                     } else {
                         echo '<div class="show_auto" id="info_auto_id_' . $car['id'] . '" style="display: none;">';
                     }
-                        echo '<h3>' . getBrandNameById($auto['brand_id']) . ' ' . getModelNameById($auto['model_id']) . '</h3>
+                        echo '<h3>' . $auto['brand'] . ' ' . $auto['model'] . '</h3>
                                 <div class="central">
                                     <div class="text_list name">
-                                        <p>Комплектация</p><p>Год выпуска</p><p>Дата покупки</p><p>Пробег</p><p>Кузов</p>
-                                        <p>Цвет</p><p>Двигатель</p><p>Коробка</p><p>Привод</p><p>ПТС</p><p>VIN</p>
+                                        <p>Комплектация</p><p>Год выпуска</p><p>Дата покупки</p><p>Пробег (км)</p><p>Кузов</p>
+                                        <p>Цвет</p><p>Двигатель</p><p>Объём двигателя (л)</p><p>Мощность двигателя (л.с.)</p>
+                                        <p>Коробка</p><p>Привод</p><p>ПТС</p><p>VIN</p>
                                     </div>
                                     <div class="text_list value">
                                         <p>' . $auto['configuration'] . '</p><p>' . $auto['auto_year'] . '</p>
                                         <p>' . $auto['date_buy'] . '</p><p>' . $auto['mileage'] . '</p>
-                                        <p>' . getBodyNameById($auto['body_id']) . '</p><p>' . $auto['color'] . '</p>
-                                        <p>' . getEngineNameById($auto['engine_id']) . '/' . $auto['engine_volume'] . 'л/' . $auto['engine_power'] . 'л.с.' . '</p>
-                                        <p>' . getGearboxNameById($auto['gearbox_id']) . '</p><p>' . getDriveNameById($auto['drive_id']) . '</p>
+                                        <p>' . $auto['body'] . '</p><p>' . $auto['color'] . '</p>
+                                        <p>' . $auto['engine'] . '</p><p>' . $auto['engine_volume'] . '</p>
+                                        <p>' . $auto['engine_power'] . '</p>
+                                        <p>' . $auto['gearbox'] . '</p><p>' . $auto['drive'] . '</p>
                                         <p>' . $auto['pts'] . '</p><p>' . $auto['vin'] . '</p>
                                     </div>
                                 </div>
@@ -192,44 +197,16 @@
                     $count++;
                 }
                 echo '<div class="btn_div">
-                        <button class="btn btn-primary" id="change_car_info" name="change_car_info" type="button">Редактировать</button>
-                        <button class="btn btn-outline-danger" id="delete_car" name="delete_car" type="button">Удалить</button>
+                        <button class="btn btn-primary" id="change_car_info" type="submit" onclick="showChangeAuto(this)">Редактировать</button>
+                        <button class="btn btn-outline-danger" id="delete_car" type="button" onclick="deleteAuto(this)">Удалить</button>
                     </div>
                 </div>';
             }?>
     </div>
 
     <div class="panel" id="tires">
-        <div id="add_tires" style="display: none;"> <?php /*панель добавления комплекта резины*/ ?>
-            <h3 style="margin-bottom: 15px;">Добавление комплекта резины</h3>
-            <div class="mb-3">
-                <label class="form-label" for="tires_brand">Марка</label>
-                <input class="form-control" id="tires_brand" name="tires_brand" type="text" placeholder="Марка резины"/>
-            </div>
-            <div class="mb-3">
-                <label class="form-label" for="tires_type">Тип резины</label>
-                <select class="form-select" id="tires_type" name="tires_type" aria-label="Default select example">
-                    <option value="" disabled selected>Выберите тип резины</option>
-                    <?php //вывод списка типов резины
-                    $tires = tires();
-                    foreach ($tires as $tire) { 
-                        echo '<option value="' . $tire['id'] . '">' . $tire['name'] . '</option>';
-                    }
-                    ?>
-                </select>
-            </div>
-            <div class="mb-3">
-                <label class="form-label" for="marking">Маркировка</label>
-                <input class="form-control" id="marking" name="marking" type="text" placeholder="Маркировка резины"/>
-            </div>
-            <div class="mb-3">
-                <label class="form-label" for="tires_date_buy">Дата покупки</label>
-                <input class="form-control" id="tires_date_buy" name="tires_date_buy" type="date" min="1886-01-29" max="<?=date('Y-m-d')?>" placeholder="Дата покупки комплекта"/>
-            </div>
-            <button class="btn btn-primary" id="add_tires" name="add_tires" type="button" onclick="addTires(this)">Добавить</button>
-        </div>
-
         <?php /*создание панелей комплектов резины для каждого автомобиля*/
+            echo '<h3>Комплекты резины</h3>';
             if (!empty($cars)) { //Если список автомобилей не пуст
                 $count = 0;
                 foreach ($cars as $car) { //для каждого автомобиля
@@ -238,14 +215,16 @@
                     } else {
                         echo '<div class="show_tires" id="tires_auto_id_' . $car['id'] . '" style="display: none;">';
                     }
-                    echo '<h3>Комплекты резины</h3>';
                     $tires_id_list = getTiresListById($car['id']);
                     if ($tires_id_list != null) {
                         foreach($tires_id_list as $tire_id) {
                             $tires = getTiresInfoById($tire_id);
-                            echo '<div class="plate" id="tires_id_' . $tire_id . '" onclick="showTires(this)">
+                            echo '<div class="plate" id="tires_id_' . $tire_id . '">
                                     <div class="btn_div">
-                                        <h5>' . $tires['brand_tires'] . '</h5>
+                                        <div class="dropdown_img" id="tires_' . $tires['tires_id'] . '" onclick="showTires(this)">
+                                            <img  src="/images/dropdown.png">
+                                            <h5>' . $tires['brand_tires'] . '</h5>
+                                        </div>
                                         <div>
                                             <img class="edit_img" id="tires_' . $tires['tires_id'] . '" src="/images/edit.png" onclick="editTires(this)">
                                             <img class="delete_img" id="tires_' . $tires['tires_id'] . '" src="/images/delete.png" onclick="deleteTires(this)">
@@ -263,17 +242,51 @@
                                     </div>
                                 </div>';
                         }
-                        $count++;                               
-                        echo '<button class="btn btn-primary" id="show_add_tires" name="show_add_tires" type="button" onclick="showAddTires(this)">Добавить новый комплект</button>
-                            </div>';
+                        $count++;
+                        echo '</div>';
+                            // <button class="btn btn-primary" id="show_add_tires" type="button" onclick="showAddTires(this)">Добавить новый комплект</button>';
                     } else { //если для данного авто нет комплектов резины
-                        echo '<div class="alert alert-info" role="alert">Список комплектов резины пуст</div>';
-                        echo '<button class="btn btn-primary" id="show_add_tires" name="show_add_tires" type="button" onclick="showAddTires(this)">Добавить новый комплект</button></div>';
+                        echo '<div class="alert alert-info" role="alert">Список комплектов резины пуст</div></div>';
                         $count++;
                     }
                 }
-            }?>
-        
+                echo '<button class="btn btn-primary" id="show_add_tires" type="button" onclick="showAddTires(this)">Добавить новый комплект</button>';
+            } else {
+                echo '<div class="alert alert-info" role="alert">Чтобы добавить комплект резины, добавьте автомобиль</div>';
+            }
+            ?>
+
+        <div id="add_tires" style="display: none;"> <?php /*панель добавления комплекта резины*/ ?>
+            <!-- <h3 style="margin-bottom: 15px;">Добавление комплекта резины</h3> -->
+            <div class="mb-3">
+                <label class="form-label" for="tires_brand">Марка</label>
+                <input class="form-control" id="tires_brand" type="text" placeholder="Марка резины" required/>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="tires_type">Тип резины</label>
+                <select class="form-select" id="tires_type" aria-label="Default select example" required>
+                    <option value="" disabled selected>Выберите тип резины</option>
+                    <?php //вывод списка типов резины
+                    $tires = tires();
+                    foreach ($tires as $tire) { 
+                        echo '<option value="' . $tire['id'] . '">' . $tire['name'] . '</option>';
+                    }
+                    ?>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="marking">Маркировка</label>
+                <input class="form-control" id="marking" type="text" placeholder="Маркировка резины"/>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="tires_date_buy">Дата покупки</label>
+                <input class="form-control" id="tires_date_buy" type="date" min="1886-01-29" max="<?=date('Y-m-d')?>" placeholder="Дата покупки комплекта"/>
+            </div>
+            <div class="btn_div">
+                <button class="btn btn-primary" id="add_tires_btn" type="button" onclick="addTires(this)">Добавить</button>
+                <button class="btn btn-secondary" id="cancel_add_tires_btn" type="button" onclick="cancelAddTires(this)">Отменить</button>
+            </div>
+        </div>
         
         
 

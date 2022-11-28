@@ -1,5 +1,5 @@
 .text_list {
-  margin-right: 20px;
+  width: 50%;
 }
 
 .name {
@@ -11,4 +11,17 @@
 .show_tires > button {
   margin-top: 10px;
   width: -webkit-fill-available;
+}
+
+.show_tires {
+  overflow: auto;
+  max-height: 413px;
+}
+
+.req:invalid {
+  border: 2px solid red;
+}
+
+.req:valid {
+  border: 2px solid green;
 }
