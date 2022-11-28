@@ -46,8 +46,7 @@ function appl_list($user_id, $status)
 
       $sql_serv = "SELECT autoserv_serv_id FROM Public.application WHERE application_id = " . $row['application_id'];
       $serv = $pdo->query($sql_serv)->fetch(); // Извлекаеаем массив услуг из заявки
-      $len = strlen($serv['autoserv_serv_id']);
-      $str = substr($serv['autoserv_serv_id'], 1, $len - 2);
+      $str = str_replace(['{', '}', ' '], '', $serv['autoserv_serv_id']);
       $serv_id = explode(',', $str);
       $serv_name = array();
       foreach ($serv_id as $row_serv) {
@@ -343,5 +342,82 @@ function admin_appl_list()
         </form></div>';
       echo '</div></div></div>';
     }
+  }
+}
+function get_category_list()
+{
+  $pdo = conn();
+  $sql_category = "SELECT name_category,serv_category_id FROM Public.serv_category
+  ORDER BY name_category ASC"; // Извлекаем список наименований категорий и их ID
+  $category = $pdo->query($sql_category);
+  $arCategory = [];
+  while ($row_category = $category->fetch()) {
+    $arCategory[$row_category['serv_category_id']] = $row_category['name_category'];
+  }
+  return $arCategory;
+}
+
+function get_service_list($category_id, $autoservice_id)
+{
+  $pdo = conn();
+  $sql_service = "SELECT name_service,service_id FROM Public.service 
+  WHERE serv_category_id=" . $category_id . "AND service_id NOT IN (SELECT service_id FROM Public.autoservice_service WHERE autoservice_id=" . $autoservice_id . ") ORDER BY name_service ASC";
+  $service = $pdo->query($sql_service);
+  $arService = [];
+  while ($row_service = $service->fetch()) {
+    $arService[$row_service['service_id']] = $row_service['name_service'];
+  }
+  return $arService;
+}
+
+
+function get_autoservice_category_list($autoservice_id) // Список категорий автосервиса
+{
+  $pdo = conn();
+  $arService = get_autoservice_service_list($autoservice_id);
+  $arCategory = [];
+  foreach ($arService as $key => $value) { // $key - ID услуги
+    $sql = "SELECT serv_category_id FROM Public.service
+    WHERE service_id=" . $key;
+    $category_id = $pdo->query($sql)->fetch();
+    $sql_category_name = "SELECT name_category FROM Public.serv_category
+    WHERE serv_category_id=" . $category_id['serv_category_id'];
+    $category_name = $pdo->query($sql_category_name)->fetch();
+    $arCategory[$category_id['serv_category_id']] = $category_name['name_category'];
+  }
+  return $arCategory;
+}
+
+function get_service_info($autoservice_id, $service_id) // Информация о конкретной услуге автосервиса
+{
+  $pdo = conn();
+  $sql = "SELECT price,text,certification FROM Public.autoservice_service
+  WHERE autoservice_id=" . $autoservice_id . "AND service_id=" . $service_id;
+  $arService = $pdo->query($sql)->fetch();
+  return $arService;
+}
+
+function get_autoservice_service_list($autoservice_id, $category = 'None') // Список услуг автосервиса
+{
+  $pdo = conn();
+  if ($category != 'None') {
+    $sql = "SELECT service_id FROM Public.autoservice_service
+    JOIN Public.service USING(service_id) WHERE autoservice_id=" . $autoservice_id .
+      "AND serv_category_id=" . $category;
+  } else {
+    $sql = "SELECT service_id FROM Public.autoservice_service
+    WHERE autoservice_id=" . $autoservice_id;
+  }
+  $autoserv_services = $pdo->query($sql); // Извлекаем список услуг из СЦ
+  $arService = [];
+  if (!empty($autoserv_services)) {
+    while ($row = $autoserv_services->fetch()) {
+      $sql_name = "SELECT name_service 
+      FROM Public.service
+      WHERE service_id=" . $row['service_id'];
+      $service = $pdo->query($sql_name)->fetch();
+      $arService[$row['service_id']] = $service['name_service'];
+    }
+    return $arService;
   }
 }

@@ -1,8 +1,8 @@
 <?php
-  session_start();
-  require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/lib/defines.php';
-  require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/lib/classes/Main.php';
-  require_once PATH_QUERIES;
+session_start();
+require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/lib/defines.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/lib/classes/Main.php';
+require_once PATH_QUERIES;
 ?>
 
 <!DOCTYPE html>
@@ -11,28 +11,28 @@
 <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />    
-    <link rel="stylesheet" href="<?php $_SERVER['DOCUMENT_ROOT']?>/vendor/site_template/style.css">
-    
-    <link href="<?php $_SERVER['DOCUMENT_ROOT']?>/assets/css/bootstrap.min.css" rel="stylesheet" />
-    <script src="<?php $_SERVER['DOCUMENT_ROOT']?>/assets/js/bootstrap.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="<?php $_SERVER['DOCUMENT_ROOT'] ?>/vendor/site_template/style.css">
+
+    <link href="<?php $_SERVER['DOCUMENT_ROOT'] ?>/assets/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="<?php $_SERVER['DOCUMENT_ROOT'] ?>/assets/js/bootstrap.min.js"></script>
     <?php
-    /* <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+  /* <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
     integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
     </script>*/
-    ?>
+  ?>
     <!-- jQuery -->
-    <script src="<?php $_SERVER['DOCUMENT_ROOT']?>/assets/js/jquery_3.6.1.js"></script>
+    <script src="<?php $_SERVER['DOCUMENT_ROOT'] ?>/assets/js/jquery_3.6.1.js"></script>
     <!-- custom -->
-    <script src="<?php $_SERVER['DOCUMENT_ROOT']?>/vendor/site_template/script.js"></script>
+    <script src="<?php $_SERVER['DOCUMENT_ROOT'] ?>/vendor/site_template/script.js"></script>
     <!-- favicon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="<?php $_SERVER['DOCUMENT_ROOT']?>/images/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="<?php $_SERVER['DOCUMENT_ROOT']?>/images/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="<?php $_SERVER['DOCUMENT_ROOT']?>/images/favicon-16x16.png">
-    <link rel="manifest" href="<?php $_SERVER['DOCUMENT_ROOT']?>/images/site.webmanifest">
+    <link rel="apple-touch-icon" sizes="180x180" href="<?php $_SERVER['DOCUMENT_ROOT'] ?>/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="<?php $_SERVER['DOCUMENT_ROOT'] ?>/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="<?php $_SERVER['DOCUMENT_ROOT'] ?>/images/favicon-16x16.png">
+    <link rel="manifest" href="<?php $_SERVER['DOCUMENT_ROOT'] ?>/images/site.webmanifest">
     <title>careauto</title>
 </head>
 
 <body>
-<?php
-Main::includeComponent('navigation.main');
+    <?php
+  Main::includeComponent('navigation.main');
