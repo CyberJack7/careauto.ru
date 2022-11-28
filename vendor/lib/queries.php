@@ -46,8 +46,7 @@ function appl_list($user_id, $status)
 
       $sql_serv = "SELECT autoserv_serv_id FROM Public.application WHERE application_id = " . $row['application_id'];
       $serv = $pdo->query($sql_serv)->fetch(); // Извлекаеаем массив услуг из заявки
-      $len = strlen($serv['autoserv_serv_id']);
-      $str = substr($serv['autoserv_serv_id'], 1, $len - 2);
+      $str = str_replace(['{', '}', ' '], '', $serv['autoserv_serv_id']);
       $serv_id = explode(',', $str);
       $serv_name = array();
       foreach ($serv_id as $row_serv) {
@@ -56,10 +55,14 @@ function appl_list($user_id, $status)
       }
       $sql_appl = "SELECT date,text,price FROM Public.application WHERE application_id = " . $row['application_id'];
       $appl_info = $pdo->query($sql_appl)->fetch(); // Дата, комментарий, цена
+      $space_ind = strpos($appl_info['date'], ' ');
+      $date = mb_substr($appl_info['date'], 0, $space_ind);
+      $time = mb_substr($appl_info['date'], $space_ind + 1);
+
       echo '<div class="accordion-item">
                     <h2 class="accordion-header" id="panelsStayOpen-heading' . $count . '">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse' . $count . '" aria-expanded="false" aria-controls="#panelsStayOpen-collapse' . $count . '">' .
-        $count . '. ' . $client['name_client'] . ' ' . $auto['name_brand'] . ' ' . $auto['name_model'] .
+        $count . '. ' . $auto['name_brand'] . ' ' . $auto['name_model'] . ' ' . $client['name_client'] . ' ' . $client['phone_client'] .
         '</button>
                     </h2>
                     <div id="panelsStayOpen-collapse' . $count . '" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading' . $count . '">
@@ -74,9 +77,16 @@ function appl_list($user_id, $status)
         $serv_count++;
         echo $serv_count . ' ' . $row_serv . '</br>';
       }
-      echo  'Стоимость услуг: ' . $appl_info['price'] . '</br> 
-            Дата заявки: ' . $appl_info['date'] . '</br> 
+      echo  'Стоимость услуг: ' . $appl_info['price'] . '</br>
             Комментарий к заявке: ' . $appl_info['text'] . '</br>';
+      if ($status == "Ожидает подтверждения") {
+        echo 'Дата заявки: <input name="date" form="confirm_form" type="date" value="' . $date . '"</input></br>
+        Время заявки: <input name="time"  form="confirm_form" type="datetime" value="' . $time . '"</input></br>';
+      } else {
+        echo 'Дата заявки: ' . $date . '</br>
+              Время заявки: ' . $time . '</br>';
+      }
+
       switch ($status) {
         case "Ожидает подтверждения":
           $button_name = "Подтвердить";
@@ -92,13 +102,13 @@ function appl_list($user_id, $status)
           break;
       }
       if ($status == "Ожидает подтверждения") {
-        echo '<div class="con1"><form action="/vendor/site_template/components/autoservice_applications/component.php" method="post">
+        echo '<div class="con1"><form id="cancel_form" action="/vendor/site_template/components/autoservice_applications/component.php" method="post">
             <input name="status" type="hidden" value="Отказ"</input>
             <input name="appl_id" type="hidden" value="' . $row['application_id'] . '"</input>
             <button class="btn btn-secondary" type="submit" >Отклонить заявку</button>      
             </form></div>';
       }
-      echo '<div class="con1"> <form action="/vendor/site_template/components/autoservice_applications/component.php" method="post">
+      echo '<div class="con1"> <form id="confirm_form" action="/vendor/site_template/components/autoservice_applications/component.php" method="post">
       <input name="status" type="hidden" value="' . $status . '"</input>
       <input name="appl_id" type="hidden" value="' . $row['application_id'] . '"</input>
       <button class="btn btn-primary" type="submit" >' . $button_name . '</button>      
@@ -603,10 +613,88 @@ function admin_appl_list()
       echo '<div class="con1"> <form action="/vendor/site_template/components/admin_reg_applications/component.php" method="post">
         <input name="autoserv_temp_id" type="hidden" value="' . $row['autoservice_temp_id'] . '"</input>
         <input name="status" type="hidden" value="Принять"</input>
+        <input name="document" type="hidden" value="' . $autoserv_info['document'] . '"</input>
         <input name="email" type="hidden" value="' . $autoserv_info['email_autoservice'] . '"</input>
         <button class="btn btn-primary" type="submit" >Зарегистрировать СЦ</button>      
         </form></div>';
       echo '</div></div></div>';
     }
+  }
+}
+function get_category_list()
+{
+  $pdo = conn();
+  $sql_category = "SELECT name_category,serv_category_id FROM Public.serv_category
+  ORDER BY name_category ASC"; // Извлекаем список наименований категорий и их ID
+  $category = $pdo->query($sql_category);
+  $arCategory = [];
+  while ($row_category = $category->fetch()) {
+    $arCategory[$row_category['serv_category_id']] = $row_category['name_category'];
+  }
+  return $arCategory;
+}
+
+function get_service_list($category_id, $autoservice_id)
+{
+  $pdo = conn();
+  $sql_service = "SELECT name_service,service_id FROM Public.service 
+  WHERE serv_category_id=" . $category_id . "AND service_id NOT IN (SELECT service_id FROM Public.autoservice_service WHERE autoservice_id=" . $autoservice_id . ") ORDER BY name_service ASC";
+  $service = $pdo->query($sql_service);
+  $arService = [];
+  while ($row_service = $service->fetch()) {
+    $arService[$row_service['service_id']] = $row_service['name_service'];
+  }
+  return $arService;
+}
+
+
+function get_autoservice_category_list($autoservice_id) // Список категорий автосервиса
+{
+  $pdo = conn();
+  $arService = get_autoservice_service_list($autoservice_id);
+  $arCategory = [];
+  foreach ($arService as $key => $value) { // $key - ID услуги
+    $sql = "SELECT serv_category_id FROM Public.service
+    WHERE service_id=" . $key;
+    $category_id = $pdo->query($sql)->fetch();
+    $sql_category_name = "SELECT name_category FROM Public.serv_category
+    WHERE serv_category_id=" . $category_id['serv_category_id'];
+    $category_name = $pdo->query($sql_category_name)->fetch();
+    $arCategory[$category_id['serv_category_id']] = $category_name['name_category'];
+  }
+  return $arCategory;
+}
+
+function get_service_info($autoservice_id, $service_id) // Информация о конкретной услуге автосервиса
+{
+  $pdo = conn();
+  $sql = "SELECT price,text,certification FROM Public.autoservice_service
+  WHERE autoservice_id=" . $autoservice_id . "AND service_id=" . $service_id;
+  $arService = $pdo->query($sql)->fetch();
+  return $arService;
+}
+
+function get_autoservice_service_list($autoservice_id, $category = 'None') // Список услуг автосервиса
+{
+  $pdo = conn();
+  if ($category != 'None') {
+    $sql = "SELECT service_id FROM Public.autoservice_service
+    JOIN Public.service USING(service_id) WHERE autoservice_id=" . $autoservice_id .
+      "AND serv_category_id=" . $category;
+  } else {
+    $sql = "SELECT service_id FROM Public.autoservice_service
+    WHERE autoservice_id=" . $autoservice_id;
+  }
+  $autoserv_services = $pdo->query($sql); // Извлекаем список услуг из СЦ
+  $arService = [];
+  if (!empty($autoserv_services)) {
+    while ($row = $autoserv_services->fetch()) {
+      $sql_name = "SELECT name_service 
+      FROM Public.service
+      WHERE service_id=" . $row['service_id'];
+      $service = $pdo->query($sql_name)->fetch();
+      $arService[$row['service_id']] = $service['name_service'];
+    }
+    return $arService;
   }
 }
