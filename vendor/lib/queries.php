@@ -591,7 +591,7 @@ function get_category_list()
 function getServicesById($category_id)
 {
   $pdo = conn();
-  $sql = "SELECT service_id, name_service FROM Public.service WHERE serv_category_id = " . $category_id . "ORDER BY name_service ASC";
+  $sql = "SELECT service_id, name_service FROM Public.service WHERE serv_category_id = " . $category_id . " ORDER BY name_service ASC";
   $services = $pdo->query($sql);
   $arServices = [];
   if (!empty($services)) {
@@ -655,10 +655,10 @@ function admin_appl_list()
 
 
 // Список категорий автосервиса
-function get_autoservice_category_list($autoservice_id) 
+function getAutoserviceCategoryList($autoservice_id) 
 {
   $pdo = conn();
-  $arService = get_autoservice_service_list($autoservice_id);
+  $arService = getAutoserviceServiceList($autoservice_id);
   $arCategory = [];
   foreach ($arService as $key => $value) { // $key - ID услуги
     $sql = "SELECT serv_category_id FROM Public.service
@@ -674,7 +674,7 @@ function get_autoservice_category_list($autoservice_id)
 
 
 // Список услуг автосервиса
-function get_autoservice_service_list($autoservice_id, $category = 'None') 
+function getAutoserviceServiceList($autoservice_id, $category = 'None') 
 {
   $pdo = conn();
   if ($category != 'None') {
@@ -701,18 +701,41 @@ function get_autoservice_service_list($autoservice_id, $category = 'None')
 
 
 // Информация о конкретной услуге автосервиса
-function get_service_info($autoservice_id, $service_id) 
+function getServiceInfo($autoservice_id, $service_id) 
 {
   $pdo = conn();
   $sql = "SELECT price,text,certification FROM Public.autoservice_service
-  WHERE autoservice_id=" . $autoservice_id . "AND service_id=" . $service_id;
+  WHERE autoservice_id = " . $autoservice_id . " AND service_id = " . $service_id;
   $arService = $pdo->query($sql)->fetch();
-  return $arService;
+  if (!empty($arService)) {
+    $arService['name'] = getServiceNameById($service_id);
+    $arService['category'] = getCategoryNameById($service_id);
+    return $arService;
+  }
+  return NULL;
+}
+
+
+// Название услуги по её id
+function getServiceNameById($service_id) {
+  $pdo = conn();
+  $sql = "SELECT name_service FROM Public.service WHERE service_id = " . $service_id;
+  $service_name = $pdo->query($sql)->fetch()['name_service'];
+  return $service_name;
+}
+
+
+// Название категории по id услуги
+function getCategoryNameById($service_id) {
+  $pdo = conn();
+  $sql = "SELECT name_category FROM Public.serv_category JOIN Public.service USING(serv_category_id) WHERE service_id = " . $service_id;
+  $category_name = $pdo->query($sql)->fetch()['name_category'];
+  return $category_name;
 }
 
 
 //Список услуг, которые ещё не были добавлены автосервисом в свой перечень услуг
-function get_service_list($category_id, $autoservice_id)
+function getServiceList($category_id, $autoservice_id)
 {
   $pdo = conn();
   $sql_service = "SELECT name_service,service_id FROM Public.service 
@@ -733,6 +756,7 @@ function getAutoservicesByParameters($city_id = NULL) {
   if ($city_id != NULL) {
     $sql_autoserv .= " WHERE city_id = " . $city_id;
   }
+  $sql_autoserv .= " ORDER BY name_autoservice ASC";
   $autoservices = $pdo->query($sql_autoserv);
   $arResult = [];
   while ($autoservice = $autoservices->fetch()) {
@@ -758,11 +782,24 @@ function getAutoserviceInfoById($autoservice_id) {
   $pdo = conn();
   $sql_autoserv = "SELECT autoservice_id, name_autoservice, phone_autoservice, address, photos, text FROM public.autoservice WHERE 
   autoservice_id = " . $autoservice_id;
-  $sql_services = "SELECT autoservice_id, name_autoservice, phone_autoservice, address, photos, text FROM public.autoservice WHERE 
-  autoservice_id = " . $autoservice_id;
+  $sql_service_list = "SELECT service_id FROM public.autoservice_service WHERE autoservice_id = " . $autoservice_id;
   $autoservice = $pdo->query($sql_autoserv)->fetch();
-  if (!empty($autoservice)) {
-    return $autoservice;
+  $service_list = $pdo->query($sql_service_list);
+  $services_id = [];
+  while ($service = $service_list->fetch()) {
+    array_push($services_id, $service['service_id']);
+  }
+  $arResult = [
+    'id' => $autoservice['autoservice_id'],
+    'name' => $autoservice['name_autoservice'],
+    'phone' => $autoservice['phone_autoservice'],
+    'address' => $autoservice['address'],
+    'photos' => $autoservice['photos'],
+    'text' => $autoservice['text'],
+    'services_id' => $services_id
+  ];
+  if (!empty($arResult)) {
+    return $arResult;
   }
   return null;
 }

@@ -117,30 +117,59 @@
             ?>
         </div>
     </div>
-
+    
     <div class="panel" id="current_autoservice">
-        <div id="show_autoservice">
-        <?php //первоначальный вывод всех автосервисов в городе автовладельца
-                $autoservice_info = getAutoserviceInfoById($autoservices[0]['id']);                
-                foreach ($autoservice_info as &$value) {
-                    if ($value == NULL) {
-                        $value = '-';
-                    }
+        <div class="show_autoservice" id="37">
+        <?php //вывод информации об автосервисе из первоначального перечня
+            $autoservice_info = getAutoserviceInfoById(37);
+            foreach ($autoservice_info as &$value) {
+                if ($value == NULL) {
+                    $value = '-';
                 }
-                echo '<div class="plate" id="autoservice_id_' . $autoservice['id'] . '">                    
-                        <h3>' . $autoservice['name'] . '</h3>
-                        <div class="central">
-                            <div class="text_list name">
-                                <p>Cтоимость услуг (р)</p><p>Телефон</p><p>Адрес</p>
-                            </div>
-                            <div class="text_list value">
-                                <p>' . $autoservice['price'] . '</p>
-                                <p>' . $autoservice['phone'] . '</p>
-                                <p>' . $autoservice['address'] . '</p>
-                            </div>
+            }
+            echo '<h3>' . $autoservice_info['name'] . '</h3>
+                <div class="autoservices_area">
+                <p class="name">Описание</p><p>' . $autoservice_info['text'] . '</p>
+                <p class="name">Фотографии</p>
+            <div class="photos">';        
+            $ar_photos = get_ar_photos(37);                
+            if (!empty($ar_photos)) {
+                $ar_name_photos = get_ar_name_photos(37);
+                echo '<img class="major_photo" id="photo_main" src="' . $ar_photos[0] . '" alt="' . $ar_name_photos[0] . '">';
+                for ($photo_number = 0; $photo_number < count($ar_photos); $photo_number++){
+                    echo '<img class="minor_photo" id="photo_' . $photo_number . '" src="' . $ar_photos[$photo_number] . '" alt="' . $ar_name_photos[$photo_number] . '" onclick="gallery(this)">';
+                }
+            }
+            echo '</div>
+                <p class="name">Телефон</p><p>' . $autoservice_info['phone'] . '</p>
+                <p class="name">Адрес</p><p>' . $autoservice_info['address'] . '</p>
+                <div class="mb-3">
+                    <label class="form-label name" for="autoserv_services">Список услуг сервисного центра</label>
+                    <select class="form-select" id="autoserv_services" name="autoserv_services" aria-label="Default select example" onchange="getServiceInfo(this)">';
+                    foreach ($autoservice_info['services_id'] as $service_id) {
+                        $service_info = getServiceInfo($autoservice_info['id'], $service_id);
+                        echo '<option value="' . $service_id . '">' . $service_info['name'] . '</option>';
+                    }
+                    $service_info = getServiceInfo($autoservice_info['id'], $autoservice_info['services_id'][0]);
+                    foreach ($service_info as &$value) {
+                        if ($value == NULL) {
+                            $value = '-';
+                        }
+                    }
+            echo '</select>
+                    <div class="central" id="service_info">
+                        <div class="text_list name">
+                            <p>Категория</p><p>Стоимость</p><p>Сертификация</p><p>Описание</p>
                         </div>
-                    </div>';
-            ?>
+                        <div class="text_list value">
+                            <p>' . $service_info['category'] . '</p>
+                            <p>' . $service_info['price'] . '</p>
+                            <p><a id="link" target="_blank" href="' . $service_info['certification'] . '">' . mb_substr($service_info['certification'], 1 + strpos($service_info['certification'], '-')) . '</a></p>
+                            <p>' . $service_info['text'] . '</p>
+                        </div>
+                    </div>
+                </div>';
+        ?>
         </div>
     
         <div id="send_application" style="display: none">

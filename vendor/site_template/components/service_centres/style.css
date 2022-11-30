@@ -28,7 +28,7 @@
 }
 
 .autoservices_area {
-  max-height: 660px;
+  max-height: 600px;
   overflow: auto;
   border-top: 1px solid #bababa;
   border-bottom: 1px solid #bababa;
@@ -41,4 +41,27 @@
 
 .plate > h3 {
   margin-bottom: 0;
+}
+
+.major_photo {
+  width: 100%;
+  height: 100%;
+}
+
+.minor_photo {
+  margin: 2px 2px 0 0;
+  width: 19.6%;
+  height: 46px;
+}
+
+#show_services_list {
+  padding-left: 5px;
+  max-height: 100px;
+  overflow: auto;
+  border: 1px solid #bababa;
+}
+
+.mb-3 > .central {
+  border: 1px solid #ced4da;
+  padding-left: 10px;
 }

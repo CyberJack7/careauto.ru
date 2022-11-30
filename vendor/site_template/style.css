@@ -115,6 +115,30 @@ textarea {
   color: #fff !important;
 }
 
+/*фотографии*/
+.photos {
+  margin: 13px 0px 0px;
+}
+
+.photos > img {
+  border-radius: 10px;
+  object-fit: contain;
+  background-color: #000;
+}
+
+.photos > .major_photo {
+  align-self: start;
+}
+
+.photos > .minor_photo {
+  align-self: start;
+  flex-direction: row;
+}
+
+.photos > img:last-child {
+  margin: 2px 0 0 0;
+}
+
 /*кнопки в линию*/
 .btn_div {
   display: flex;

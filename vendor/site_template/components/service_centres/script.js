@@ -86,3 +86,31 @@ function getServicesById(category) {
     }
   );
 }
+
+
+//отображение информации об услуге
+function setServiceInfo(ar_service_info) {
+  let value_p = document.getElementById("service_info").getElementsByClassName("value")[0].getElementsByTagName("p")
+  let count = 0;
+  for (key in ar_service_info) {
+    value_p[count].innerHTML = ar_service_info[key];
+    count++;
+  }  
+}
+
+
+//получение информации об услуге
+function getServiceInfo(select) {
+  let service_id = select.options[select.selectedIndex].value; //id выбранной услуги
+  let autoservice_id = document.getElementsByClassName("show_autoservice")[0].id;
+  let json_data = JSON.stringify({'autoservice_id': autoservice_id, 'service_id': service_id});
+  $.post(
+    "/vendor/site_template/components/service_centres/component.php",
+    { autoserv_service_id: json_data },
+    function (data) {
+      //функция которая будет выполнена после успешного запроса
+      let ar_service_info = JSON.parse(data); //конвертировали JSON string из data в js object      
+      setServiceInfo(ar_service_info);
+    }
+  );
+}

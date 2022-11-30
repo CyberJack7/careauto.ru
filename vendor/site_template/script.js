@@ -49,3 +49,10 @@ function showCheckboxes(checkboxes_label) {
     checkboxes.style.display = "block";
   }
 }
+
+
+//просмотр фотографий
+function gallery(photo) {
+  let major_photo = document.getElementsByClassName("major_photo")[0];
+  major_photo.src = photo.src;
+}

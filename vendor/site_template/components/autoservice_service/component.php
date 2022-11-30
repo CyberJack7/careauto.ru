@@ -9,7 +9,7 @@ require_once PATH_CONNECT;
 
 function get_service($category_id)
 {
-    $arService = get_service_list($category_id, $_SESSION['user']['id']);
+    $arService = getServiceList($category_id, $_SESSION['user']['id']);
     foreach ($arService as $key => $value) {
         echo '<option value="' . $key . '">' . $value . '</option>';
     }
@@ -17,7 +17,7 @@ function get_service($category_id)
 
 function get_autoserv_service($autoservice_id, $category_id)
 {
-    $arService = get_autoservice_service_list($autoservice_id, $category_id);
+    $arService = getAutoserviceServiceList($autoservice_id, $category_id);
     foreach ($arService as $key => $value) {
         echo '<option value="' . $key . '">' . $value . '</option>';
     }
@@ -25,14 +25,14 @@ function get_autoserv_service($autoservice_id, $category_id)
 function service_info($autoservice_id, $service_id)
 {
 
-    $arService = get_service_info($autoservice_id, $service_id);
-    if ($arService == false) {
+    $arService = getServiceInfo($autoservice_id, $service_id);
+    if ($arService == NULL) {
         $arService = [];
         $arService['price'] = '';
         $arService['text'] = '';
         $arService['certification'] = '';
-        echo '<div id="con2" class="con2"> Стоимость услуги: ' . '<input required name="add_price" id="add_price" class="form-control" type="text" value="' . $arService['price'] . '">' . '</br>' .
-            'Описание услуги: ' . '<input required name="add_text" id="add_text" class="form-control" type="add_text" value="' . $arService['text'] . '">' . '</br>' .
+        echo '<div id="con2" class="con2"> Стоимость услуги(обязательно): ' . '<input name="add_price" id="add_price" class="form-control" type="text" value="' . $arService['price'] . '">' . '</br>' .
+            'Описание услуги(необязательно): ' . '<input name="add_text" id="add_text" class="form-control" type="add_text" value="' . $arService['text'] . '">' . '</br>' .
             'Сертификация(необязательно): ' .
             '<input name="add_certification" id="add_certification" accept="application/pdf" class="form-control" type="file">
         <button id="add_service" type="button" class="btn btn-outline-primary">Добавить услугу</button>
@@ -58,6 +58,7 @@ function service_update($autoservice_id, $service_id, $price, $text, $certificat
         $directory = PATH_UPLOADS_REGULAR . $autoservice_id . '/certification/';
         $name_cert = time() . '-' . $_FILES['certification']['name'] . '_' . $service_id;
         $full_path = $_SERVER['DOCUMENT_ROOT'] . $directory . $name_cert;
+
         if (!is_dir($directory))
             mkdir($directory, 0777, true);
         if (!move_uploaded_file($_FILES['certification']['tmp_name'], $full_path)) {
@@ -66,6 +67,15 @@ function service_update($autoservice_id, $service_id, $price, $text, $certificat
             header('Location: /autoservice_service/');
             exit;
         }
+
+        // if (!is_dir($_SERVER['DOCUMENT_ROOT'] . $directory))
+        //     mkdir($_SERVER['DOCUMENT_ROOT'] . $directory, 0777, true);
+        // if (!move_uploaded_file($_FILES['certification']['tmp_name'], $full_path)) {
+        //     $_SESSION['message']['text'] = "Не удалось загрузить файл, попробуйте снова";
+        //     $_SESSION['message']['type'] = 'warning';
+        //     header('Location: /autoservice_service/');
+        //     exit;
+        // }
         $sql = "UPDATE Public.autoservice_service 
         SET price=" . $pdo->quote($price) .
             ",text=" . $pdo->quote($text) .
@@ -73,7 +83,8 @@ function service_update($autoservice_id, $service_id, $price, $text, $certificat
             "WHERE autoservice_id=" . $autoservice_id .
             "AND service_id=" . $service_id;
         $res = $pdo->exec($sql);
-        unlink($_SERVER['DOCUMENT_ROOT'] . $res_file['certification']);
+        if ($res_file['certification'] != NULL)
+            unlink($_SERVER['DOCUMENT_ROOT'] . $res_file['certification']);
     } else {
         $sql = "UPDATE Public.autoservice_service 
         SET price=" . $pdo->quote($price) .
@@ -128,7 +139,7 @@ if (!empty($_POST['category_id'])) {
 if (!empty($_POST['autoserv_category_id'])) {
     get_autoserv_service($_SESSION['user']['id'], $_POST['autoserv_category_id']);
 }
-if (!empty($_POST['price']) and !empty($_POST['text']) and !empty($_POST['service_id'])) {
+if (!empty($_POST['price']) and !empty($_POST['service_id'])) {
     if (!empty($_FILES['certification']))
         service_update($_SESSION['user']['id'], $_POST['service_id'], $_POST['price'], $_POST['text'], $_FILES['certification']);
     else
@@ -137,7 +148,7 @@ if (!empty($_POST['price']) and !empty($_POST['text']) and !empty($_POST['servic
 if (!empty($_POST['service_id']) and empty($_POST['price'])) {
     service_info($_SESSION['user']['id'], $_POST['service_id']);
 }
-if (!empty($_POST['add_price']) and !empty($_POST['add_text']) and !empty($_POST['add_service_id'])) {
+if (!empty($_POST['add_price']) and !empty($_POST['add_service_id'])) {
     if (!empty($_FILES['add_certification']))
         service_add($_SESSION['user']['id'], $_POST['add_service_id'], $_POST['add_price'], $_POST['add_text'], $_FILES['add_certification']);
     else

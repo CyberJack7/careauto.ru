@@ -31,7 +31,7 @@
             }
             ?>
         </div>
-        <button class="btn btn-primary" id="start_add_automobile" type="button">Добавить автомобиль</button>
+        <button class="btn btn-primary" id="start_add_automobile" type="button">Поиск</button>
         <p class="message_window">
             <?php //блок вывода сообщений
             if (isset($_SESSION['message']['text'])) {
@@ -197,7 +197,7 @@
                     $count++;
                 }
                 echo '<div class="btn_div">
-                        <button class="btn btn-primary" id="change_car_info" type="submit" onclick="showChangeAuto(this)">Редактировать</button>
+                        <button class="btn btn-primary" id="change_car_info" type="button" onclick="showChangeAuto(this)">Редактировать</button>
                         <button class="btn btn-outline-danger" id="delete_car" type="button" onclick="deleteAuto(this)">Удалить</button>
                     </div>
                 </div>';

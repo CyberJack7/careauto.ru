@@ -66,7 +66,7 @@ if (empty($_SESSION['user'])) {
                 <textarea class="form-control" id="description" name="description" type="textarea" placeholder="Описание Вашего сервисного центра"><?=$autoservice['text']?></textarea>
             </div>
             <div class="mb-3">
-                <label class="form-label" for="photos">Фотографии (до 5 шт)</label>
+                <label class="form-label" for="photos">Фотографии (до 5 шт; рекомендуемый формат - 16:9)</label>
                 <input class="form-control" id="photos" name="photos[]" type="file" accept="image/jpeg" multiple/>
                 <div class="photos">  
                     <?php //фотографии

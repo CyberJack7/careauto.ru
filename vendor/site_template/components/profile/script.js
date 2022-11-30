@@ -99,11 +99,6 @@ $("document").ready(function () {
   }
 });
 
-function gallery(photo) {
-  let major_photo = document.getElementsByClassName("major_photo")[0];
-  major_photo.src = photo.src;
-}
-
 function set_brand(cb) {
   $data_send = { brand: cb.id };
   let title = document
