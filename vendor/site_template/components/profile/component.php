@@ -25,7 +25,7 @@ function main_contacts() {
     $template .= '"" disabled selected>';
   }
   if ($_SESSION['user']['city_id'] !== null) {
-    $template .= city_id_name($_SESSION['user']['city_id']) . '</option>';
+    $template .= getCityNameById($_SESSION['user']['city_id']) . '</option>';
   } else {
     $template .= 'Выберите город</option>';
   }

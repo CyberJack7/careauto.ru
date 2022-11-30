@@ -126,7 +126,7 @@ function city_list(){
 }
 
 //название города по city_id
-function city_id_name($city_id){
+function getCityNameById($city_id){
   $pdo = conn();
   $sql = "SELECT name_city FROM public.city WHERE city_id = " . $city_id;
   $city_name = $pdo->query($sql)->fetch()['name_city'];
@@ -703,4 +703,46 @@ function get_service_list($category_id, $autoservice_id)
     $arService[$row_service['service_id']] = $row_service['name_service'];
   }
   return $arService;
+}
+
+
+//Список сервисных центров, удовлетворяющих параметрам фильтрации
+function getAutoservicesByParameters($city_id = NULL) {
+  $pdo = conn();
+  $sql_autoserv = "SELECT autoservice_id, name_autoservice, phone_autoservice, address FROM public.autoservice ";
+  if ($city_id != NULL) {
+    $sql_autoserv .= " WHERE city_id = " . $city_id;
+  }
+  $autoservices = $pdo->query($sql_autoserv);
+  $arResult = [];
+  while ($autoservice = $autoservices->fetch()) {
+    $sql_price = "SELECT MIN(price) as min_price, MAX(price) as max_price FROM public.autoservice_service WHERE autoservice_id = " . $autoservice['autoservice_id'];
+    $price = $pdo->query($sql_price)->fetch();
+    array_push($arResult, [
+      'id' => $autoservice['autoservice_id'],
+      'name' => $autoservice['name_autoservice'],
+      'price' => $price['min_price'] . '-' . $price['max_price'],
+      'phone' => $autoservice['phone_autoservice'],
+      'address' => $autoservice['address']
+    ]);
+  }
+  if (!empty($arResult)) {    
+    return $arResult;
+  }
+  return null;
+}
+
+
+//Подробная информация о сервисном центре по id автосервиса для автовладельца
+function getAutoserviceInfoById($autoservice_id) {
+  $pdo = conn();
+  $sql_autoserv = "SELECT autoservice_id, name_autoservice, phone_autoservice, address, photos, text FROM public.autoservice WHERE 
+  autoservice_id = " . $autoservice_id;
+  $sql_services = "SELECT autoservice_id, name_autoservice, phone_autoservice, address, photos, text FROM public.autoservice WHERE 
+  autoservice_id = " . $autoservice_id;
+  $autoservice = $pdo->query($sql_autoserv)->fetch();
+  if (!empty($autoservice)) {
+    return $autoservice;
+  }
+  return null;
 }

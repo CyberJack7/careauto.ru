@@ -90,15 +90,60 @@
     </div>
 
     <div class="panel" id="search_autoservices">
-
+        <h3>Сервисные центры в городе <?=getCityNameById($_SESSION['user']['city_id'])?></h3>
+        <div class="autoservices_area">
+            <?php //первоначальный вывод всех автосервисов в городе автовладельца
+                $autoservices = getAutoservicesByParameters($_SESSION['user']['city_id']);
+                foreach ($autoservices as $autoservice) {
+                    foreach ($autoservice as &$value) {
+                        if ($value == NULL) {
+                            $value = '-';
+                        }
+                    }
+                    echo '<div class="plate" id="autoservice_id_' . $autoservice['id'] . '">                    
+                            <h3>' . $autoservice['name'] . '</h3>
+                            <div class="central">
+                                <div class="text_list name">
+                                    <p>Cтоимость услуг (р)</p><p>Телефон</p><p>Адрес</p>
+                                </div>
+                                <div class="text_list value">
+                                    <p>' . $autoservice['price'] . '</p>
+                                    <p>' . $autoservice['phone'] . '</p>
+                                    <p>' . $autoservice['address'] . '</p>
+                                </div>
+                            </div>
+                        </div>';
+                }
+            ?>
+        </div>
     </div>
 
-    <div id="current_autoservice">
-        <div class="panel" id="show_autoservice">
-    
+    <div class="panel" id="current_autoservice">
+        <div id="show_autoservice">
+        <?php //первоначальный вывод всех автосервисов в городе автовладельца
+                $autoservice_info = getAutoserviceInfoById($autoservices[0]['id']);                
+                foreach ($autoservice_info as &$value) {
+                    if ($value == NULL) {
+                        $value = '-';
+                    }
+                }
+                echo '<div class="plate" id="autoservice_id_' . $autoservice['id'] . '">                    
+                        <h3>' . $autoservice['name'] . '</h3>
+                        <div class="central">
+                            <div class="text_list name">
+                                <p>Cтоимость услуг (р)</p><p>Телефон</p><p>Адрес</p>
+                            </div>
+                            <div class="text_list value">
+                                <p>' . $autoservice['price'] . '</p>
+                                <p>' . $autoservice['phone'] . '</p>
+                                <p>' . $autoservice['address'] . '</p>
+                            </div>
+                        </div>
+                    </div>';
+            ?>
         </div>
     
-        <div class="panel" id="send_application" style="display: none">
+        <div id="send_application" style="display: none">
     
         </div>        
     </div>

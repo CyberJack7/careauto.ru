@@ -244,3 +244,13 @@ textarea {
 .alert {
   margin-bottom: 10px !important;
 }
+
+
+/*Краткая информация в plate*/
+.text_list {
+  width: 50%;
+}
+
+.name {
+  color: rgb(100, 100, 100);
+}
