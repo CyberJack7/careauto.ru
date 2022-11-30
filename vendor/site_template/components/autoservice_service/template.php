@@ -1,0 +1,84 @@
+<?php require_once __DIR__ . '/component.php';
+?>
+<script src="<?php $_SERVER['DOCUMENT_ROOT'] ?>/vendor/site_template/components/autoservice_service/script.js">
+</script>
+
+<link rel="stylesheet"
+    href="<?php $_SERVER['DOCUMENT_ROOT'] ?>/vendor/site_template/components/autoservice_service/style.css">
+<?php
+//на странице заявок автосервиса может находиться только автосервис
+if (!($_SESSION['user']['user_type'] == 'autoservice')) {
+    header('Location: /');
+}
+?>
+<!--  -->
+<div class="container" id="main_con">
+    <div id="show_autoserv_serv" class="panel">
+        <h3>Список категорий автосервиса</h3>
+        <select id="autoserv_category" name="autoserv_category" class="form-select" size="4"
+            aria-label="size 4 select example">
+            <?php
+            $arAutoServCategory = get_autoservice_category_list($_SESSION['user']['id']);
+            foreach ($arAutoServCategory as $key => $value) {
+                echo '<option value="' . $key . '">' . $value . '</option>';
+            }
+            ?>
+        </select>
+        <h3>Список услуг автосервиса</h3>
+        <div id="test-div-2">
+            <select id="autoserv_service" name="autoserv_service" class="form-select" size="4"
+                aria-label="size 4 select example">
+                <!-- Сюда вставляем код из ajax запроса, см JS скрипт -->
+            </select>
+        </div>
+        <h3>Информация об услуге</h3>
+        <div class="con" name="service_info" id="service_info">
+
+        </div>
+    </div>
+    <div id="show_all_serv" class="panel">
+        <h3>Категории услуг</h3>
+
+        <select id="category" name="category" class="form-select" size="4" aria-label="size 4 select example">
+            <?php
+            $arCategory = get_category_list();
+            foreach ($arCategory as $key => $value) {
+                echo '<option value="' . $key . '">' . $value . '</option>';
+            }
+            ?>
+        </select>
+
+        <h3>Список услуг</h3>
+        <select id="service" name="service" class="form-select" size="4" aria-label="size 4 select example">
+            <!-- Сюда вставляем код из ajax запроса, см JS скрипт -->
+
+        </select>
+        <h3>Информация об услуге</h3>
+        <div class="con" name="add_service_info" id="add_service_info">
+
+        </div>
+
+    </div>
+</div>
+
+<!--  -->
+<div class="container text-center my-5">
+    <?php //блок вывода сообщений
+    if (isset($_SESSION['message']['text'])) {
+        if ($_SESSION['message']['type'] == 'success') {
+            echo '<p><div class="alert alert-success" role="alert">
+                ' . $_SESSION['message']['text'] . '</div></p>';
+        } elseif ($_SESSION['message']['type'] == 'warning') {
+            echo '<p><div class="alert alert-warning" role="alert">
+                ' . $_SESSION['message']['text'] . '</div></p>';
+        } elseif ($_SESSION['message']['type'] == 'danger') {
+            echo '<p><div class="alert alert-danger" role="alert">
+                ' . $_SESSION['message']['text'] . '</div></p>';
+        } elseif ($_SESSION['message']['type'] == 'info') {
+            echo '<p><div class="alert alert-info" role="alert">
+                ' . $_SESSION['message']['text'] . '</div></p>';
+        }
+    }
+    unset($_SESSION['message']['text'], $_SESSION['message']['type']);
+    ?>
+</div>

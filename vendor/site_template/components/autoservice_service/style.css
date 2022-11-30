@@ -1,0 +1,27 @@
+.con1 {
+  display: inline-block;
+  margin-left: 2px;
+}
+.con2 {
+  border: 2px solid #0d6efd;
+  border-radius: 5px;
+  padding: 15px;
+}
+
+button {
+  margin-top: 20px;
+}
+
+#show_autoserv_serv {
+  width: 50%;
+  margin: 10px;
+}
+#show_all_serv {
+  width: 50%;
+}
+
+#main_con {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}

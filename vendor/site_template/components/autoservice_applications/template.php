@@ -23,6 +23,7 @@ if (!($_SESSION['user']['user_type'] == 'autoservice')) {
                 role="tab" aria-controls="nav-work" aria-selected="false">В работе</button>
             <button class="nav-link" id="nav-done-tab" data-bs-toggle="tab" data-bs-target="#nav-done" type="button"
                 role="tab" aria-controls="nav-done" aria-selected="false">Выполнено</button>
+            <button id="reset-btn" type="button"><img id="reset-img" src="/images/restart.png" alt=""></button>
 
         </div>
     </div>
@@ -58,27 +59,29 @@ if (!($_SESSION['user']['user_type'] == 'autoservice')) {
                 ?>
             </div>
         </div>
+        <div id="spinner" class="spinner-border text-primary">
+        </div>
     </div>
 </div>
 
 <!-- для заявок end -->
 <div class="container text-center my-5">
     <?php //блок вывода сообщений
-        if (isset($_SESSION['message']['text'])) {
-            if ($_SESSION['message']['type'] == 'success') {
-                echo '<p><div class="alert alert-success" role="alert">
+    if (isset($_SESSION['message']['text'])) {
+        if ($_SESSION['message']['type'] == 'success') {
+            echo '<p><div class="alert alert-success" role="alert">
                 ' . $_SESSION['message']['text'] . '</div></p>';
-            } elseif ($_SESSION['message']['type'] == 'warning') {
-                echo '<p><div class="alert alert-warning" role="alert">
+        } elseif ($_SESSION['message']['type'] == 'warning') {
+            echo '<p><div class="alert alert-warning" role="alert">
                 ' . $_SESSION['message']['text'] . '</div></p>';
-            } elseif ($_SESSION['message']['type'] == 'danger') {
-                echo '<p><div class="alert alert-danger" role="alert">
+        } elseif ($_SESSION['message']['type'] == 'danger') {
+            echo '<p><div class="alert alert-danger" role="alert">
                 ' . $_SESSION['message']['text'] . '</div></p>';
-            } elseif ($_SESSION['message']['type'] == 'info') {
-                echo '<p><div class="alert alert-info" role="alert">
+        } elseif ($_SESSION['message']['type'] == 'info') {
+            echo '<p><div class="alert alert-info" role="alert">
                 ' . $_SESSION['message']['text'] . '</div></p>';
-            }
         }
-        unset($_SESSION['message']['text'], $_SESSION['message']['type']);
+    }
+    unset($_SESSION['message']['text'], $_SESSION['message']['type']);
     ?>
 </div>

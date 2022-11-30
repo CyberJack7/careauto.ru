@@ -1,11 +1,14 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/lib/defines.php';
 require_once PATH_CONNECT;
-function change_status($appl_id, $status)
+function change_status($appl_id, $status, $date = '0', $time = '0')
 {
     $pdo = conn();
     switch ($status) {
         case "Ожидает подтверждения":
+            $new_date = $date . ' ' . $time;
+            $sql = "UPDATE Public.application SET date=" . $pdo->quote($new_date) . "WHERE application_id=" . $appl_id;
+            $result = $pdo->exec($sql);
             $new_status = "Подтверждено";
             break;
         case "Подтверждено":
@@ -19,9 +22,8 @@ function change_status($appl_id, $status)
             break;
         case "Выполнено":
             $new_status = "Завершено";
-            date_default_timezone_set('Europe/Moscow');
-            $date = date('Y-m-d h:i:s a', time());
-            $sql = "UPDATE Public.application SET date_payment=" . $pdo->quote($date) . "WHERE application_id=" . $appl_id;
+            $date_pay = date('Y-m-d h:i:s', time());
+            $sql = "UPDATE Public.application SET date_payment=" . $pdo->quote($date_pay) . "WHERE application_id=" . $appl_id;
             $result = $pdo->exec($sql);
             break;
     }
@@ -40,6 +42,6 @@ function change_status($appl_id, $status)
     }
 }
 if (!empty($_POST['status']) and !empty($_POST['appl_id'])) {
-    change_status($_POST['appl_id'], $_POST['status']);
+    change_status($_POST['appl_id'], $_POST['status'], $_POST['date'], $_POST['time']);
 } else {
 }

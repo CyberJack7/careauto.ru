@@ -1,18 +1,15 @@
-<?php require_once __DIR__ . '/component.php';?>
-<script src="<?php $_SERVER['DOCUMENT_ROOT']?>/vendor/site_template/components/navigation.main/script.js"></script>
-<link rel="stylesheet" href="<?php $_SERVER['DOCUMENT_ROOT']?>/vendor/site_template/components/navigation.main/style.css">
+<?php require_once __DIR__ . '/component.php'; ?>
+<script src="<?php $_SERVER['DOCUMENT_ROOT'] ?>/vendor/site_template/components/navigation.main/script.js"></script>
+<link rel="stylesheet"
+    href="<?php $_SERVER['DOCUMENT_ROOT'] ?>/vendor/site_template/components/navigation.main/style.css">
 
 <div class="navbar navbar-expand-lg navbar-dark bg-dark navbar_custom">
     <div class="container">
         <a class="navbar-brand p-0" href="/">
             <img src="/images/main_title.png" alt="careauto.ru" height="50" />
         </a>
-        <button class="navbar-toggler" type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNav"
-            aria-controls="navbarNav"
-            aria-expanded="false"
-            aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
