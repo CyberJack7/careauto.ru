@@ -58,6 +58,7 @@ function service_update($autoservice_id, $service_id, $price, $text, $certificat
         $directory = PATH_UPLOADS_REGULAR . $autoservice_id . '/certification/';
         $name_cert = time() . '-' . $_FILES['certification']['name'] . '_' . $service_id;
         $full_path = $_SERVER['DOCUMENT_ROOT'] . $directory . $name_cert;
+
         if (!is_dir($directory))
             mkdir($directory, 0777, true);
         if (!move_uploaded_file($_FILES['certification']['tmp_name'], $full_path)) {
@@ -66,6 +67,15 @@ function service_update($autoservice_id, $service_id, $price, $text, $certificat
             header('Location: /autoservice_service/');
             exit;
         }
+
+        // if (!is_dir($_SERVER['DOCUMENT_ROOT'] . $directory))
+        //     mkdir($_SERVER['DOCUMENT_ROOT'] . $directory, 0777, true);
+        // if (!move_uploaded_file($_FILES['certification']['tmp_name'], $full_path)) {
+        //     $_SESSION['message']['text'] = "Не удалось загрузить файл, попробуйте снова";
+        //     $_SESSION['message']['type'] = 'warning';
+        //     header('Location: /autoservice_service/');
+        //     exit;
+        // }
         $sql = "UPDATE Public.autoservice_service 
         SET price=" . $pdo->quote($price) .
             ",text=" . $pdo->quote($text) .
@@ -73,7 +83,8 @@ function service_update($autoservice_id, $service_id, $price, $text, $certificat
             "WHERE autoservice_id=" . $autoservice_id .
             "AND service_id=" . $service_id;
         $res = $pdo->exec($sql);
-        unlink($_SERVER['DOCUMENT_ROOT'] . $res_file['certification']);
+        if ($res_file['certification'] != NULL)
+            unlink($_SERVER['DOCUMENT_ROOT'] . $res_file['certification']);
     } else {
         $sql = "UPDATE Public.autoservice_service 
         SET price=" . $pdo->quote($price) .
@@ -128,7 +139,7 @@ if (!empty($_POST['category_id'])) {
 if (!empty($_POST['autoserv_category_id'])) {
     get_autoserv_service($_SESSION['user']['id'], $_POST['autoserv_category_id']);
 }
-if (!empty($_POST['price']) and !empty($_POST['text']) and !empty($_POST['service_id'])) {
+if (!empty($_POST['price']) and !empty($_POST['service_id'])) {
     if (!empty($_FILES['certification']))
         service_update($_SESSION['user']['id'], $_POST['service_id'], $_POST['price'], $_POST['text'], $_FILES['certification']);
     else

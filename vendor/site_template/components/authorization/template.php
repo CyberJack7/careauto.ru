@@ -1,11 +1,14 @@
-<?php require_once __DIR__ . '/component.php';?>
-<script src="<?php $_SERVER['DOCUMENT_ROOT']?>/vendor/site_template/components/authorization/script.js"></script>
-<link rel="stylesheet" href="<?php $_SERVER['DOCUMENT_ROOT']?>/vendor/site_template/components/authorization/style.css">
+<?php require_once __DIR__ . '/component.php'; ?>
+<script src="<?php $_SERVER['DOCUMENT_ROOT'] ?>/vendor/site_template/components/authorization/script.js"></script>
+<link rel="stylesheet"
+    href="<?php $_SERVER['DOCUMENT_ROOT'] ?>/vendor/site_template/components/authorization/style.css">
 
 <?php //на странице авторизации может находиться только неавторизованный пользователь
-    if (!empty($_SESSION['user'])) {
-        header('Location: /');
-    }
+if (!empty($_SESSION['user'])) {
+    header('Location: /');
+}
+if (!empty($_SESSION['password_recovery']))
+    unset($_SESSION['password_recovery']);
 ?>
 <div class="container central column">
     <h1>Вход</h1>
@@ -30,26 +33,27 @@
             </div>
         </div>
         <button id="auth_button" name="auth_button" type="submit" class="btn btn-primary">Войти</button>
+        <p>Забыли пароль? - <a href="/password_recovery/"> Восстановление пароля</a>
         <p>У вас еще нет аккаунта? - <a href="/registration/">Зарегистрируйтесь</a>
-            
-        <?php //блок вывода сообщений
-        if (isset($_SESSION['message']['text'])) {
-            if ($_SESSION['message']['type'] == 'success') {
-                echo '<p><div class="alert alert-success" role="alert">
+
+            <?php //блок вывода сообщений
+            if (isset($_SESSION['message']['text'])) {
+                if ($_SESSION['message']['type'] == 'success') {
+                    echo '<p><div class="alert alert-success" role="alert">
                 ' . $_SESSION['message']['text'] . '</div></p>';
-            } elseif ($_SESSION['message']['type'] == 'warning') {
-                echo '<p><div class="alert alert-warning" role="alert">
+                } elseif ($_SESSION['message']['type'] == 'warning') {
+                    echo '<p><div class="alert alert-warning" role="alert">
                 ' . $_SESSION['message']['text'] . '</div></p>';
-            } elseif ($_SESSION['message']['type'] == 'danger') {
-                echo '<p><div class="alert alert-danger" role="alert">
+                } elseif ($_SESSION['message']['type'] == 'danger') {
+                    echo '<p><div class="alert alert-danger" role="alert">
                 ' . $_SESSION['message']['text'] . '</div></p>';
-            } elseif ($_SESSION['message']['type'] == 'info') {
-                echo '<p><div class="alert alert-info" role="alert">
+                } elseif ($_SESSION['message']['type'] == 'info') {
+                    echo '<p><div class="alert alert-info" role="alert">
                 ' . $_SESSION['message']['text'] . '</div></p>';
+                }
             }
-        }
-        unset($_SESSION['message']['text'], $_SESSION['message']['type']);
-        ?>
+            unset($_SESSION['message']['text'], $_SESSION['message']['type']);
+            ?>
 
     </form>
 </div>
