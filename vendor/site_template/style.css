@@ -147,27 +147,38 @@ textarea {
   width: 100% !important;
 }
 
+.selectBox > option {
+  user-select: none;  
+}
+
 .selectBox select {
   width: 100%;
   font-weight: bold;
 }
 
-#checkboxes {
+.checkboxes {
   display: none;
   border: 1px #dadada solid;
   overflow: auto;
-  height: 195px;
+  max-height: 195px; 
 }
 
-#checkboxes label {
+.checkboxes > p {
+  margin: 0 !important;
+  padding: 2px 4px;
+}
+
+.checkboxes label {
   display: block;
+  padding: 2px 4px;
+  line-height: 1.2;
 }
 
-#checkboxes label > input {
-  margin: 2px 4px;
+.checkboxes label > input {
+  margin: 2px 4px 2px 0;
 }
 
-#checkboxes label:hover {
+.checkboxes label:hover {
   background-color: #0d6efd;
   color: white;
 }

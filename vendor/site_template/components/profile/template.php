@@ -90,14 +90,14 @@ if (empty($_SESSION['user'])) {
             </div>
             <div class="multiselect mb-3">
                 <label class="form-label" for="brands">Обслуживаемые марки авто</label>
-                <div class="form-select selectBox" onclick="showCheckboxes()">
+                <div class="form-select selectBox" onclick="showCheckboxes(this)">
                     <option>Выбрано марок авто: <?php $autoserv_brands = get_autoservice_brands($_SESSION['user']['id']); 
                     if ($autoserv_brands == null) {
                         $autoserv_brands = [];
                     }
                     echo count($autoserv_brands);?></option>
                 </div>
-                <div id="checkboxes">
+                <div class="checkboxes">
                     <?php //вывод обслуживаемых марок
                     $brands = brands();
                     foreach ($brands as $brand) {

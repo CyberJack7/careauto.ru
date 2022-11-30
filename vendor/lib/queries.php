@@ -550,3 +550,157 @@ function tires() {
   }
   return null;
 }
+
+
+//Список всех категорий услуг
+function get_category_list()
+{
+  $pdo = conn();
+  $sql_category = "SELECT name_category,serv_category_id FROM Public.serv_category
+  ORDER BY name_category ASC"; // Извлекаем список наименований категорий и их ID
+  $category = $pdo->query($sql_category);
+  $arCategory = [];
+  while ($row_category = $category->fetch()) {
+    $arCategory[$row_category['serv_category_id']] = $row_category['name_category'];
+  }
+  return $arCategory;
+}
+
+
+//Список услуг по id категории
+function getServicesById($category_id)
+{
+  $pdo = conn();
+  $sql = "SELECT service_id, name_service FROM Public.service WHERE serv_category_id = " . $category_id . "ORDER BY name_service ASC";
+  $services = $pdo->query($sql);
+  $arServices = [];
+  if (!empty($services)) {
+    while ($service = $services->fetch()) {
+      array_push($arServices, ['id' => $service['service_id'], 'name' => $service['name_service']]);
+    }
+    return $arServices;
+  }
+  return NULL;
+}
+
+
+// Вывод заявок на регистрацию СЦ для админа
+function admin_appl_list()
+{
+  $pdo = conn();
+  $sql = "SELECT autoservice_temp_id FROM Public.autoservice_in_check";
+  $appl = $pdo->query($sql);
+  if ($appl->rowCount() == 0) {
+    echo '<p><div class="alert alert-primary" role="alert">Заявок нет!</div></p>';
+  } else {
+    $count = 0;
+    while ($row = $appl->fetch()) {
+      $count++;
+      $sql_info = "SELECT name_autoservice,email_autoservice,phone_autoservice,document,city_id FROM Public.autoservice_in_check 
+      WHERE autoservice_temp_id=" . $row['autoservice_temp_id'];
+      $autoserv_info = $pdo->query($sql_info)->fetch();
+      $sql_city = "SELECT name_city FROM Public.city WHERE city_id=" . $autoserv_info['city_id'];
+      $city = $pdo->query($sql_city)->fetch();
+      echo '<div class="accordion-item">
+                    <h2 class="accordion-header" id="panelsStayOpen-heading' . $count . '">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse' . $count . '" aria-expanded="false" aria-controls="#panelsStayOpen-collapse' . $count . '">' .
+        $count . '. ' . $autoserv_info['name_autoservice'] . ' ' . $autoserv_info['email_autoservice'] .
+        '</button>
+                    </h2>
+                    <div id="panelsStayOpen-collapse' . $count . '" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading' . $count . '">
+                        <div class="accordion-body">' .
+        'Название СЦ: ' . $autoserv_info['name_autoservice'] . '</br> ' .
+        'Почта СЦ: ' . $autoserv_info['email_autoservice'] . '</br> ' .
+        'Телефон СЦ: ' . $autoserv_info['phone_autoservice'] . '</br> ' .
+        'Город: ' . $city['name_city'] . '</br> ' .
+        'Документ: ' . '<a href="' . $autoserv_info['document'] . '" target="_blank">Ссылка на документ</a>' . '</br> ';
+
+      echo '<div class="con1"><form action="/vendor/site_template/components/admin_reg_applications/component.php" method="post">
+        <input name="status" type="hidden" value="Отказ"</input>
+        <input name="email" type="hidden" value="' . $autoserv_info['email_autoservice'] . '"</input>
+        <input name="autoserv_temp_id" type="hidden" value="' . $row['autoservice_temp_id'] . '"</input>
+        <button class="btn btn-secondary" type="submit" >Отклонить заявку</button>      
+        </form></div>';
+      echo '<div class="con1"> <form action="/vendor/site_template/components/admin_reg_applications/component.php" method="post">
+        <input name="autoserv_temp_id" type="hidden" value="' . $row['autoservice_temp_id'] . '"</input>
+        <input name="status" type="hidden" value="Принять"</input>
+        <input name="document" type="hidden" value="' . $autoserv_info['document'] . '"</input>
+        <input name="email" type="hidden" value="' . $autoserv_info['email_autoservice'] . '"</input>
+        <button class="btn btn-primary" type="submit" >Зарегистрировать СЦ</button>      
+        </form></div>';
+      echo '</div></div></div>';
+    }
+  }
+}
+
+
+// Список категорий автосервиса
+function get_autoservice_category_list($autoservice_id) 
+{
+  $pdo = conn();
+  $arService = get_autoservice_service_list($autoservice_id);
+  $arCategory = [];
+  foreach ($arService as $key => $value) { // $key - ID услуги
+    $sql = "SELECT serv_category_id FROM Public.service
+    WHERE service_id=" . $key;
+    $category_id = $pdo->query($sql)->fetch();
+    $sql_category_name = "SELECT name_category FROM Public.serv_category
+    WHERE serv_category_id=" . $category_id['serv_category_id'];
+    $category_name = $pdo->query($sql_category_name)->fetch();
+    $arCategory[$category_id['serv_category_id']] = $category_name['name_category'];
+  }
+  return $arCategory;
+}
+
+
+// Список услуг автосервиса
+function get_autoservice_service_list($autoservice_id, $category = 'None') 
+{
+  $pdo = conn();
+  if ($category != 'None') {
+    $sql = "SELECT service_id FROM Public.autoservice_service
+    JOIN Public.service USING(service_id) WHERE autoservice_id=" . $autoservice_id .
+      "AND serv_category_id=" . $category;
+  } else {
+    $sql = "SELECT service_id FROM Public.autoservice_service
+    WHERE autoservice_id=" . $autoservice_id;
+  }
+  $autoserv_services = $pdo->query($sql); // Извлекаем список услуг из СЦ
+  $arService = [];
+  if (!empty($autoserv_services)) {
+    while ($row = $autoserv_services->fetch()) {
+      $sql_name = "SELECT name_service 
+      FROM Public.service
+      WHERE service_id=" . $row['service_id'];
+      $service = $pdo->query($sql_name)->fetch();
+      $arService[$row['service_id']] = $service['name_service'];
+    }
+    return $arService;
+  }
+}
+
+
+// Информация о конкретной услуге автосервиса
+function get_service_info($autoservice_id, $service_id) 
+{
+  $pdo = conn();
+  $sql = "SELECT price,text,certification FROM Public.autoservice_service
+  WHERE autoservice_id=" . $autoservice_id . "AND service_id=" . $service_id;
+  $arService = $pdo->query($sql)->fetch();
+  return $arService;
+}
+
+
+//Список услуг, которые ещё не были добавлены автосервисом в свой перечень услуг
+function get_service_list($category_id, $autoservice_id)
+{
+  $pdo = conn();
+  $sql_service = "SELECT name_service,service_id FROM Public.service 
+  WHERE serv_category_id=" . $category_id . "AND service_id NOT IN (SELECT service_id FROM Public.autoservice_service WHERE autoservice_id=" . $autoservice_id . ") ORDER BY name_service ASC";
+  $service = $pdo->query($sql_service);
+  $arService = [];
+  while ($row_service = $service->fetch()) {
+    $arService[$row_service['service_id']] = $row_service['name_service'];
+  }
+  return $arService;
+}

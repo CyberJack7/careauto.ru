@@ -24,3 +24,8 @@
   width: -webkit-fill-available;
   text-align: center;
 }
+
+.services_by_catedory > p {
+  margin: 0 !important;
+  padding: 2px 4px;
+}

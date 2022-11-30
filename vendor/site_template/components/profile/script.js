@@ -110,7 +110,7 @@ function set_brand(cb) {
     .getElementsByClassName("form-select selectBox")[0]
     .getElementsByTagName("option")[0];
   let checkboxes = document
-    .getElementById("checkboxes")
+    .getElementsByClassName("checkboxes")[0]
     .getElementsByTagName("input");
   len_cb = checkboxes.length;
   amount = 0;
@@ -130,18 +130,5 @@ function set_brand(cb) {
       "/vendor/site_template/components/profile/delete_info.php",
       $data_send
     );
-  }
-}
-
-var expanded = true;
-
-function showCheckboxes() {
-  let checkboxes = document.getElementById("checkboxes");
-  if (expanded) {
-    checkboxes.style.display = "block";
-    expanded = false;
-  } else {
-    checkboxes.style.display = "none";
-    expanded = true;
   }
 }

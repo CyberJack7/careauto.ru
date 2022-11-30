@@ -1,30 +1,88 @@
 
-
-//обновление списка моделей в dropdown
-function setServices(category) {
-  let current_models_list = document.getElementById("model").getElementsByTagName("option");
-  let amount = current_models_list.length;
-  for (let i = 1; i < amount; i++) {
-    current_models_list[1].remove();
+//обновление количества выбранных услуг
+function setServiceAmount() {
+  let title = document.getElementById("show_services").getElementsByTagName("option")[0];
+  let checkboxes = document.getElementById("services").getElementsByTagName("input");
+  len_cb = checkboxes.length;
+  amount = 0;
+  for (let i = 0; i < len_cb; i++) {
+    if (checkboxes[i].checked) {
+      amount++;
+    }
   }
-  amount = brands.length;
-  let models_list = document.getElementById("model");
-  for (let i = 0; i < amount; i++) {
-    models_list.append(new Option(brands[i]["name"], brands[i]["id"]));
+  title.innerHTML = "Выбрано услуг: " + amount;
+}
+
+
+//обновление списка услуг в checkboxes
+function setServices(ar_services, type_of_change, category_id) {
+  let amount_services = ar_services.length;
+  let services_list = document.getElementById("services");
+  if (type_of_change) { //добавляем список услуг
+    let div = document.createElement("div");
+    div.className = "services_by_catedory";
+    div.id = category_id;
+    let p = document.createElement("p");
+    p.id = category_id;
+    let labels =  document.getElementById("categories").getElementsByTagName("label");
+    let amount_labels = labels.length;
+    for (let i = 0; i < amount_labels; i++) {
+      if (labels[i].getElementsByTagName("input")[0].id == category_id) {
+        p.innerHTML = '<b>' + labels[i].innerText.trim() + '</b>';
+        break;
+      }
+    }
+    div.append(p);
+    for (let i = 0; i < amount_services; i++) {
+      let label = document.getElementById("categories").getElementsByTagName("label")[0].cloneNode(true);
+      label.setAttribute('for', ar_services[i]["id"]);      
+      let input = label.getElementsByTagName("input")[0];
+      input.id = ar_services[i]["id"];
+      input.checked = false;
+      input.removeAttribute("onclick");
+      label.innerText = "";
+      label.append(input);
+      label.append(ar_services[i]["name"]);
+      div.append(label);
+      label.onclick = function() {
+        setServiceAmount();
+      }
+    }
+    services_list.append(div);    
+  } else { //убираем их списка услуг
+    let div = services_list.getElementsByClassName("services_by_catedory")
+    let amount_div = div.length;
+    for (let i = 0; i < amount_div; i++) {
+      if (div[i].id == category_id) {
+        div[i].remove();
+        break;
+      }
+    }
+    setServiceAmount();
   }
 }
 
 
-//получение списка моделей по id марки
-function getBrandId(brand) {
-  let brandId = brand.options[brand.selectedIndex].value; //id выбранной марки
+//получение списка услуг по id категории
+function getServicesById(category) {
+  let category_id = category.id; //id нажатой категории
+  let type_of_change = true; //тип изменения: true - добавить в список услуг, false - очистить из списка услуг
+  let text = document.getElementById("show_categories").getElementsByTagName("option")[0];
+  let amount_checked_categories = parseInt(text.innerHTML.match(/\d+/), 10);
+  if (category.checked == true) {
+    text.innerHTML = "Выбрано категорий услуг: " + (amount_checked_categories + 1);
+  } else {
+    text.innerHTML = "Выбрано категорий услуг: " + (amount_checked_categories - 1);
+    type_of_change = false;
+  }
+  let json_category_id = JSON.stringify(category_id);
   $.post(
-    "/vendor/site_template/components/my_auto/component.php",
-    { brand_id: brandId },
+    "/vendor/site_template/components/service_centres/component.php",
+    { category_id: json_category_id },
     function (data) {
       //функция которая будет выполнена после успешного запроса
-      let ar_data = JSON.parse(data); //конвертировали JSON string из data в js object
-      setModels(ar_data);
+      let ar_services = JSON.parse(data); //конвертировали JSON string из data в js object
+      setServices(ar_services, type_of_change, category_id);
     }
   );
 }

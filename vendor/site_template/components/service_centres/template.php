@@ -14,12 +14,12 @@
     <div class="panel search">
         <div class="mb-3">
             <label class="form-label" for="autoserv_name">Название сервисного центра</label>
-            <input class="form-control" id="autoserv_name"type="text" placeholder="Название сервисного центра"/>
+            <input class="form-control" id="autoserv_name" type="text" placeholder="Название сервисного центра"/>
         </div>
         <div class="mb-3">
-            <label for="city" class="form-label">Город</label>
-            <select required name="city_id" class="form-select" aria-label="Default select example" id="city">
-                <option value="" disabled selected>Выберите город</option>
+            <label class="form-label" for="city">Город</label>
+            <select class="form-select" id="city" name="city_id" aria-label="Default select example">
+                <option disabled selected>Выберите город</option>
                 <?php //вывод списка городов
                     $arResult = city_list();
                     foreach ($arResult['CITIES'] as $city_id => $arCity) {
@@ -29,28 +29,28 @@
                     }
                 ?>
             </select>
-        </div>        
+        </div>
         <div class="multiselect mb-3">
             <label class="form-label" for="categories">Категории услуг</label>
-            <div class="form-select selectBox" onclick="showCheckboxes()">
-                <option>Выбрано категорий услуг: </option>
+            <div class="form-select selectBox" id="show_categories" onclick="showCheckboxes(this)">
+                <option>Выбрано категорий услуг: 0</option>
             </div>
-            <div id="checkboxes">
+            <div class="checkboxes" id="categories">
                 <?php //вывод категорий услуг
-                $brands = brands();
-                foreach ($brands as $brand) {                    
-                        echo '<label for="' . $brand['id'] . '">
-                            <input type="checkbox" id="' . $brand['id'] . '" onclick="set_brand(this)"/>' . $brand['name'] . '</label>';
+                $categories = get_category_list();
+                foreach ($categories as $key => $value) {
+                        echo '<label for="' . $key . '">
+                            <input type="checkbox" id="' . $key . '" onclick="getServicesById(this)"/>' . $value . '</label>';
                 }?>
             </div>
         </div>
-        <div class="mb-3">
+        <div class="multiselect mb-3">
             <label class="form-label" for="services">Услуги</label>
-            <select class="form-select" id="services" name="services" aria-label="Default select example" required>
-                <option value="" disabled selected>Выберите услуги</option>
-            </select>
+            <div class="form-select selectBox" id="show_services" onclick="showCheckboxes(this)">
+                <option>Выбрано услуг: 0</option>
+            </div>
+            <div class="checkboxes" id="services"></div>
         </div>
-        
         <div class="mb-3">
             <label class="form-label" for="autos">Ваш автомобиль</label>
             <select class="form-select" id="city" name="auto_id" aria-label="Default select example" required>
