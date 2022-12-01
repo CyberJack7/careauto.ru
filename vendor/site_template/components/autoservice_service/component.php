@@ -56,7 +56,7 @@ function service_update($autoservice_id, $service_id, $price, $text, $certificat
         WHERE autoservice_id=" . $autoservice_id . "AND service_id=" . $service_id;
         $res_file = $pdo->query($sql_get_old_file)->fetch();
         $directory = PATH_UPLOADS_REGULAR . $autoservice_id . '/certification/';
-        $name_cert = time() . '-' . $_FILES['certification']['name'] . '_' . $service_id;
+        $name_cert = time() . '_' . $service_id . '-' . translit($_FILES['certification']['name']);
         $full_path = $_SERVER['DOCUMENT_ROOT'] . $directory . $name_cert;
 
         if (!is_dir($_SERVER['DOCUMENT_ROOT'] . $directory))
@@ -102,7 +102,7 @@ function service_add($autoservice_id, $service_id, $price, $text, $certification
     $text = $pdo->quote($text);
     if ($certification != null) {
         $directory = PATH_UPLOADS_REGULAR . $autoservice_id . '/certification/';
-        $name_cert = time() . '-' . $_FILES['add_certification']['name'] . '_' . $service_id;
+        $name_cert = time() . '_' . $service_id . '-' . translit($_FILES['add_certification']['name']);
         $full_path = $_SERVER['DOCUMENT_ROOT'] . $directory . $name_cert;
         if (!is_dir($_SERVER['DOCUMENT_ROOT'] . $directory))
             mkdir($_SERVER['DOCUMENT_ROOT'] . $directory, 0777, true);

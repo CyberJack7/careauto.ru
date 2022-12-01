@@ -90,12 +90,21 @@ function getServicesById(category) {
 
 //отображение информации об услуге
 function setServiceInfo(ar_service_info) {
-  let value_p = document.getElementById("service_info").getElementsByClassName("value")[0].getElementsByTagName("p")
-  let count = 0;
-  for (key in ar_service_info) {
-    value_p[count].innerHTML = ar_service_info[key];
-    count++;
-  }  
+  console.log(ar_service_info);
+  let ar_p = document.getElementById("service_info").getElementsByTagName("p");
+  ar_p[0].innerHTML = ar_service_info['category'];
+  ar_p[1].innerHTML = ar_service_info['price'];
+  ar_p[3].innerHTML = ar_service_info['text'];
+  let elem_a = document.getElementById("service_info").getElementsByTagName("a")[0];
+  elem_a.href = ar_service_info['certification'];
+  elem_a.innerHTML = ar_service_info['certification'].substring(ar_service_info['certification'].indexOf('-') + 1);
+  if (ar_service_info['certification'] == '-') {
+    ar_p[2].style.display = 'block';
+    elem_a.style.display = 'none';
+  } else {
+    ar_p[2].style.display = 'none';
+    elem_a.style.display = 'block';
+  }
 }
 
 

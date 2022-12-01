@@ -256,10 +256,10 @@ function get_ar_name_photos($autoservice_id)
 }
 
 //обслуживаемые автосервисом марки авто
-function get_autoservice_brands($autoservice_id)
+function getAutoserviceBrands($autoservice_id)
 {
   $pdo = conn();
-  $sql = "SELECT brand_id, name_brand FROM brand JOIN autoservice_brand USING(brand_id) WHERE autoservice_id = " . $autoservice_id;
+  $sql = "SELECT brand_id, name_brand FROM brand JOIN autoservice_brand USING(brand_id) WHERE autoservice_id = " . $autoservice_id  . " ORDER BY name_brand";
   $brands = $pdo->query($sql);
   $arResult = [];
   if (!empty($brands)) {
@@ -274,7 +274,7 @@ function get_autoservice_brands($autoservice_id)
 //модели авто по id марки
 function getModelById($brand_id) {
   $pdo = conn();
-  $sql = "SELECT model_id, name_model FROM public.model WHERE brand_id = " . $brand_id;
+  $sql = "SELECT model_id, name_model FROM public.model WHERE brand_id = " . $brand_id . " ORDER BY name_model";
   $models = $pdo->query($sql);
   $arResult = [];
   if (!empty($models)) {     
@@ -482,7 +482,7 @@ function getAutosById($client_id) {
 function brands()
 {
   $pdo = conn();
-  $sql = "SELECT * FROM public.brand";
+  $sql = "SELECT * FROM public.brand ORDER BY name_brand";
   $brands = $pdo->query($sql);
   $arResult = [];
   if (!empty($brands)) {
@@ -497,7 +497,7 @@ function brands()
 //все типы кузова
 function bodies() {
   $pdo = conn();
-  $sql = "SELECT * FROM public.body";
+  $sql = "SELECT * FROM public.body ORDER BY name_body";
   $bodies = $pdo->query($sql);
   $arResult = [];
   if (!empty($bodies)) {     
@@ -512,7 +512,7 @@ function bodies() {
 //все типы двигателя
 function engines() {
   $pdo = conn();
-  $sql = "SELECT * FROM public.engine";
+  $sql = "SELECT * FROM public.engine ORDER BY name_engine";
   $engines = $pdo->query($sql);
   $arResult = [];
   if (!empty($engines)) {     
@@ -527,7 +527,7 @@ function engines() {
 //все типы КПП
 function gearboxes() {
   $pdo = conn();
-  $sql = "SELECT * FROM public.gearbox";
+  $sql = "SELECT * FROM public.gearbox ORDER BY name_gearbox";
   $gearboxes = $pdo->query($sql);
   $arResult = [];
   if (!empty($gearboxes)) {
@@ -542,7 +542,7 @@ function gearboxes() {
 //все типы приводов
 function drives() {
   $pdo = conn();
-  $sql = "SELECT * FROM public.drive";
+  $sql = "SELECT * FROM public.drive ORDER BY name_drive";
   $drives = $pdo->query($sql);
   $arResult = [];
   if (!empty($drives)) {     
@@ -557,7 +557,7 @@ function drives() {
 //все типы резины
 function tires() {
   $pdo = conn();
-  $sql = "SELECT * FROM public.tire_type";
+  $sql = "SELECT * FROM public.tire_type ORDER BY name_tire_type";
   $tire_types = $pdo->query($sql);
   $arResult = [];
   if (!empty($tire_types)) {     
@@ -699,10 +699,14 @@ function getServiceInfo($autoservice_id, $service_id)
   $sql = "SELECT price,text,certification FROM Public.autoservice_service
   WHERE autoservice_id = " . $autoservice_id . " AND service_id = " . $service_id;
   $arService = $pdo->query($sql)->fetch();
+  $arResult = [];
   if (!empty($arService)) {
-    $arService['name'] = getServiceNameById($service_id);
-    $arService['category'] = getCategoryNameById($service_id);
-    return $arService;
+    $arResult['category'] = getCategoryNameById($service_id);
+    $arResult['name'] = getServiceNameById($service_id);
+    $arResult['price'] = $arService['price'];
+    $arResult['text'] = $arService['text'];
+    $arResult['certification'] = $arService['certification'];
+    return $arResult;
   }
   return NULL;
 }
@@ -781,6 +785,7 @@ function getAutoserviceInfoById($autoservice_id) {
   while ($service = $service_list->fetch()) {
     array_push($services_id, $service['service_id']);
   }
+  $brand_list = getAutoserviceBrands($autoservice_id);
   $arResult = [
     'id' => $autoservice['autoservice_id'],
     'name' => $autoservice['name_autoservice'],
@@ -788,10 +793,29 @@ function getAutoserviceInfoById($autoservice_id) {
     'address' => $autoservice['address'],
     'photos' => $autoservice['photos'],
     'text' => $autoservice['text'],
-    'services_id' => $services_id
+    'brand_list' => $brand_list,
+    'services_id' => $services_id,
   ];
   if (!empty($arResult)) {
     return $arResult;
   }
   return null;
+}
+
+
+//транслитерация слов
+function translit($value)
+{
+	$converter = array(
+		'а' => 'a',    'б' => 'b',    'в' => 'v',    'г' => 'g',    'д' => 'd',
+		'е' => 'e',    'ё' => 'e',    'ж' => 'zh',   'з' => 'z',    'и' => 'i',
+		'й' => 'y',    'к' => 'k',    'л' => 'l',    'м' => 'm',    'н' => 'n',
+		'о' => 'o',    'п' => 'p',    'р' => 'r',    'с' => 's',    'т' => 't',
+		'у' => 'u',    'ф' => 'f',    'х' => 'h',    'ц' => 'c',    'ч' => 'ch',
+		'ш' => 'sh',   'щ' => 'sch',  'ь' => '',     'ы' => 'y',    'ъ' => '',
+		'э' => 'e',    'ю' => 'yu',   'я' => 'ya'
+	);
+  $value = mb_strtolower($value);
+	$value = strtr($value, $converter);
+	return $value;
 }

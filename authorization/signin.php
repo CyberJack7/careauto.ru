@@ -30,7 +30,7 @@ if (password_verify($password, $result['password_admin'])) {
     $result = $pdo->query($sql_client)->fetch();
     if (password_verify($password, $result['password_client'])) {
         $user_id = $result['client_id'];
-        $sql_ban_client = "SELECT * FROM public.ban_list
+        /*$sql_ban_client = "SELECT * FROM public.ban_list
         WHERE user_id = '$user_id'";
         $ban_result = $pdo->query($sql_ban_client)->fetch();
         if (!empty($ban_result)) {
@@ -39,7 +39,7 @@ if (password_verify($password, $result['password_admin'])) {
             $_SESSION['message']['type'] = 'danger';
             header('Location: /authorization/');
             exit;
-        }
+        }*/
         $_SESSION['user'] = [
             "user_type" => "client",
             "id" => $result['client_id'],
@@ -61,7 +61,7 @@ if (password_verify($password, $result['password_admin'])) {
     $result = $pdo->query($sql_autoservice)->fetch();
     if (password_verify($password, $result['password_autoservice'])) {
         $user_id = $result['autoservice_id'];
-        $sql_ban_client = "SELECT * FROM public.ban_list
+        /*$sql_ban_client = "SELECT * FROM public.ban_list
         WHERE user_id = '$user_id'";
         $ban_result = $pdo->query($sql_ban_client)->fetch();
         if (!empty($ban_result)) {
@@ -70,7 +70,7 @@ if (password_verify($password, $result['password_admin'])) {
             $_SESSION['message']['type'] = 'danger';
             header('Location: /authorization/');
             exit;
-        }
+        }*/
         $_SESSION['user'] = [
             "user_type" => "autoservice",
             "id" => $result['autoservice_id'],

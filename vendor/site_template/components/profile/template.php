@@ -15,7 +15,7 @@ if (empty($_SESSION['user'])) {
         if ($_SESSION['user']['user_type'] == 'autoservice') { ?>
             <a class="btn btn-outline-primary" id="main_data_caption" name="main_data_caption" type="button" href="#main_data">Основная информация</a>
             <a class="btn btn-outline-primary" id="contacts_caption" name="contacts_caption" type="button" href="#contacts">Контакты</a>
-            <a class="btn btn-outline-primary" id="requisites_caption" name="requisites_caption" type="button" href="#requisites">Реквизиты</a>
+            <a class="btn btn-outline-primary" id="requisites_caption" name="requisites_caption" type="button" href="#requisites" style="display: none">Реквизиты</a>
             <a class="btn btn-outline-primary" id="change_password_caption" name="change_password_caption" type="button" href="#change_password">Смена пароля</a>
             <a class="btn btn-outline-primary" id="delete_account_caption" name="delete_account_caption" type="button" href="#delete_account">Удаление аккаунта</a>
         <?php } else { ?>
@@ -123,7 +123,7 @@ if (empty($_SESSION['user'])) {
             <?php
             if ($_SESSION['user']['user_type'] == 'client') {
                 echo '<h3 id="main_data">Основная информация</h3>';                        
-                $amount_cars = count(cars_list($_SESSION['user']['id']));
+                /*$amount_cars = count(cars_list($_SESSION['user']['id']));
                 if ($amount_cars == 0) {
                     echo '<h5>Исследователь</h5>';
                 } elseif ($amount_cars == 1) {
@@ -132,7 +132,7 @@ if (empty($_SESSION['user'])) {
                     echo '<h5>Опытный водитель</h5>';
                 } else {
                     echo '<h5>Коллекционер автомобилей</h5>';
-                }
+                }*/
                 echo '<div class="mb-3">
                             <label class="form-label" for="name">ФИО</label>
                             <input class="form-control" id="name" name="name" type="text" value="' . $_SESSION['user']['name'] . 
@@ -152,7 +152,7 @@ if (empty($_SESSION['user'])) {
         </form>
         
         <?php if ($_SESSION['user']['user_type'] == 'autoservice') {?>
-        <form class="panel" action="<?php $_SERVER['DOCUMENT_ROOT']?>/vendor/site_template/components/profile/change_requisites.php" method="post">
+        <form class="panel" action="<?php $_SERVER['DOCUMENT_ROOT']?>/vendor/site_template/components/profile/change_requisites.php" method="post" style="display: none">
             <h3 id="requisites">Реквизиты</h3>
             <div class="mb-3">
                 <label class="form-label" for="inn">ИНН</label>

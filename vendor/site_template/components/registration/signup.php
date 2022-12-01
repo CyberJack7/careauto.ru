@@ -5,6 +5,7 @@ session_start();
 require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/lib/defines.php';
 require_once PATH_CONNECT;
 require_once PATH_SEND_EMAIL;
+require_once PATH_QUERIES;
 $pdo = conn();
 
 function email_check($email, $pdo)
@@ -75,7 +76,7 @@ if ($user_type == "client") { // для клиента
     header('Location: /confirmation_code/');
     exit;
 } elseif ($user_type == "autoservice") { // для автосервиса
-    $path_to_file = PATH_UPLOADS_TEMP . time() . '-' . $_FILES['document']['name'];
+    $path_to_file = PATH_UPLOADS_TEMP . time() . '-' . translit($_FILES['document']['name']);
     if (!move_uploaded_file($_FILES['document']['tmp_name'], $_SERVER['DOCUMENT_ROOT'] . $path_to_file)) {
         $_SESSION['message']['text'] = "Не удалось загрузить файл!";
         $_SESSION['message']['type'] = 'warning';

@@ -10,6 +10,7 @@
 if (!($_SESSION['user']['user_type'] == 'autoservice')) {
     header('Location: /');
 }
+unset($_SESSION['message']['text'], $_SESSION['message']['type']);
 ?>
 
 <nav>

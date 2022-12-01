@@ -50,34 +50,28 @@ $photos = str_replace(['{', '}', "'"], '', $autoservice['photos']); //готов
 $ar_photos = explode(',', $photos); //превращаем в массив
 
 if (!empty($_FILES['photos']['tmp_name'][0])) {
-    if ($autoservice['photos'] != null) { //если есть какие-то фото в бд
-        $ar_name_photos = []; //массив названий фото из бд
-        foreach ($ar_photos as $photo) {
-            array_push($ar_name_photos, substr($photo, stripos($photo, '-')+1));
-        }
-        $ar_diff_photos = array_diff($_FILES['photos']['name'], $ar_name_photos); //фото, которые будем загружать
-        if (!empty($ar_diff_photos)) { //если каких-то фото из загруженных нет в бд
-            $directory = PATH_UPLOADS_REGULAR . $_SESSION['user']['id'] . '/photos/';
-            $full_directory = $_SERVER['DOCUMENT_ROOT'] . $directory;
-            foreach ($ar_diff_photos as $photo) { //для каждого фото, которое надо загрузить
-                $photo_number = array_search($photo, $_FILES['photos']['name']);
-                $photo_name = time() . '-' . $_FILES['photos']['name'][$photo_number];
-                $download_path = $full_directory . $photo_name;
-                if (!move_uploaded_file($_FILES['photos']['tmp_name'][$photo_number], $download_path)) {
-                    $_SESSION['message']['text'] = "Не удалось загрузить файл, попробуйте снова";
-                    $_SESSION['message']['type'] = 'warning';
-                    header('Location: /profile/');
-                    exit;
-                }
-                array_push($ar_photos, $directory . $photo_name);
+    if ($autoservice['photos'] != null) { //если есть какие-то фото в бд        
+        $directory = PATH_UPLOADS_REGULAR . $_SESSION['user']['id'] . '/photos/';
+        $full_directory = $_SERVER['DOCUMENT_ROOT'] . $directory;
+        foreach ($_FILES['photos']['tmp_name'] as $photo) { //для каждого фото, которое надо загрузить
+            $photo_number = array_search($photo, $_FILES['photos']['name']);
+            $photo_name = time() . '-' . translit($_FILES['photos']['name'][$photo_number]);
+            $download_path = $full_directory . $photo_name;
+            echo $download_path;
+            if (!move_uploaded_file($_FILES['photos']['tmp_name'][$photo_number], $download_path)) {
+                $_SESSION['message']['text'] = "Не удалось загрузить файл, попробуйте снова";
+                $_SESSION['message']['type'] = 'warning';
+                header('Location: /profile/');
+                exit;
             }
-            $sql_photos = "{'" . implode("','", $ar_photos) . "'}";
-            $sql_quote_photos = $pdo->quote($sql_photos);
-            $sql = "UPDATE public.autoservice SET photos = " . $sql_quote_photos . " WHERE autoservice_id = " . $_SESSION['user']['id'];     
-            $stmt = $pdo->exec($sql);
-            $_SESSION['message']['text'] = 'Данные изменены успешно!';
-            $_SESSION['message']['type'] = 'success';
+            array_push($ar_photos, $directory . $photo_name);
         }
+        $sql_photos = "{'" . implode("','", $ar_photos) . "'}";
+        $sql_quote_photos = $pdo->quote($sql_photos);
+        $sql = "UPDATE public.autoservice SET photos = " . $sql_quote_photos . " WHERE autoservice_id = " . $_SESSION['user']['id'];     
+        $stmt = $pdo->exec($sql);
+        $_SESSION['message']['text'] = 'Данные изменены успешно!';
+        $_SESSION['message']['type'] = 'success';
     } else { //если фотографий в БД нет
         $sql_photos = '';
         $directory = PATH_UPLOADS_REGULAR . $_SESSION['user']['id'] . '/photos/';
@@ -91,7 +85,7 @@ if (!empty($_FILES['photos']['tmp_name'][0])) {
             } 
         }
         for ($photo_number = 0; $photo_number < count($_FILES['photos']['name']); $photo_number++) {
-            $photo_name = time() . '-' . $_FILES['photos']['name'][$photo_number];
+            $photo_name = time() . '-' . translit($_FILES['photos']['name'][$photo_number]);
             $download_path = $full_directory . $photo_name;
             if (!move_uploaded_file($_FILES['photos']['tmp_name'][$photo_number], $download_path)) {
                 $_SESSION['message']['text'] = "Не удалось загрузить файл, попробуйте снова";

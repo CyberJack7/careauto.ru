@@ -31,7 +31,7 @@
             }
             ?>
         </div>
-        <button class="btn btn-primary" id="start_add_automobile" type="button">Поиск</button>
+        <button class="btn btn-primary" id="start_add_automobile" type="button">Добавить новый автомобиль</button>
         <p class="message_window">
             <?php //блок вывода сообщений
             if (isset($_SESSION['message']['text'])) {

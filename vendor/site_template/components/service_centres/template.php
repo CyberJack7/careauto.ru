@@ -94,34 +94,39 @@
         <div class="autoservices_area">
             <?php //первоначальный вывод всех автосервисов в городе автовладельца
                 $autoservices = getAutoservicesByParameters($_SESSION['user']['city_id']);
-                foreach ($autoservices as $autoservice) {
-                    foreach ($autoservice as &$value) {
-                        if ($value == NULL) {
-                            $value = '-';
+                if ($autoservices != NULL) {
+                    foreach ($autoservices as $autoservice) {
+                        foreach ($autoservice as &$value) {
+                            if ($value == NULL) {
+                                $value = '-';
+                            }
                         }
+                        echo '<div class="plate" id="autoservice_id_' . $autoservice['id'] . '">                    
+                                <h3>' . $autoservice['name'] . '</h3>
+                                <div class="central">
+                                    <div class="text_list name">
+                                        <p>Cтоимость услуг (р)</p><p>Телефон</p><p>Адрес</p>
+                                    </div>
+                                    <div class="text_list value">
+                                        <p>' . $autoservice['price'] . '</p>
+                                        <p>' . $autoservice['phone'] . '</p>
+                                        <p>' . $autoservice['address'] . '</p>
+                                    </div>
+                                </div>
+                            </div>';
                     }
-                    echo '<div class="plate" id="autoservice_id_' . $autoservice['id'] . '">                    
-                            <h3>' . $autoservice['name'] . '</h3>
-                            <div class="central">
-                                <div class="text_list name">
-                                    <p>Cтоимость услуг (р)</p><p>Телефон</p><p>Адрес</p>
-                                </div>
-                                <div class="text_list value">
-                                    <p>' . $autoservice['price'] . '</p>
-                                    <p>' . $autoservice['phone'] . '</p>
-                                    <p>' . $autoservice['address'] . '</p>
-                                </div>
-                            </div>
-                        </div>';
+                } else {
+                    echo 'По вашему запросу ничего не найдено';
                 }
             ?>
         </div>
     </div>
     
     <div class="panel" id="current_autoservice">
-        <div class="show_autoservice" id="37">
+        <div class="show_autoservice" id="<?=$autoservices[0]['id']?>">
         <?php //вывод информации об автосервисе из первоначального перечня
-            $autoservice_info = getAutoserviceInfoById(37);
+        if ($autoservices != NULL) {
+            $autoservice_info = getAutoserviceInfoById($autoservices[0]['id']);
             foreach ($autoservice_info as &$value) {
                 if ($value == NULL) {
                     $value = '-';
@@ -132,9 +137,9 @@
                 <p class="name">Описание</p><p>' . $autoservice_info['text'] . '</p>
                 <p class="name">Фотографии</p>
             <div class="photos">';        
-            $ar_photos = get_ar_photos(37);                
+            $ar_photos = get_ar_photos($autoservices[0]['id']);
             if (!empty($ar_photos)) {
-                $ar_name_photos = get_ar_name_photos(37);
+                $ar_name_photos = get_ar_name_photos($autoservices[0]['id']);
                 echo '<img class="major_photo" id="photo_main" src="' . $ar_photos[0] . '" alt="' . $ar_name_photos[0] . '">';
                 for ($photo_number = 0; $photo_number < count($ar_photos); $photo_number++){
                     echo '<img class="minor_photo" id="photo_' . $photo_number . '" src="' . $ar_photos[$photo_number] . '" alt="' . $ar_name_photos[$photo_number] . '" onclick="gallery(this)">';
@@ -143,6 +148,16 @@
             echo '</div>
                 <p class="name">Телефон</p><p>' . $autoservice_info['phone'] . '</p>
                 <p class="name">Адрес</p><p>' . $autoservice_info['address'] . '</p>
+            <div  class="mb-3">
+                <label class="form-label name" for="autoserv_services">Обслуживаемые марки автомобилей</label>
+                <div class="central" id="autoservice_brands">';
+            if (!empty($autoservice_info['brand_list'])) {
+                foreach ($autoservice_info['brand_list'] as $brand) {
+                    echo '<p id="' . $brand['id'] . '">' . $brand['name'] . '</p>';
+                }
+            }  
+            echo '</div>
+                </div>
                 <div class="mb-3">
                     <label class="form-label name" for="autoserv_services">Список услуг сервисного центра</label>
                     <select class="form-select" id="autoserv_services" name="autoserv_services" aria-label="Default select example" onchange="getServiceInfo(this)">';
@@ -158,17 +173,25 @@
                     }
             echo '</select>
                     <div class="central" id="service_info">
-                        <div class="text_list name">
-                            <p>Категория</p><p>Стоимость</p><p>Сертификация</p><p>Описание</p>
-                        </div>
-                        <div class="text_list value">
-                            <p>' . $service_info['category'] . '</p>
-                            <p>' . $service_info['price'] . '</p>
-                            <p><a id="link" target="_blank" href="' . $service_info['certification'] . '">' . mb_substr($service_info['certification'], 1 + strpos($service_info['certification'], '-')) . '</a></p>
+                        <label class="form-label name" for="autoserv_services">Категория</label>
+                        <p>' . $service_info['category'] . '</p>
+                        <label class="form-label name" for="autoserv_services">Стоимость</label>
+                        <p>' . $service_info['price'] . '</p>
+                        <label class="form-label name" for="autoserv_services">Сертификация</label>';
+                        if ($service_info['certification'] == '-') {
+                            echo '<p style="display: block">Отсутствует</p>
+                                <a target="_blank" href="' . $service_info['certification'] . '" style="display: none">' . mb_substr($service_info['certification'], 1 + strpos($service_info['certification'], '-')) . '</a>';
+                        } else {
+                            echo '<p style="display: none">Отсутствует</p>
+                            <a target="_blank" href="' . $service_info['certification'] . '" style="display: block">' . mb_substr($service_info['certification'], 1 + strpos($service_info['certification'], '-')) . '</a>';                    
+                        }
+                        echo '<label class="form-label name" for="autoserv_services">Описание</label>
                             <p>' . $service_info['text'] . '</p>
                         </div>
-                    </div>
-                </div>';
+                    </div>';
+        } else {
+            echo 'Здесь мог бы быть Ваш автосервис';
+        }
         ?>
         </div>
     

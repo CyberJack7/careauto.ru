@@ -25,18 +25,12 @@ if (isset($_POST['autoserv_service_id'])) {
     $data = json_decode($_POST['autoserv_service_id'], true);
     if (!empty($data)) {
         $services = getServiceInfo($data['autoservice_id'], $data['service_id']);
-        $service_result = [
-            'category' => $services['category'],
-            'price' => $services['price'],
-            'certification' => $services['certification'],
-            'text' => $services['text']
-        ];
-        foreach ($service_result as &$value) {
+        foreach ($services as &$value) {
             if ($value == NULL) {
                 $value = '-';
             }
         }
-        $json_services = json_encode($service_result);
+        $json_services = json_encode($services);
         echo $json_services;
     } else {
         return NULL;

@@ -10,7 +10,7 @@ if (empty($_SESSION['user']['new_email']) && empty($_SESSION['new_user']) && emp
 }
 ?>
 
-<div class="container central column">
+<div class="container central column content">
     <div class="panel">
 
         <div class="class mb-3">
