@@ -59,23 +59,14 @@ function service_update($autoservice_id, $service_id, $price, $text, $certificat
         $name_cert = time() . '-' . $_FILES['certification']['name'] . '_' . $service_id;
         $full_path = $_SERVER['DOCUMENT_ROOT'] . $directory . $name_cert;
 
-        if (!is_dir($directory))
-            mkdir($directory, 0777, true);
+        if (!is_dir($_SERVER['DOCUMENT_ROOT'] . $directory))
+            mkdir($_SERVER['DOCUMENT_ROOT'] . $directory, 0777, true);
         if (!move_uploaded_file($_FILES['certification']['tmp_name'], $full_path)) {
             $_SESSION['message']['text'] = "Не удалось загрузить файл, попробуйте снова";
             $_SESSION['message']['type'] = 'warning';
             header('Location: /autoservice_service/');
             exit;
         }
-
-        // if (!is_dir($_SERVER['DOCUMENT_ROOT'] . $directory))
-        //     mkdir($_SERVER['DOCUMENT_ROOT'] . $directory, 0777, true);
-        // if (!move_uploaded_file($_FILES['certification']['tmp_name'], $full_path)) {
-        //     $_SESSION['message']['text'] = "Не удалось загрузить файл, попробуйте снова";
-        //     $_SESSION['message']['type'] = 'warning';
-        //     header('Location: /autoservice_service/');
-        //     exit;
-        // }
         $sql = "UPDATE Public.autoservice_service 
         SET price=" . $pdo->quote($price) .
             ",text=" . $pdo->quote($text) .
@@ -104,8 +95,8 @@ function service_add($autoservice_id, $service_id, $price, $text, $certification
         $directory = PATH_UPLOADS_REGULAR . $autoservice_id . '/certification/';
         $name_cert = time() . '-' . $_FILES['add_certification']['name'] . '_' . $service_id;
         $full_path = $_SERVER['DOCUMENT_ROOT'] . $directory . $name_cert;
-        if (!is_dir($directory))
-            mkdir($directory, 0777, true);
+        if (!is_dir($_SERVER['DOCUMENT_ROOT'] . $directory))
+            mkdir($_SERVER['DOCUMENT_ROOT'] . $directory, 0777, true);
         if (!move_uploaded_file($_FILES['add_certification']['tmp_name'], $full_path)) {
             $_SESSION['message']['text'] = "Не удалось загрузить файл, попробуйте снова";
             $_SESSION['message']['type'] = 'warning';
