@@ -1,5 +1,5 @@
 <?php
-  require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/site_template/header.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/site_template/header.php';
 ?>
 
 <?php //неавторизованный пользователь пересылается на страницу авторизации
@@ -15,5 +15,5 @@ if (empty($_SESSION['user'])) {
 ?>
 
 <?php
-  require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/site_template/footer.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/site_template/footer.php';
 ?>

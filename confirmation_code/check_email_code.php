@@ -118,4 +118,38 @@ if (!empty($_SESSION['new_user'])) { //подтверждение регистр
         header('Location: /profile/');
         exit;
     }
+} elseif (!empty($_SESSION['password_recovery'])) { // Если пользователь меняет пароль
+    if ($_POST['resend']) { //если повторная отправка кода подтверждения
+        $_SESSION['password_recovery']['code'] = send_email($_SESSION['password_recovery']['email']);
+        $_SESSION['message']['text'] = "Отправлен новый код!";
+        $_SESSION['message']['type'] = 'info';
+        header('Location: /confirmation_code/');
+        exit;
+    }
+    if ($_SESSION['password_recovery']['attempt'] >= 1) { // 2 попытки на ввод кода!
+        if ($_SESSION['password_recovery']['code'] === $code_inp) { // если код введен верно
+            header('Location: /password_recovery/');
+            exit();
+        } else {
+            $_SESSION['password_recovery']['attempt'] -= 1;
+            $_SESSION['message']['text'] = "Код введен неверно! У вас осталась " . $_SESSION['password_recovery']['attempt'] . " попытка";
+            $_SESSION['message']['type'] = 'warning';
+            if ($_SESSION['password_recovery']['attempt'] == 0) {
+                unset($_SESSION['password_recovery']);
+                $_SESSION['message']['text'] = "Превышено число попыток ввода кода!<br>Выполните восстановление повторно!";
+                $_SESSION['message']['type'] = 'danger';
+                header('Location: /authorization/');
+                exit;
+            } else {
+                header('Location: /confirmation_code/');
+                exit;
+            }
+        }
+    } else {
+        unset($_SESSION['password_recovery']);
+        $_SESSION['message']['text'] = "Превышено число попыток ввода кода!<br>Выполните восстановление повторно!";
+        $_SESSION['message']['type'] = 'danger';
+        header('Location: /authorization/');
+        exit;
+    }
 }
