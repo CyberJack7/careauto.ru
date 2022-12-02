@@ -226,7 +226,7 @@ function get_all_userinfo($user_id, $user_type = null)
 }
 
 //массив расположения фотографий автосервиса
-function get_ar_photos($autoservice_id)
+function getPhotosArray($autoservice_id)
 {
   $pdo = conn();
   $sql = "SELECT photos FROM public.autoservice WHERE autoservice_id = " . $autoservice_id;
@@ -241,9 +241,9 @@ function get_ar_photos($autoservice_id)
 }
 
 //массив названий фотографий автосервиса
-function get_ar_name_photos($autoservice_id)
+function getPhotosNames($autoservice_id)
 {
-  $ar_photos = get_ar_photos($autoservice_id);
+  $ar_photos = getPhotosArray($autoservice_id);
   if (!empty($ar_photos)) {
     $ar_name_photos = [];
     foreach ($ar_photos as $photo) {
@@ -794,7 +794,7 @@ function getAutoserviceInfoById($autoservice_id) {
     'photos' => $autoservice['photos'],
     'text' => $autoservice['text'],
     'brand_list' => $brand_list,
-    'services_id' => $services_id,
+    'services_id' => $services_id
   ];
   if (!empty($arResult)) {
     return $arResult;

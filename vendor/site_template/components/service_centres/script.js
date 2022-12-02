@@ -88,6 +88,120 @@ function getServicesById(category) {
 }
 
 
+//получение информации о сервисном центре
+function getAutoserviceInfo(plate) {
+  let autoservice_id = parseInt(plate.id.match(/\d+/), 10); //id выбранного СЦ
+  let json_autoservice_id = JSON.stringify(autoservice_id);
+  $.post(
+    "/vendor/site_template/components/service_centres/component.php",
+    { autoserv_get_info: json_autoservice_id },
+    function (data) {
+      //функция которая будет выполнена после успешного запроса
+      let ar_autoservice_info = JSON.parse(data); //конвертировали JSON string из data в js object
+      
+      //вывод основной текстовой информации
+      let show_autoservice_area = document.getElementsByClassName("show_autoservice")[0];
+      show_autoservice_area.id = ar_autoservice_info['id'];
+      show_autoservice_area.getElementsByTagName("h3")[0].innerHTML = ar_autoservice_info['name'];
+      let value_p = show_autoservice_area.getElementsByClassName("value");
+      value_p[0].innerHTML = ar_autoservice_info['text'];
+      value_p[1].innerHTML = ar_autoservice_info['phone'];
+      value_p[2].innerHTML = ar_autoservice_info['address'];
+      //вывод фотографий СЦ
+      let autoservice_photos = document.getElementsByClassName("photos")[0]; //внутренняя область вывода фотографий
+      let autoservice_photos_p = document.getElementById("photos_p");
+      let amount_photos = ar_autoservice_info['photos'].length; //количество добавляемых фотографий
+      if (amount_photos == 0) {
+        autoservice_photos.style.display = 'none';
+        autoservice_photos_p.style.display = 'block';
+      } else {
+        autoservice_photos_p.style.display = 'none';
+        autoservice_photos.style.display = 'block';
+        let major_photo = autoservice_photos.getElementsByClassName("major_photo")[0];
+        major_photo.src = ar_autoservice_info['photos'][0]['src'];
+        major_photo.alt = ar_autoservice_info['photos'][0]['name'];
+        let minor_photos = autoservice_photos.getElementsByClassName("minor_photo");
+        minor_photos[0].src = ar_autoservice_info['photos'][0]['src'];
+        minor_photos[0].alt = ar_autoservice_info['photos'][0]['name'];
+        let i = 1;
+        for (; i < amount_photos; i++) {
+          minor_photos[i].src = ar_autoservice_info['photos'][i]['src'];
+          minor_photos[i].alt = ar_autoservice_info['photos'][i]['name'];
+          minor_photos[i].removeAttribute("style");
+        }
+        let amount_minor_photos = minor_photos.length;
+        while (i < amount_minor_photos) {
+          minor_photos[i].style.display = "none";
+          i++;
+        }
+      }
+      //вывод списка обслуживаемых марок
+      let autoservice_brands = document.getElementById("autoservice_brands"); //внутренняя область вывода марок
+      let autoservice_brands_p = document.getElementById("autoservice_brands_p");
+      let amount_brands = ar_autoservice_info['brand_list'].length; //количество добавляемых марок
+      if (amount_brands == 0) {
+        autoservice_brands.style.display = 'none';
+        autoservice_brands_p.style.display = 'block';
+      } else {
+        autoservice_brands_p.style.display = 'none';
+        autoservice_brands.style.display = 'block';
+        let ar_brands_p = autoservice_brands.getElementsByTagName("p");
+        let amount_p = ar_brands_p.length; //количество текущих марок
+        let i = 0;
+        for (; i < amount_brands && i < amount_p; i++) {
+          ar_brands_p[i].id = ar_autoservice_info['brand_list'][i]['id'];
+          ar_brands_p[i].innerHTML = ar_autoservice_info['brand_list'][i]['name'];
+        }
+        if (i < amount_brands) {
+          for (; i < amount_brands; i++) {
+            let p_brand = document.createElement("p");
+            p_brand.id = ar_autoservice_info['brand_list'][i]['id'];
+            p_brand.innerHTML = ar_autoservice_info['brand_list'][i]['name'];
+            autoservice_brands.appendChild(p_brand);
+          }
+        } else if (i < amount_p) {
+          while (i < amount_p) {
+            ar_brands_p[i].remove();
+            amount_p--;
+          }          
+        }
+      }
+      //вывод списка услуг СЦ
+      let autoservice_services = document.getElementById("autoserv_services"); //перечень услуг автосервиса
+      let autoservice_service_info = document.getElementById("service_info"); //вывод подробной инфы об услуге
+      let autoservice_services_p = document.getElementById("autoservice_services_p"); //текст если 0 услуг
+      let amount_service = ar_autoservice_info['services'].length; //количество добавляемых услуг
+      if (amount_service == 0) {
+        autoservice_services.style.display = 'none';
+        autoservice_service_info.style.display = 'none';
+        autoservice_services_p.style.display = 'block';
+      } else {
+        autoservice_brands_p.style.display = 'none';
+        autoservice_brands.style.display = 'block';
+        autoservice_service_info.style.display = 'block';
+        let autoservice_service_option = autoservice_services.getElementsByTagName("option");
+        let amount_option = autoservice_service_option.length; //количество текущих марок
+        let i = 0;
+        for (; i < amount_service && i < amount_option; i++) {
+          autoservice_service_option[i].value = ar_autoservice_info['services'][i]['id'];
+          autoservice_service_option[i].innerHTML = ar_autoservice_info['services'][i]['name'];
+        }
+        if (i < amount_service) {          
+          for (; i < amount_service; i++) {
+            autoservice_services.append(new Option(ar_autoservice_info['services'][i]['name'], ar_autoservice_info['services'][i]['id']));
+          }
+        } else if (i < amount_option) {
+          while (i < amount_option) {
+            autoservice_service_option[i].remove();
+            amount_option--;
+          }
+        }
+      }
+    }
+  );
+}
+
+
 //отображение информации об услуге
 function setServiceInfo(ar_service_info) {
   console.log(ar_service_info);
@@ -113,6 +227,7 @@ function getServiceInfo(select) {
   let service_id = select.options[select.selectedIndex].value; //id выбранной услуги
   let autoservice_id = document.getElementsByClassName("show_autoservice")[0].id;
   let json_data = JSON.stringify({'autoservice_id': autoservice_id, 'service_id': service_id});
+  console.log(json_data);
   $.post(
     "/vendor/site_template/components/service_centres/component.php",
     { autoserv_service_id: json_data },

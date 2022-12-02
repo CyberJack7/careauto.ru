@@ -68,7 +68,7 @@ if ($user_type == "client") { // для клиента
         "name" => $_POST['name_client'],
         "email" => $_POST['email'],
         "city_id" => $_POST['city_id'],
-        "phone" => str_replace(['(', ')', '-', '+', ' '], '', $_POST['phone']),
+        "phone" => str_replace(['(', ')', '-', ' '], '', $_POST['phone']),
         "password" => password_hash($_POST['password'], PASSWORD_DEFAULT),
         "code" => send_email($_POST['email']),
         "attempt" => 3

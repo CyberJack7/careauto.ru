@@ -101,7 +101,7 @@
                                 $value = '-';
                             }
                         }
-                        echo '<div class="plate" id="autoservice_id_' . $autoservice['id'] . '">                    
+                        echo '<div class="plate" id="autoservice_id_' . $autoservice['id'] . '" onclick="getAutoserviceInfo(this)">                    
                                 <h3>' . $autoservice['name'] . '</h3>
                                 <div class="central">
                                     <div class="text_list name">
@@ -133,23 +133,31 @@
                 }
             }
             echo '<h3>' . $autoservice_info['name'] . '</h3>
-                <div class="autoservices_area">
-                <p class="name">Описание</p><p>' . $autoservice_info['text'] . '</p>
-                <p class="name">Фотографии</p>
-            <div class="photos">';        
-            $ar_photos = get_ar_photos($autoservices[0]['id']);
-            if (!empty($ar_photos)) {
-                $ar_name_photos = get_ar_name_photos($autoservices[0]['id']);
-                echo '<img class="major_photo" id="photo_main" src="' . $ar_photos[0] . '" alt="' . $ar_name_photos[0] . '">';
-                for ($photo_number = 0; $photo_number < count($ar_photos); $photo_number++){
-                    echo '<img class="minor_photo" id="photo_' . $photo_number . '" src="' . $ar_photos[$photo_number] . '" alt="' . $ar_name_photos[$photo_number] . '" onclick="gallery(this)">';
+                <div class="autoservices_area" style="max-height: 595.6px !important">
+                <p class="name">Описание</p><p class="value">' . $autoservice_info['text'] . '</p>
+                <p class="name">Фотографии</p>';
+                $ar_photos = getPhotosArray($autoservices[0]['id']);
+                if (empty($ar_photos)) {
+                    echo '<p id="photos_p" style="display: block">Отсутствуют</p>
+                    <div class="photos" style="display: none">
+                        <img class="major_photo" id="photo_main" src="" alt="">
+                        <img class="minor_photo" id="photo_0" src="" alt="" onclick="gallery(this)">
+                    </div>';
+                } else {
+                    echo '<p id="photos_p" style="display: none">Отсутствуют</p>
+                    <div class="photos" style="display: block">';
+                    $ar_name_photos = getPhotosNames($autoservices[0]['id']);
+                    echo '<img class="major_photo" id="photo_main" src="' . $ar_photos[0] . '" alt="' . $ar_name_photos[0] . '">';
+                    for ($photo_number = 0; $photo_number < count($ar_photos); $photo_number++){
+                        echo '<img class="minor_photo" id="photo_' . $photo_number . '" src="' . $ar_photos[$photo_number] . '" alt="' . $ar_name_photos[$photo_number] . '" onclick="gallery(this)">';
+                    }
+                    echo '</div>';
                 }
-            }
-            echo '</div>
-                <p class="name">Телефон</p><p>' . $autoservice_info['phone'] . '</p>
-                <p class="name">Адрес</p><p>' . $autoservice_info['address'] . '</p>
+            echo '<p class="name">Телефон</p><p class="value">' . $autoservice_info['phone'] . '</p>
+                    <p class="name">Адрес</p><p class="value">' . $autoservice_info['address'] . '</p>
             <div  class="mb-3">
                 <label class="form-label name" for="autoserv_services">Обслуживаемые марки автомобилей</label>
+                <p id="autoservice_brands_p" style="display: none">Перечень марок не указан</p>
                 <div class="central" id="autoservice_brands">';
             if (!empty($autoservice_info['brand_list'])) {
                 foreach ($autoservice_info['brand_list'] as $brand) {
@@ -160,6 +168,7 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label name" for="autoserv_services">Список услуг сервисного центра</label>
+                    <p id="autoservice_services_p" style="display: none">Перечень марок не указан</p>
                     <select class="form-select" id="autoserv_services" name="autoserv_services" aria-label="Default select example" onchange="getServiceInfo(this)">';
                     foreach ($autoservice_info['services_id'] as $service_id) {
                         $service_info = getServiceInfo($autoservice_info['id'], $service_id);

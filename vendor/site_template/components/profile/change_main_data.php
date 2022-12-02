@@ -53,18 +53,19 @@ if (!empty($_FILES['photos']['tmp_name'][0])) {
     if ($autoservice['photos'] != null) { //если есть какие-то фото в бд        
         $directory = PATH_UPLOADS_REGULAR . $_SESSION['user']['id'] . '/photos/';
         $full_directory = $_SERVER['DOCUMENT_ROOT'] . $directory;
+        $count = 0;
         foreach ($_FILES['photos']['tmp_name'] as $photo) { //для каждого фото, которое надо загрузить
-            $photo_number = array_search($photo, $_FILES['photos']['name']);
-            $photo_name = time() . '-' . translit($_FILES['photos']['name'][$photo_number]);
+            // $photo_number = array_search($photo, $_FILES['photos']['name']);
+            $photo_name = time() . '-' . translit($_FILES['photos']['name'][$count]);
             $download_path = $full_directory . $photo_name;
-            echo $download_path;
-            if (!move_uploaded_file($_FILES['photos']['tmp_name'][$photo_number], $download_path)) {
+            if (!move_uploaded_file($photo, $download_path)) {
                 $_SESSION['message']['text'] = "Не удалось загрузить файл, попробуйте снова";
                 $_SESSION['message']['type'] = 'warning';
                 header('Location: /profile/');
                 exit;
             }
             array_push($ar_photos, $directory . $photo_name);
+            $count++;
         }
         $sql_photos = "{'" . implode("','", $ar_photos) . "'}";
         $sql_quote_photos = $pdo->quote($sql_photos);

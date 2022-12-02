@@ -70,9 +70,9 @@ if (empty($_SESSION['user'])) {
                 <input class="form-control" id="photos" name="photos[]" type="file" accept="image/jpeg" multiple/>
                 <div class="photos">  
                     <?php //фотографии
-                    $ar_photos = get_ar_photos($_SESSION['user']['id']);                
+                    $ar_photos = getPhotosArray($_SESSION['user']['id']);                
                     if (!empty($ar_photos)) {
-                        $ar_name_photos = get_ar_name_photos($_SESSION['user']['id']);
+                        $ar_name_photos = getPhotosNames($_SESSION['user']['id']);
                         echo '<img class="major_photo" id="photo_main" src="' . $ar_photos[0] . '" alt="' . $ar_name_photos[0] . '">';
                         for ($photo_number = 0; $photo_number < count($ar_photos); $photo_number++){
                             echo '<img class="minor_photo" id="photo_' . $photo_number . '" src="' . $ar_photos[$photo_number] . '" alt="' . $ar_name_photos[$photo_number] . '" onclick="gallery(this)">';
@@ -91,7 +91,7 @@ if (empty($_SESSION['user'])) {
             <div class="multiselect mb-3">
                 <label class="form-label" for="brands">Обслуживаемые марки авто</label>
                 <div class="form-select selectBox" onclick="showCheckboxes(this)">
-                    <option>Выбрано марок авто: <?php $autoserv_brands = get_autoservice_brands($_SESSION['user']['id']); 
+                    <option>Выбрано марок авто: <?php $autoserv_brands = getAutoserviceBrands($_SESSION['user']['id']); 
                     if ($autoserv_brands == null) {
                         $autoserv_brands = [];
                     }
