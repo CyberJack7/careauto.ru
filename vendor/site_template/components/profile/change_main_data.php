@@ -35,7 +35,7 @@ if (isset($_POST['brand'])) {//редактировать список маро�
         $_SESSION['message']['type'] = 'success';
     }
     
-    $autoservice = get_all_userinfo($_SESSION['user']['id'], 'autoservice');
+    $autoservice = getAllUserInfo($_SESSION['user']['id'], 'autoservice');
     
     if ($description != $autoservice['text']) { //смена описания
         $sql_description = $pdo->quote($description);

@@ -48,7 +48,7 @@ if (empty($_SESSION['user'])) {
     </div>
 
     <div>
-        <?php if ($_SESSION['user']['user_type'] == 'autoservice') { $autoservice = get_all_userinfo($_SESSION['user']['id'], 'autoservice');?>
+        <?php if ($_SESSION['user']['user_type'] == 'autoservice') { $autoservice = getAllUserInfo($_SESSION['user']['id'], 'autoservice');?>
         <form class="panel" action="<?php $_SERVER['DOCUMENT_ROOT']?>/vendor/site_template/components/profile/change_main_data.php" method="post" enctype="multipart/form-data">
             <h3 id="main_data">Основная информация</h3>
             <?php

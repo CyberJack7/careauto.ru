@@ -88,115 +88,69 @@ function getServicesById(category) {
 }
 
 
+//поиск и сортировка сервисных центров
+function searchAutoservices(search_button) {
+  cancelApplication();
+  let search_autoservices = document.getElementById("search_autoservices");
+  search_autoservices.getElementsByTagName("h3")[0].innerHTML = 'Поиск сервисных центров по Вашему запросу';
+  search_autoservices.getElementsByClassName("autoservices_area")[0].remove();
+  search_autoservices.insertAdjacentHTML('beforeend', '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>');
+
+  let autoservice_name = document.getElementById("autoserv_name").value; //название нужного СЦ
+  let autoservice_city = document.getElementById("city").options[document.getElementById("city").selectedIndex].value; //нужный город
+  let autoservice_categories = []; //нужные категории
+  let autoservice_services = []; //нужные услуги
+  let autoservice_auto_id = document.getElementById("autos").options[document.getElementById("autos").selectedIndex].value; //нужный автомобиль
+  let autoservice_categories_input = document.getElementById("categories").getElementsByTagName("input");
+  let amount_categories_input = autoservice_categories_input.length;
+  for (let i = 0; i < amount_categories_input; i++) {
+    if (autoservice_categories_input[i].checked == true) {
+      autoservice_categories.push(autoservice_categories_input[i].id);
+    }
+  }
+  let autoservice_services_input = document.getElementById("services").getElementsByTagName("input");
+  let amount_services_input = autoservice_services_input.length;
+  for (let i = 0; i < amount_services_input; i++) {
+    if (autoservice_services_input[i].checked == true) {
+      autoservice_services.push(autoservice_services_input[i].id);
+    }
+  }
+  let json_data = JSON.stringify({
+    'name': autoservice_name,
+    'city': autoservice_city,
+    'categories': autoservice_categories,
+    'services': autoservice_services,
+    'auto_id': autoservice_auto_id,
+  });
+  $.post(
+    "/vendor/site_template/components/service_centres/component.php",
+    { search_autoservices: json_data },
+    function (data) {
+      //функция которая будет выполнена после успешного запроса
+      let search_autoservices = document.getElementById("search_autoservices");
+      search_autoservices.getElementsByTagName("h3")[0].remove();
+      search_autoservices.getElementsByClassName("spinner-border")[0].remove();
+      search_autoservices.insertAdjacentHTML('afterBegin', data);
+    }
+  );
+}
+
+
 //получение информации о сервисном центре
 function getAutoserviceInfo(plate) {
+  cancelApplication();
   let autoservice_id = parseInt(plate.id.match(/\d+/), 10); //id выбранного СЦ
   let json_autoservice_id = JSON.stringify(autoservice_id);
+  let current_autoservice = document.getElementById("current_autoservice");
+  current_autoservice.getElementsByClassName("show_autoservice")[0].remove();
+  current_autoservice.insertAdjacentHTML('afterBegin', '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>');  
   $.post(
     "/vendor/site_template/components/service_centres/component.php",
     { autoserv_get_info: json_autoservice_id },
     function (data) {
       //функция которая будет выполнена после успешного запроса
-      let ar_autoservice_info = JSON.parse(data); //конвертировали JSON string из data в js object
-      
-      //вывод основной текстовой информации
-      let show_autoservice_area = document.getElementsByClassName("show_autoservice")[0];
-      show_autoservice_area.id = ar_autoservice_info['id'];
-      show_autoservice_area.getElementsByTagName("h3")[0].innerHTML = ar_autoservice_info['name'];
-      let value_p = show_autoservice_area.getElementsByClassName("value");
-      value_p[0].innerHTML = ar_autoservice_info['text'];
-      value_p[1].innerHTML = ar_autoservice_info['phone'];
-      value_p[2].innerHTML = ar_autoservice_info['address'];
-      //вывод фотографий СЦ
-      let autoservice_photos = document.getElementsByClassName("photos")[0]; //внутренняя область вывода фотографий
-      let autoservice_photos_p = document.getElementById("photos_p");
-      let amount_photos = ar_autoservice_info['photos'].length; //количество добавляемых фотографий
-      if (amount_photos == 0) {
-        autoservice_photos.style.display = 'none';
-        autoservice_photos_p.style.display = 'block';
-      } else {
-        autoservice_photos_p.style.display = 'none';
-        autoservice_photos.style.display = 'block';
-        let major_photo = autoservice_photos.getElementsByClassName("major_photo")[0];
-        major_photo.src = ar_autoservice_info['photos'][0]['src'];
-        major_photo.alt = ar_autoservice_info['photos'][0]['name'];
-        let minor_photos = autoservice_photos.getElementsByClassName("minor_photo");
-        minor_photos[0].src = ar_autoservice_info['photos'][0]['src'];
-        minor_photos[0].alt = ar_autoservice_info['photos'][0]['name'];
-        let i = 1;
-        for (; i < amount_photos; i++) {
-          minor_photos[i].src = ar_autoservice_info['photos'][i]['src'];
-          minor_photos[i].alt = ar_autoservice_info['photos'][i]['name'];
-          minor_photos[i].removeAttribute("style");
-        }
-        let amount_minor_photos = minor_photos.length;
-        while (i < amount_minor_photos) {
-          minor_photos[i].style.display = "none";
-          i++;
-        }
-      }
-      //вывод списка обслуживаемых марок
-      let autoservice_brands = document.getElementById("autoservice_brands"); //внутренняя область вывода марок
-      let autoservice_brands_p = document.getElementById("autoservice_brands_p");
-      let amount_brands = ar_autoservice_info['brand_list'].length; //количество добавляемых марок
-      if (amount_brands == 0) {
-        autoservice_brands.style.display = 'none';
-        autoservice_brands_p.style.display = 'block';
-      } else {
-        autoservice_brands_p.style.display = 'none';
-        autoservice_brands.style.display = 'block';
-        let ar_brands_p = autoservice_brands.getElementsByTagName("p");
-        let amount_p = ar_brands_p.length; //количество текущих марок
-        let i = 0;
-        for (; i < amount_brands && i < amount_p; i++) {
-          ar_brands_p[i].id = ar_autoservice_info['brand_list'][i]['id'];
-          ar_brands_p[i].innerHTML = ar_autoservice_info['brand_list'][i]['name'];
-        }
-        if (i < amount_brands) {
-          for (; i < amount_brands; i++) {
-            let p_brand = document.createElement("p");
-            p_brand.id = ar_autoservice_info['brand_list'][i]['id'];
-            p_brand.innerHTML = ar_autoservice_info['brand_list'][i]['name'];
-            autoservice_brands.appendChild(p_brand);
-          }
-        } else if (i < amount_p) {
-          while (i < amount_p) {
-            ar_brands_p[i].remove();
-            amount_p--;
-          }          
-        }
-      }
-      //вывод списка услуг СЦ
-      let autoservice_services = document.getElementById("autoserv_services"); //перечень услуг автосервиса
-      let autoservice_service_info = document.getElementById("service_info"); //вывод подробной инфы об услуге
-      let autoservice_services_p = document.getElementById("autoservice_services_p"); //текст если 0 услуг
-      let amount_service = ar_autoservice_info['services'].length; //количество добавляемых услуг
-      if (amount_service == 0) {
-        autoservice_services.style.display = 'none';
-        autoservice_service_info.style.display = 'none';
-        autoservice_services_p.style.display = 'block';
-      } else {
-        autoservice_brands_p.style.display = 'none';
-        autoservice_brands.style.display = 'block';
-        autoservice_service_info.style.display = 'block';
-        let autoservice_service_option = autoservice_services.getElementsByTagName("option");
-        let amount_option = autoservice_service_option.length; //количество текущих марок
-        let i = 0;
-        for (; i < amount_service && i < amount_option; i++) {
-          autoservice_service_option[i].value = ar_autoservice_info['services'][i]['id'];
-          autoservice_service_option[i].innerHTML = ar_autoservice_info['services'][i]['name'];
-        }
-        if (i < amount_service) {          
-          for (; i < amount_service; i++) {
-            autoservice_services.append(new Option(ar_autoservice_info['services'][i]['name'], ar_autoservice_info['services'][i]['id']));
-          }
-        } else if (i < amount_option) {
-          while (i < amount_option) {
-            autoservice_service_option[i].remove();
-            amount_option--;
-          }
-        }
-      }
+      current_autoservice.getElementsByClassName("spinner-border")[0].remove();
+      current_autoservice.insertAdjacentHTML('afterBegin', data);
     }
   );
 }
@@ -204,7 +158,6 @@ function getAutoserviceInfo(plate) {
 
 //отображение информации об услуге
 function setServiceInfo(ar_service_info) {
-  console.log(ar_service_info);
   let ar_p = document.getElementById("service_info").getElementsByTagName("p");
   ar_p[0].innerHTML = ar_service_info['category'];
   ar_p[1].innerHTML = ar_service_info['price'];
@@ -227,7 +180,6 @@ function getServiceInfo(select) {
   let service_id = select.options[select.selectedIndex].value; //id выбранной услуги
   let autoservice_id = document.getElementsByClassName("show_autoservice")[0].id;
   let json_data = JSON.stringify({'autoservice_id': autoservice_id, 'service_id': service_id});
-  console.log(json_data);
   $.post(
     "/vendor/site_template/components/service_centres/component.php",
     { autoserv_service_id: json_data },
@@ -238,3 +190,141 @@ function getServiceInfo(select) {
     }
   );
 }
+
+
+//получение информации об услуге
+function createApplication(btn) {
+  let current_autoservice = document.getElementById("current_autoservice");
+  current_autoservice.getElementsByClassName("autoservices_area")[0].style.setProperty("max-height", "193.4px", "important");
+  btn.style.display = "none";
+  current_autoservice.insertAdjacentHTML('beforeend', '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>');
+  let client_id = document.getElementsByClassName("search")[0].id; //id клиента
+  let auto_id = document.getElementById("autos").options[document.getElementById("autos").selectedIndex].value; //id выбранного автомобиля
+  let autoservice_id = current_autoservice.getElementsByClassName("show_autoservice")[0].id; //id выбранного СЦ
+  let services_inputs = document.getElementById("services").getElementsByTagName("input");
+  let amount_services_inputs = services_inputs.length;
+  let services_id = [];
+  for (let i = 0; i < amount_services_inputs; i++) {
+    if (services_inputs[i].checked == true) {
+      services_id.push(services_inputs[i].id);
+    }
+  }
+  let json_data = JSON.stringify({'client_id': client_id, 'auto_id': auto_id, 'autoservice_id': autoservice_id, 'services_id': services_id});
+  $.post(
+    "/vendor/site_template/components/service_centres/component.php",
+    { create_application: json_data },
+    function (data) {
+      //функция которая будет выполнена после успешного запроса 
+      current_autoservice.getElementsByClassName("spinner-border")[0].remove();
+      current_autoservice.insertAdjacentHTML('beforeend', data);
+    }
+  );
+}
+
+
+//рассчитать стоимость заявки и кол-во выбранных услуг
+function setPrice(check) {
+  let service_id = check.id;
+  let autoservice_id = document.getElementById("current_autoservice").getElementsByClassName("show_autoservice")[0].id; //id выбранного СЦ
+  let json_data = JSON.stringify({'autoservice_id': autoservice_id, 'service_id': service_id});
+  $.post(
+    "/vendor/site_template/components/service_centres/component.php",
+    { get_price: json_data },
+    function (data) {
+      let cur_price_area = document.getElementById("price").getElementsByTagName("b")[0];
+      let cur_price = Number(parseInt(cur_price_area.innerHTML.match(/\d+/), 10));
+      let cur_amount_services_area = document.getElementById("show_application_services").getElementsByTagName("option")[0];
+      let cur_amount_services = Number(parseInt(cur_amount_services_area.innerHTML.match(/\d+/), 10));
+      if (check.checked == true) {
+        cur_price += Number(data);
+        cur_amount_services++;
+      } else {
+        cur_price -= Number(data);
+        cur_amount_services--;
+      }
+      cur_price_area.innerHTML = '<b>' + String(cur_price) + " р" + '</b>';
+      cur_amount_services_area.innerHTML = 'Выбрано услуг: ' + String(cur_amount_services);
+    }
+  );
+}
+
+
+//отправить заявку
+function sendApplication(btn) {
+  let client_id = document.getElementsByClassName("search")[0].id; //id клиента
+  let auto_id = document.getElementById("auto_application").options[document.getElementById("auto_application").selectedIndex].value; //id выбранного автомобиля
+  if (auto_id != '') {
+    let autoservice_id = current_autoservice.getElementsByClassName("show_autoservice")[0].id; //id выбранного СЦ  
+    let price = Number(parseInt(document.getElementById("price").getElementsByTagName("b")[0].innerHTML.match(/\d+/), 10)); //стоимость
+    let date;
+    if (document.getElementById("desired_date").value != '') {
+      date = document.getElementById("desired_date").value + ' ' + document.getElementById("desired_time").value; //желаемая дата и время
+    } else {
+      date = document.getElementById("desired_date").value;
+    }
+    let comment = document.getElementById("comment").value; //комментарий
+    let services_id = []; //массив id услуг
+    let services_option = document.getElementById("application_services").getElementsByTagName("input");
+    let amount_services_option = services_option.length;
+    for (let i = 0; i < amount_services_option; i++) {
+      if (services_option[i].checked == true) {
+        services_id.push(services_option[i].id);
+      }
+    }
+    json_data = JSON.stringify({
+      'client_id': client_id, 
+      'auto_id': auto_id, 
+      'autoservice_id': autoservice_id, 
+      'services_id': services_id,
+      'price': price,
+      'date': date,
+      'comment': comment
+    });
+    $.post(
+      "/vendor/site_template/components/service_centres/component.php",
+      { send_application: json_data },
+      function (data) {
+        //функция которая будет выполнена после успешного запроса 
+        cancelApplication();
+      }
+    );
+  }
+}
+
+
+//отменить заявку
+function cancelApplication() {
+  if (document.getElementById("send_application")) {
+    document.getElementById("create_application").style.display = 'block';
+    document.getElementById("send_application").remove();
+    document.getElementById("current_autoservice").getElementsByClassName("autoservices_area")[0].removeAttribute("style");
+  }
+}
+
+
+
+//получение информации о сервисном центре
+/*function setAutoservSort(select) {  
+  let sort_id = select.options[select.selectedIndex].value;; //id выбранной сортировки
+  let json_sort;
+  if (sort_id == 0) {
+    json_sort = JSON.stringify({sort_id: sort_id});
+  } else {
+    let plates = document.getElementById("search_autoservices").getElementsByClassName("plate");
+    let prices = {};
+    let amount_plates = plates.length;
+    for (let i = 0; i < amount_plates; i++) {
+      let min_price = plates[i].getElementsByTagName("p")[3].innerHTML.substring(0, plates[i].getElementsByTagName("p")[3].innerHTML.indexOf('-'));
+      prices[parseInt(plates[i].id.match(/\d+/), 10)] = min_price;
+    }  
+    json_sort = JSON.stringify({sort_id: sort_id, prices: prices});
+  }
+  $.post(
+    "/vendor/site_template/components/service_centres/component.php",
+    { autoserv_sort: json_sort },
+    function (data) {
+      //функция которая будет выполнена после успешного запроса
+      console.log(data);
+    }
+  );
+}*/
