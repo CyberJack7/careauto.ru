@@ -30,18 +30,18 @@
 
 #search_autoservices {
   width: 33% !important;
-  max-height: 700px !important;
+  max-height: 748px !important;
 }
 
 .autoservices_area {
-  max-height: 562px;
+  max-height: 635px;
   overflow: auto;
   border-top: 1px solid #bababa;
   border-bottom: 1px solid #bababa;
 }
 
 .with_btn {
-  max-height: 547.6px !important;
+  max-height: 620.6px !important;
 }
 
 .autoservices_area > button {
@@ -110,7 +110,7 @@
 }
 
 #send_application > .autoservices_area {
-  max-height: 262.6px;
+  max-height: 277.6px;
 }
 
 .autoservices_area > .mb-3 {

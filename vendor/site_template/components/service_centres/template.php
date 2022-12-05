@@ -42,8 +42,8 @@
                     <?php //вывод категорий услуг
                     $categories = get_category_list();
                     foreach ($categories as $key => $value) {
-                            echo '<label for="' . $key . '">
-                                <input type="checkbox" id="' . $key . '" onclick="getServicesById(this)"/>' . $value . '</label>';
+                            echo '<label for="category_' . $key . '">
+                                <input type="checkbox" id="category_' . $key . '" onclick="getServicesById(this)"/>' . $value . '</label>';
                     }?>
                 </div>
             </div>
@@ -198,7 +198,5 @@
         </div>
         <button class="btn btn-primary" id="create_application" type="button" onclick="createApplication(this)">Сформировать заявку</button>
         
-        
-
     </div>
 </div>

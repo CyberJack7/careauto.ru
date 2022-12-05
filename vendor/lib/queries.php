@@ -863,9 +863,9 @@ function getAutoservicesByParameters($parametres = NULL) {
       WHERE autoservice_id = " . $id . " GROUP BY phone_autoservice, name_city, address";
     $autoservice_info = $pdo->query($sql_autoservice_info)->fetch();
     if ($autoservice_info['address'] != NULL) {
-      $address = $autoservice_info['name_city'] . ', ' . $autoservice_info['address'];
+      $address = 'г. ' . $autoservice_info['name_city'] . ', ' . $autoservice_info['address'];
     } else {
-      $address = $autoservice_info['name_city'];
+      $address = 'г. ' . $autoservice_info['name_city'];
     }
     array_push($arResult, [
       'id' => $id,
@@ -891,9 +891,9 @@ function getAutoserviceInfoById($autoservice_id) {
   $services_id = getServicesIdList($autoservice_id);
   $brand_list = getAutoserviceBrands($autoservice_id);
   if ($autoservice['address'] != NULL) {
-    $address = $autoservice['name_city'] . ', ' . $autoservice['address'];
+    $address = 'г. ' . $autoservice['name_city'] . ', ' . $autoservice['address'];
   } else {
-    $address = $autoservice['name_city'];
+    $address = 'г. ' . $autoservice['name_city'];
   }
   $arResult = [
     'id' => $autoservice['autoservice_id'],
@@ -918,6 +918,58 @@ function getServicePriceById($autoservice_id, $service_id) {
   $sql = "SELECT price FROM public.autoservice_service WHERE autoservice_id = " . $autoservice_id . ' AND service_id = ' . $service_id;
   $price = $pdo->query($sql)->fetch()['price'];  
   return $price;
+}
+
+
+//Список текущих услуг клиента
+function getApplicationsListById($client_id, $auto_id = NULL, $history = false) {
+  $pdo = conn();
+  $sql_insert = '';
+  if ($auto_id != NULL) {
+    $sql_insert .= ' AND auto_id = ' . $auto_id;
+  }
+  if ($history == true) {
+    $sql_insert .= " AND status IN ('Завершено', 'Отказ')";
+  }
+  $sql = "SELECT application_id, name_brand, name_model, name_autoservice, date, autoserv_serv_id, price, application.text, status, date_payment 
+    FROM public.autoservice JOIN public.application USING(autoservice_id) JOIN public.automobile USING(auto_id) JOIN public.brand USING(brand_id) 
+    JOIN public.model USING(model_id) WHERE application.client_id = " . $client_id . $sql_insert . ' ORDER BY name_autoservice';
+  $applications = $pdo->query($sql);
+  $arApplications = [];
+  while ($application = $applications->fetch()) {
+    if ($application['date'] != NULL) {
+      list($date, $time) = explode(" ", $application['date']);
+    } else {
+      $date = $time = '-';
+    }
+    $services = [];
+    if (substr($application['autoserv_serv_id'], 1, -1) != '') {
+      $sql_autoserv_services = "SELECT DISTINCT name_service FROM public.autoservice_service JOIN public.service USING(service_id) 
+      WHERE autoservice_service.service_id IN (" . substr($application['autoserv_serv_id'], 1, -1) . ') ORDER BY name_service';
+      $services_names = $pdo->query($sql_autoserv_services);
+      while ($service_name = $services_names->fetch()) {
+        array_push($services, $service_name['name_service']);
+      }
+    }
+    foreach ($application as &$value) {
+      if($value == NULL) {
+        $value = '-';
+      }
+    }
+    array_push($arApplications, [
+      'id' => $application['application_id'],
+      'auto' => $application['name_brand'] . ' ' . $application['name_model'],
+      'autoservice' => $application['name_autoservice'],
+      'date' => $date,
+      'time' => $time,
+      'services' => $services,
+      'price' => $application['price'],
+      'text' => $application['text'],
+      'date_payment' => $application['date_payment'],
+      'status' => $application['status']
+    ]);
+  }
+  return $arApplications;
 }
 
 

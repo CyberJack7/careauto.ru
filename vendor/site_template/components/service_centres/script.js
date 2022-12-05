@@ -49,7 +49,7 @@ function setServices(ar_services, type_of_change, category_id) {
       }
     }
     services_list.append(div);    
-  } else { //убираем их списка услуг
+  } else { //убираем из списка услуг
     let div = services_list.getElementsByClassName("services_by_catedory")
     let amount_div = div.length;
     for (let i = 0; i < amount_div; i++) {
@@ -65,7 +65,7 @@ function setServices(ar_services, type_of_change, category_id) {
 
 //получение списка услуг по id категории
 function getServicesById(category) {
-  let category_id = category.id; //id нажатой категории
+  let category_id = parseInt(category.id.match(/\d+/), 10); //id нажатой категории
   let type_of_change = true; //тип изменения: true - добавить в список услуг, false - очистить из списка услуг
   let text = document.getElementById("show_categories").getElementsByTagName("option")[0];
   let amount_checked_categories = parseInt(text.innerHTML.match(/\d+/), 10);
@@ -90,7 +90,6 @@ function getServicesById(category) {
 
 //поиск и сортировка сервисных центров
 function searchAutoservices(search_button) {
-  cancelApplication();
   let search_autoservices = document.getElementById("search_autoservices");
   search_autoservices.getElementsByTagName("h3")[0].innerHTML = 'Поиск сервисных центров по Вашему запросу';
   search_autoservices.getElementsByClassName("autoservices_area")[0].remove();
@@ -105,7 +104,7 @@ function searchAutoservices(search_button) {
   let amount_categories_input = autoservice_categories_input.length;
   for (let i = 0; i < amount_categories_input; i++) {
     if (autoservice_categories_input[i].checked == true) {
-      autoservice_categories.push(autoservice_categories_input[i].id);
+      autoservice_categories.push(parseInt(autoservice_categories_input[i].id.match(/\d+/), 10));
     }
   }
   let autoservice_services_input = document.getElementById("services").getElementsByTagName("input");
@@ -131,6 +130,12 @@ function searchAutoservices(search_button) {
       search_autoservices.getElementsByTagName("h3")[0].remove();
       search_autoservices.getElementsByClassName("spinner-border")[0].remove();
       search_autoservices.insertAdjacentHTML('afterBegin', data);
+      if (document.getElementById("search_autoservices").getElementsByClassName("plate")[0]) {
+        getAutoserviceInfo(document.getElementById("search_autoservices").getElementsByClassName("plate")[0]);
+      } else {
+        cancelApplication();
+        document.getElementsByClassName("show_autoservice")[0].style.display = 'none';
+      }
     }
   );
 }
@@ -195,7 +200,7 @@ function getServiceInfo(select) {
 //получение информации об услуге
 function createApplication(btn) {
   let current_autoservice = document.getElementById("current_autoservice");
-  current_autoservice.getElementsByClassName("autoservices_area")[0].style.setProperty("max-height", "193.4px", "important");
+  current_autoservice.getElementsByClassName("autoservices_area")[0].style.setProperty("max-height", "251.4px", "important");
   btn.style.display = "none";
   current_autoservice.insertAdjacentHTML('beforeend', '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>');
   let client_id = document.getElementsByClassName("search")[0].id; //id клиента
