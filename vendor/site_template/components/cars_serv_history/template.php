@@ -33,10 +33,10 @@
         </div>
     </div>
 
-    <div class="panel" id="show_applications">    
+    <div class="panel" id="show_applications">
         <?php 
-            $application_list = getApplicationsListById($_SESSION['user']['id'], $cars[0]['id'], true);
-            echo setAutoApplications($application_list);
+            $history_list = getAutoHistoryById($_SESSION['user']['id'], $cars[0]['id']);
+            echo setAutoHistory($history_list);
         ?>
     </div>
 

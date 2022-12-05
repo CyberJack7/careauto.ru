@@ -585,6 +585,19 @@ function get_category_list()
 }
 
 
+//Список всех услуг
+function getAllServicesList() {
+  $pdo = conn();
+  $sql_services = "SELECT service_id, name_service FROM public.service ORDER BY name_service"; 
+  $services = $pdo->query($sql_services);
+  $arServices = [];
+  while ($service = $services->fetch()) {
+    array_push($arServices, ['id' => $service['service_id'], 'name' => $service['name_service']]);
+  }
+  return $arServices;
+}
+
+
 //Список услуг по id категории
 function getServicesById($category_id)
 {
@@ -922,23 +935,16 @@ function getServicePriceById($autoservice_id, $service_id) {
 
 
 //Список текущих услуг клиента
-function getApplicationsListById($client_id, $auto_id = NULL, $history = false) {
+function getApplicationsListById($client_id) {
   $pdo = conn();
-  $sql_insert = '';
-  if ($auto_id != NULL) {
-    $sql_insert .= ' AND auto_id = ' . $auto_id;
-  }
-  if ($history == true) {
-    $sql_insert .= " AND status IN ('Завершено', 'Отказ')";
-  }
-  $sql = "SELECT application_id, name_brand, name_model, name_autoservice, date, autoserv_serv_id, price, application.text, status, date_payment 
+  $sql = "SELECT application_id, name_brand, name_model, name_autoservice, autoserv_serv_id, price, application.text, status, date_payment 
     FROM public.autoservice JOIN public.application USING(autoservice_id) JOIN public.automobile USING(auto_id) JOIN public.brand USING(brand_id) 
-    JOIN public.model USING(model_id) WHERE application.client_id = " . $client_id . $sql_insert . ' ORDER BY name_autoservice';
+    JOIN public.model USING(model_id) WHERE application.client_id = " . $client_id . ' ORDER BY name_autoservice';
   $applications = $pdo->query($sql);
   $arApplications = [];
   while ($application = $applications->fetch()) {
-    if ($application['date'] != NULL) {
-      list($date, $time) = explode(" ", $application['date']);
+    if ($application['date_payment'] != NULL) {
+      list($date, $time) = explode(" ", $application['date_payment']);
     } else {
       $date = $time = '-';
     }
@@ -965,11 +971,54 @@ function getApplicationsListById($client_id, $auto_id = NULL, $history = false) 
       'services' => $services,
       'price' => $application['price'],
       'text' => $application['text'],
-      'date_payment' => $application['date_payment'],
       'status' => $application['status']
     ]);
   }
   return $arApplications;
+}
+
+
+//Список записей обслуживания клиента
+function getAutoHistoryById($client_id, $auto_id) {
+  $pdo = conn();
+  $sql = "SELECT history_id, name_brand, name_model, name_autoservice, autoserv_serv_id, price, text, date_payment, confidentiality   
+  FROM public.client_history JOIN public.automobile USING(auto_id) JOIN public.brand USING(brand_id) 
+  JOIN public.model USING(model_id) WHERE client_history.client_id = " . $client_id . " AND auto_id = " . $auto_id;
+  $histories = $pdo->query($sql);
+  $arHistory = [];
+  while ($history = $histories->fetch()) {
+    if ($history['date_payment'] != NULL) {
+      list($date, $time) = explode(" ", $history['date_payment']);
+    } else {
+      $date = $time = '-';
+    }
+    $services = [];
+    if (substr($history['autoserv_serv_id'], 1, -1) != '') {
+      $sql_autoserv_services = "SELECT DISTINCT name_service FROM public.autoservice_service JOIN public.service USING(service_id) 
+      WHERE autoservice_service.service_id IN (" . substr($history['autoserv_serv_id'], 1, -1) . ') ORDER BY name_service';
+      $services_names = $pdo->query($sql_autoserv_services);
+      while ($service_name = $services_names->fetch()) {
+        array_push($services, $service_name['name_service']);
+      }
+    }
+    foreach ($history as &$value) {
+      if($value == NULL) {
+        $value = '-';
+      }
+    }
+    array_push($arHistory, [
+      'id' => $history['history_id'],
+      'auto' => $history['name_brand'] . ' ' . $history['name_model'],
+      'autoservice' => $history['name_autoservice'],
+      'date' => $date,
+      'time' => $time,
+      'services' => $services,
+      'price' => $history['price'],
+      'text' => $history['text'],
+      'confidentiality' => $history['confidentiality']
+    ]);
+  }
+  return $arHistory;
 }
 
 
