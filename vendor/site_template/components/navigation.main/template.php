@@ -40,8 +40,8 @@
                     aria-current="page" href="/service_centres/">Сервисные центры</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link <?php if (mb_strpos($_SERVER['REQUEST_URI'], '/ /') !== false) { ?>active<?php } ?>"
-                    aria-current="page" href="">Заявки</a>
+                <a class="nav-link <?php if (mb_strpos($_SERVER['REQUEST_URI'], '/client_applications/') !== false) { ?>active<?php } ?>"
+                    aria-current="page" href="/client_applications/">Заявки</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link <?php if (mb_strpos($_SERVER['REQUEST_URI'], '/cars_serv_history/') !== false) { ?>active<?php } ?>"

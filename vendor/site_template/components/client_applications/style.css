@@ -1,0 +1,29 @@
+
+.plate {
+  width: 1000px !important;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex > div{
+  margin-right: 30px;
+  width: 300px;
+}
+
+button {
+  width: -webkit-fill-available;
+}
+
+#services {
+  max-width: auto;
+  max-height: 100px;
+  overflow: auto;
+}
+
+#com_btn {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}

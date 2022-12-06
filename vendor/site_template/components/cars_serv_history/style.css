@@ -1,0 +1,61 @@
+
+.panel {
+    width: fit-content !important;
+}
+
+.plate {
+    width: auto !important;
+}
+
+.flex {
+    display: flex;
+}
+
+.flex > div{
+    margin-right: 30px;
+    width: 250px;
+}
+
+button {
+    width: -webkit-fill-available;
+}
+
+#services {
+    max-width: auto;
+    max-height: 110px;
+    overflow: auto;
+}
+
+#com_btn {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+#history_area {
+    max-height: 578px;
+    width: 940px;
+    overflow: auto;
+    border-top: 1px solid #bababa;
+    border-bottom: 1px solid #bababa;
+}
+
+#show_applications {
+    margin-right: 0;
+}
+
+label{
+    margin-bottom: 5px;
+}
+
+label > input {
+    margin: 2px 4px 2px 0;
+}
+
+.checkboxes {
+    display: block;
+}
+
+#text {
+    max-height: 100px;
+}
