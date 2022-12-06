@@ -19,7 +19,7 @@ if (isset($_POST['brand'])) {//редактировать список маро�
 }
 if (isset($_POST['dataQuery'])) { //нажата кнопка del_photo или del_all_photos
     $ar_res_photos = json_decode($_POST['dataQuery'], true);
-    $ar_bd_photos = get_ar_photos($_SESSION['user']['id']);
+    $ar_bd_photos = getPhotosArray($_SESSION['user']['id']);
     if (empty($ar_res_photos)) { //удалить все фотографии СЦ
         $sql_photos_delete = "UPDATE public.autoservice SET photos = null WHERE autoservice_id = " . $_SESSION['user']['id'];
         $stmt = $pdo->exec($sql_photos_delete);

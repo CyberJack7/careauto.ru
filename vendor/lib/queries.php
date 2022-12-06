@@ -222,7 +222,7 @@ function requisites($autoservice_id)
 }
 
 //полная информация о пользователе
-function get_all_userinfo($user_id, $user_type = null)
+function getAllUserInfo($user_id, $user_type = null)
 {
   $pdo = conn();
   $sql_array_check = [
@@ -263,7 +263,7 @@ function get_all_userinfo($user_id, $user_type = null)
 }
 
 //массив расположения фотографий автосервиса
-function get_ar_photos($autoservice_id)
+function getPhotosArray($autoservice_id)
 {
   $pdo = conn();
   $sql = "SELECT photos FROM public.autoservice WHERE autoservice_id = " . $autoservice_id;
@@ -278,9 +278,9 @@ function get_ar_photos($autoservice_id)
 }
 
 //массив названий фотографий автосервиса
-function get_ar_name_photos($autoservice_id)
+function getPhotosNames($autoservice_id)
 {
-  $ar_photos = get_ar_photos($autoservice_id);
+  $ar_photos = getPhotosArray($autoservice_id);
   if (!empty($ar_photos)) {
     $ar_name_photos = [];
     foreach ($ar_photos as $photo) {
@@ -803,26 +803,137 @@ function getServiceList($category_id, $autoservice_id)
 }
 
 
-//Список сервисных центров, удовлетворяющих параметрам фильтрации
-function getAutoservicesByParameters($city_id = NULL)
+//Список id категорий автосервиса
+function getCategoriesIdList($autoservice_id)
 {
   $pdo = conn();
-  $sql_autoserv = "SELECT autoservice_id, name_autoservice, phone_autoservice, address FROM public.autoservice ";
-  if ($city_id != NULL) {
-    $sql_autoserv .= " WHERE city_id = " . $city_id;
+  $sql = "SELECT DISTINCT serv_category_id FROM public.autoservice_service JOIN public.service USING(service_id) 
+    WHERE autoservice_id = " . $autoservice_id;
+  $categories = $pdo->query($sql);
+  $arCategories = [];
+  while ($category = $categories->fetch()) {
+    array_push($arCategories, $category['serv_category_id']);
   }
+  return $arCategories;
+}
+
+
+//Список id услуг автосервиса
+function getServicesIdList($autoservice_id)
+{
+  $pdo = conn();
+  $sql = "SELECT service_id FROM Public.autoservice_service WHERE autoservice_id = " . $autoservice_id;
+  $services = $pdo->query($sql);
+  $arService = [];
+  while ($service = $services->fetch()) {
+    array_push($arService, $service['service_id']);
+  }
+  return $arService;
+}
+
+
+//Список сервисных центров, удовлетворяющих параметрам фильтрации
+function getAutoservicesByParameters($parametres = NULL)
+{
+  $pdo = conn();
+  $sql_autoserv = "SELECT DISTINCT autoservice_id, name_autoservice FROM public.autoservice_brand JOIN public.autoservice 
+    USING(autoservice_id) JOIN public.autoservice_service USING(autoservice_id) JOIN public.service USING(service_id)    ";
+  if ($parametres != NULL) {
+    if (isset($parametres['name']) && $parametres['name'] != NULL) {
+      if (mb_strpos($sql_autoserv, "WHERE") === false) {
+        $sql_autoserv .= "WHERE ";
+      }
+      $sql_autoserv .= "name_autoservice = " . $pdo->quote($parametres['name']) . ' AND ';
+    }
+    if (isset($parametres['city']) && $parametres['city'] != NULL) {
+      if (mb_strpos($sql_autoserv, "WHERE") === false) {
+        $sql_autoserv .= "WHERE ";
+      }
+      $sql_autoserv .= "city_id = " . $parametres['city'] . ' AND ';
+    }
+    if (isset($parametres['auto_id']) && $parametres['auto_id'] != NULL) {
+      if (mb_strpos($sql_autoserv, "WHERE") === false) {
+        $sql_autoserv .= "WHERE ";
+      }
+      $sql_brand_id = "SELECT brand_id FROM public.automobile WHERE auto_id = " . $parametres['auto_id'];
+      $brand_id = $pdo->query($sql_brand_id)->fetch()['brand_id'];
+      $sql_autoserv .= "brand_id = " . $brand_id . ' AND ';
+    }
+    if (isset($parametres['categories']) && $parametres['categories'] != NULL) {
+      if (mb_strpos($sql_autoserv, "WHERE") === false) {
+        $sql_autoserv .= "WHERE ";
+      }
+      $str_categories = '(' . implode(',', $parametres['categories']) . ')';
+      $sql_autoserv .= "serv_category_id IN " . $str_categories . ' AND ';
+    }
+    if (isset($parametres['services']) && $parametres['services'] != NULL) {
+      if (mb_strpos($sql_autoserv, "WHERE") === false) {
+        $sql_autoserv .= "WHERE ";
+      }
+      $str_services = '(' . implode(',', $parametres['services']) . ')';
+      $sql_autoserv .= "service_id IN " . $str_services . ' AND ';
+    }
+  }
+  $sql_autoserv = substr($sql_autoserv, 0, strlen($sql_autoserv) - 4);
   $sql_autoserv .= " ORDER BY name_autoservice ASC";
   $autoservices = $pdo->query($sql_autoserv);
+  $full_accord = [];
+  $partly_accord = [];
+  if (isset($parametres['categories']) && $parametres['categories'] != NULL) {
+    if (isset($parametres['services']) && $parametres['services'] != NULL) {
+      while ($autoservice = $autoservices->fetch()) {
+        $autoserv_categories = getCategoriesIdList($autoservice['autoservice_id']);
+        $autoserv_service = getServicesIdList($autoservice['autoservice_id']);
+        if (empty(array_diff($parametres['categories'], $autoserv_categories)) && empty(array_diff($parametres['services'], $autoserv_service))) {
+          $full_accord[$autoservice['autoservice_id']] = $autoservice['name_autoservice'];
+        } else {
+          $partly_accord[$autoservice['autoservice_id']] = $autoservice['name_autoservice'];
+        }
+      }
+    } else {
+      while ($autoservice = $autoservices->fetch()) {
+        $autoserv_categories = getCategoriesIdList($autoservice['autoservice_id']);
+        if (empty(array_diff($parametres['categories'], $autoserv_categories))) {
+          $full_accord[$autoservice['autoservice_id']] = $autoservice['name_autoservice'];
+        } else {
+          $partly_accord[$autoservice['autoservice_id']] = $autoservice['name_autoservice'];
+        }
+      }
+    }
+  } elseif (isset($parametres['services']) && $parametres['services'] != NULL) {
+    while ($autoservice = $autoservices->fetch()) {
+      $autoserv_service = getServicesIdList($autoservice['autoservice_id']);
+      if (empty(array_diff($parametres['services'], $autoserv_service))) {
+        $full_accord[$autoservice['autoservice_id']] = $autoservice['name_autoservice'];
+      } else {
+        $partly_accord[$autoservice['autoservice_id']] = $autoservice['name_autoservice'];
+      }
+    }
+  } else {
+    while ($autoservice = $autoservices->fetch()) {
+      $full_accord[$autoservice['autoservice_id']] = $autoservice['name_autoservice'];
+    }
+  }
+  asort($full_accord);
+  asort($partly_accord);
+  $ar_sort = $full_accord + $partly_accord;
   $arResult = [];
-  while ($autoservice = $autoservices->fetch()) {
-    $sql_price = "SELECT MIN(price) as min_price, MAX(price) as max_price FROM public.autoservice_service WHERE autoservice_id = " . $autoservice['autoservice_id'];
-    $price = $pdo->query($sql_price)->fetch();
+  foreach ($ar_sort as $id => $name) {
+    $sql_autoservice_info = "SELECT phone_autoservice, name_city, address, MIN(price) as min_price, MAX(price) as max_price 
+      FROM public.autoservice_service JOIN public.autoservice USING(autoservice_id) JOIN public.city USING(city_id) 
+      WHERE autoservice_id = " . $id . " GROUP BY phone_autoservice, name_city, address";
+    $autoservice_info = $pdo->query($sql_autoservice_info)->fetch();
+    if ($autoservice_info['address'] != NULL) {
+      $address = $autoservice_info['name_city'] . ', ' . $autoservice_info['address'];
+    } else {
+      $address = $autoservice_info['name_city'];
+    }
     array_push($arResult, [
-      'id' => $autoservice['autoservice_id'],
-      'name' => $autoservice['name_autoservice'],
-      'price' => $price['min_price'] . '-' . $price['max_price'],
-      'phone' => $autoservice['phone_autoservice'],
-      'address' => $autoservice['address']
+      'id' => $id,
+      'name' => $name,
+      'price' => $autoservice_info['min_price'] . '-' . $autoservice_info['max_price'],
+      'phone' => $autoservice_info['phone_autoservice'],
+      'address' => $address
     ]);
   }
   if (!empty($arResult)) {
@@ -836,30 +947,40 @@ function getAutoservicesByParameters($city_id = NULL)
 function getAutoserviceInfoById($autoservice_id)
 {
   $pdo = conn();
-  $sql_autoserv = "SELECT autoservice_id, name_autoservice, phone_autoservice, address, photos, text FROM public.autoservice WHERE 
-  autoservice_id = " . $autoservice_id;
-  $sql_service_list = "SELECT service_id FROM public.autoservice_service WHERE autoservice_id = " . $autoservice_id;
+  $sql_autoserv = "SELECT autoservice_id, name_autoservice, phone_autoservice, name_city, address, photos, text 
+    FROM public.autoservice JOIN public.city USING(city_id) WHERE autoservice_id = " . $autoservice_id;
   $autoservice = $pdo->query($sql_autoserv)->fetch();
-  $service_list = $pdo->query($sql_service_list);
-  $services_id = [];
-  while ($service = $service_list->fetch()) {
-    array_push($services_id, $service['service_id']);
-  }
+  $services_id = getServicesIdList($autoservice_id);
   $brand_list = getAutoserviceBrands($autoservice_id);
+  if ($autoservice['address'] != NULL) {
+    $address = $autoservice['name_city'] . ', ' . $autoservice['address'];
+  } else {
+    $address = $autoservice['name_city'];
+  }
   $arResult = [
     'id' => $autoservice['autoservice_id'],
     'name' => $autoservice['name_autoservice'],
     'phone' => $autoservice['phone_autoservice'],
-    'address' => $autoservice['address'],
+    'address' => $address,
     'photos' => $autoservice['photos'],
     'text' => $autoservice['text'],
     'brand_list' => $brand_list,
-    'services_id' => $services_id,
+    'services_id' => $services_id
   ];
   if (!empty($arResult)) {
     return $arResult;
   }
   return null;
+}
+
+
+//Стоимость услуги по id
+function getServicePriceById($autoservice_id, $service_id)
+{
+  $pdo = conn();
+  $sql = "SELECT price FROM public.autoservice_service WHERE autoservice_id = " . $autoservice_id . ' AND service_id = ' . $service_id;
+  $price = $pdo->query($sql)->fetch()['price'];
+  return $price;
 }
 
 
