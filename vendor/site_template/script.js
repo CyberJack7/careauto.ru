@@ -28,7 +28,6 @@ $(document).ready(function () {
   });
 });
 
-
 //отправка ajax запроса методом post
 function getAjax(url, data_send) {
   $.ajax({
@@ -39,17 +38,16 @@ function getAjax(url, data_send) {
   });
 }
 
-
 //показать/скрыть область отображения чекбоксов
 function showCheckboxes(checkboxes_label) {
-  let checkboxes = checkboxes_label.parentNode.getElementsByClassName("checkboxes")[0];
+  let checkboxes =
+    checkboxes_label.parentNode.getElementsByClassName("checkboxes")[0];
   if (checkboxes.style.display == "block") {
     checkboxes.style.display = "none";
   } else {
     checkboxes.style.display = "block";
   }
 }
-
 
 //просмотр фотографий
 function gallery(photo) {

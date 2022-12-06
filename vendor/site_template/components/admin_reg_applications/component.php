@@ -33,8 +33,8 @@ if (!empty($_POST['autoserv_temp_id']) and !empty($_POST['email']) and !empty($_
     if ($_POST['status'] == "accept")
         add_autoservice($_POST['autoserv_temp_id'], $_POST['email'], $_POST['document']);
     else {
-        del_autoservice($_POST['autoservice_temp_id']);
-        send_email($email, 'reg_fail');
-        unlink($_SERVER['DOCUMENT_ROOT'], $_POST['document']);
+        del_autoservice($_POST['autoserv_temp_id']);
+        send_email($_POST['email'], 'reg_fail');
+        unlink($_SERVER['DOCUMENT_ROOT'] . $_POST['document']);
     }
 }

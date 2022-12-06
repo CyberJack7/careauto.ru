@@ -3,7 +3,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/lib/defines.php';
 require_once PATH_CONNECT;
 
 //список автомобилей автовладельца (+ количество)
-function cars_list($user_id) {
+function cars_list($user_id)
+{
   $pdo = conn();
   $sql = "SELECT auto_id FROM public.automobile WHERE client_id = " . $user_id;
   $cars = $pdo->query($sql); //список авто по id
@@ -34,6 +35,7 @@ function appl_list($user_id, $status)
     $count = 0;
     while ($row = $appl->fetch()) {
       $count++;
+      $appl_id = $row['application_id'];
       $sql_auto = "SELECT name_brand, name_model FROM Public.application
           JOIN automobile USING(auto_id)
           JOIN brand USING(brand_id) 
@@ -46,42 +48,76 @@ function appl_list($user_id, $status)
 
       $sql_serv = "SELECT autoserv_serv_id FROM Public.application WHERE application_id = " . $row['application_id'];
       $serv = $pdo->query($sql_serv)->fetch(); // Извлекаеаем массив услуг из заявки
-      $str = str_replace(['{', '}', ' '], '', $serv['autoserv_serv_id']);
-      $serv_id = explode(',', $str);
-      $serv_name = array();
-      foreach ($serv_id as $row_serv) {
-        $sql_serv_name = "SELECT name_service FROM Public.service WHERE service_id = " . $row_serv;
-        array_push($serv_name, $pdo->query($sql_serv_name)->fetch()['name_service']);
+      if (!empty($serv['autoserv_serv_id'])) { // Если в заявке есть услуги!
+        $str = str_replace(['{', '}', ' '], '', $serv['autoserv_serv_id']);
+        $serv_id = explode(',', $str);
+        $ArService = [];
+        foreach ($serv_id as $row_serv) {
+          $sql_serv_name = "SELECT name_service FROM Public.service WHERE service_id = " . $row_serv;
+          $ArService["$row_serv"] = $pdo->query($sql_serv_name)->fetch()['name_service'];
+        }
+      } else {
+        $str = "null";
+        $ArService = null;
       }
+      echo '<input id="ArService_' . $appl_id . '" name="ArService" type="hidden" value="' . $str . '"</input>';
+      echo '<input id="ArServiceNew_' . $appl_id . '" name="ArService" type="hidden" value="' . $str . '"</input>';
       $sql_appl = "SELECT date,text,price FROM Public.application WHERE application_id = " . $row['application_id'];
       $appl_info = $pdo->query($sql_appl)->fetch(); // Дата, комментарий, цена
       $space_ind = strpos($appl_info['date'], ' ');
       $date = mb_substr($appl_info['date'], 0, $space_ind);
       $time = mb_substr($appl_info['date'], $space_ind + 1);
-
       echo '<div class="accordion-item">
-                    <h2 class="accordion-header" id="panelsStayOpen-heading' . $count . '">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse' . $count . '" aria-expanded="false" aria-controls="#panelsStayOpen-collapse' . $count . '">' .
+                    <h2 class="accordion-header" id="panelsStayOpen-heading' . $appl_id . '">
+                        <button onclick="getStartServices(this);getStartAmount(this)" value="' . $appl_id . '" class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse' . $appl_id . '" aria-expanded="false" aria-controls="#panelsStayOpen-collapse' . $appl_id . '">' .
         $count . '. ' . $auto['name_brand'] . ' ' . $auto['name_model'] . ' ' . $client['name_client'] . ' ' . $client['phone_client'] .
         '</button>
                     </h2>
-                    <div id="panelsStayOpen-collapse' . $count . '" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading' . $count . '">
+                    <div id="panelsStayOpen-collapse' . $appl_id . '" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading' . $appl_id . '">
                         <div class="accordion-body">' .
         'ФИО Клиента: ' . $client['name_client'] . '</br> ' .
         'Телефон Клиента: ' . $client['phone_client'] . '</br> ' .
         'Марка машины: ' . $auto['name_brand'] . '</br> ' .
         'Модель машины: ' . $auto['name_model'] . '</br> ' .
         'Список услуг: </br>';
-      $serv_count = 0;
-      foreach ($serv_name as $row_serv) {
-        $serv_count++;
-        echo $serv_count . ' ' . $row_serv . '</br>';
+      $ArCategoryAppl = getCategoryArService($ArService, $user_id); // Список категорий в заявке
+      $ArCategoryAutoserv = getAutoserviceCategoryList($user_id); // Выводим список категорий из СЦ, с галкой те,которые соответствуют услугам, указанным в заявке
+      if ($ArCategoryAppl != null)
+        $category_count = count($ArCategoryAppl);
+      else
+        $category_count = 0;
+      if ($ArService != null) // Если в заявке есть услуги
+        $service_count = count($ArService);
+      else $service_count = 0;
+      echo '<div class="test_1"> <label class="form-label" for="categories_' . $appl_id . '">Категории услуг</label> 
+        <div class="form-select selectBox" id="show_categories_' . $appl_id . '" onclick="showCheckboxes(this)" value="' . $appl_id . '">
+        <option id="category_counter_' . $appl_id . '" >Выбрано категорий услуг:' . $category_count . '</option>
+        </div>
+        <div class="checkboxes" id="categories_' . $appl_id . '">';
+      if (!empty($ArCategoryAutoserv)) {
+        foreach ($ArCategoryAutoserv as $key => $value) {
+          if ($ArCategoryAppl != null && in_array($value, $ArCategoryAppl))
+            $checked = " checked ";
+          else
+            $checked = " ";
+          echo '<label for="' . $appl_id . 'category_' . $key . '">
+        <input onclick="getStartServices(this)"' . $checked . 'value="' . $appl_id . '" type="checkbox" id="' . $appl_id . 'category_' . $key . '"  />' . $value . '</label>';
+        }
       }
-      echo  'Стоимость услуг: ' . $appl_info['price'] . '</br>
+      echo '</div></div>';
+      // Выводим список услуг, те которые в заявке с чек боксоком
+      echo '<div class="test_2"> <label class="form-label" for="services_' . $appl_id . '">Услуги</label>
+      <div value="' . $appl_id . '" onclick="showCheckboxes(this)" class="form-select selectBox" id="show_services_' . $appl_id . '">
+      <option id="services_counter_' . $appl_id . '">Выбрано услуг: ' . $service_count . '</option>
+      </div>
+      <div class="checkboxes" id="services_' . $appl_id . '"></div></div>';
+
+
+      echo  '<p>Стоимость услуг: </p><input disabled id="prices_' . $appl_id . '" value="' . $appl_info['price'] . '"> Рублей. </br>
             Комментарий к заявке: ' . $appl_info['text'] . '</br>';
       if ($status == "Ожидает подтверждения") {
-        echo 'Дата заявки: <input name="date" type="date" value="' . $date . '"</input></br>
-        Время заявки: <input name="time" type="datetime" value="' . $time . '"</input></br>';
+        echo 'Дата заявки: <input id="date_' . $appl_id . '" name="date" type="date" value="' . $date . '"</input></br>
+        Время заявки: <input id="time_' . $appl_id . '" name="time" type="datetime" value="' . $time . '"</input></br>';
       } else {
         echo 'Дата заявки: ' . $date . '</br>
               Время заявки: ' . $time . '</br>';
@@ -103,13 +139,13 @@ function appl_list($user_id, $status)
       }
       if ($status == "Ожидает подтверждения" or $status == "Подтверждено") {
         echo '<div class="con1">
-            <button id="cancel_btn" class="btn btn-secondary" type="button" >Отклонить заявку</button>      
+            <button role="button" name="cancel" value="' . $appl_id . '" id="cancel_btn_' . $appl_id . '" class="btn btn-secondary" type="button" >Отклонить заявку</button>      
             </div>';
       }
       echo '<div class="con1">
-      <input name="status" type="hidden" value="' . $status . '"</input>
-      <input name="appl_id" type="hidden" value="' . $row['application_id'] . '"</input>
-      <button id="accept_btn" class="btn btn-primary" type="button" >' . $button_name . '</button>      
+      <input id="status_' . $appl_id . '" name="status" type="hidden" value="' . $status . '"</input>
+      <input id="appl_id_' . $appl_id . '" name="appl_id_' . $appl_id . '" type="hidden" value="' . $row['application_id'] . '"</input>
+      <button role="button" name="accept" value="' . $appl_id . '" id="accept_btn_' . $appl_id . '" class="btn btn-primary" type="button" >' . $button_name . '</button>      
       </div>';
 
       echo '</div></div></div>';
@@ -135,7 +171,8 @@ function city_list()
 }
 
 //название города по city_id
-function getCityNameById($city_id){
+function getCityNameById($city_id)
+{
   $pdo = conn();
   $sql = "SELECT name_city FROM public.city WHERE city_id = " . $city_id;
   $city_name = $pdo->query($sql)->fetch()['name_city'];
@@ -272,12 +309,13 @@ function getAutoserviceBrands($autoservice_id)
 }
 
 //модели авто по id марки
-function getModelById($brand_id) {
+function getModelById($brand_id)
+{
   $pdo = conn();
   $sql = "SELECT model_id, name_model FROM public.model WHERE brand_id = " . $brand_id . " ORDER BY name_model";
   $models = $pdo->query($sql);
   $arResult = [];
-  if (!empty($models)) {     
+  if (!empty($models)) {
     while ($model = $models->fetch()) { //для каждой модели
       array_push($arResult, ['id' => $model['model_id'], 'name' => $model['name_model']]);
     }
@@ -287,7 +325,8 @@ function getModelById($brand_id) {
 }
 
 //информация об авто по id авто
-function getAutoInfoById($auto_id) {
+function getAutoInfoById($auto_id)
+{
   $pdo = conn();
   $sql = "SELECT * FROM public.automobile WHERE auto_id = " . $auto_id;
   $auto = $pdo->query($sql)->fetch();
@@ -347,7 +386,8 @@ function getAutoInfoById($auto_id) {
 }
 
 //Название марки по id марки
-function getBrandNameById($brand_id) {
+function getBrandNameById($brand_id)
+{
   $pdo = conn();
   $sql = "SELECT name_brand FROM public.brand WHERE brand_id = " . $brand_id;
   $brand = $pdo->query($sql);
@@ -358,7 +398,8 @@ function getBrandNameById($brand_id) {
 }
 
 //Название модели по id модели
-function getModelNameById($model_id) {
+function getModelNameById($model_id)
+{
   $pdo = conn();
   $sql = "SELECT name_model FROM public.model WHERE model_id = " . $model_id;
   $model = $pdo->query($sql);
@@ -369,7 +410,8 @@ function getModelNameById($model_id) {
 }
 
 //Название кузова по id кузова
-function getBodyNameById($body_id) {
+function getBodyNameById($body_id)
+{
   $pdo = conn();
   $sql = "SELECT name_body FROM public.body WHERE body_id = " . $body_id;
   $body = $pdo->query($sql);
@@ -380,7 +422,8 @@ function getBodyNameById($body_id) {
 }
 
 //Название типа двигателя по id двигателя
-function getEngineNameById($engine_id) {
+function getEngineNameById($engine_id)
+{
   $pdo = conn();
   $sql = "SELECT name_engine FROM public.engine WHERE engine_id = " . $engine_id;
   $engine = $pdo->query($sql);
@@ -391,7 +434,8 @@ function getEngineNameById($engine_id) {
 }
 
 //Название типа коробки по id коробки
-function getGearboxNameById($gearbox_id) {
+function getGearboxNameById($gearbox_id)
+{
   $pdo = conn();
   $sql = "SELECT name_gearbox FROM public.gearbox WHERE gearbox_id = " . $gearbox_id;
   $gearbox = $pdo->query($sql);
@@ -402,7 +446,8 @@ function getGearboxNameById($gearbox_id) {
 }
 
 //Название типа привода по id привода
-function getDriveNameById($drive_id) {
+function getDriveNameById($drive_id)
+{
   $pdo = conn();
   $sql = "SELECT name_drive FROM public.drive WHERE drive_id = " . $drive_id;
   $drive = $pdo->query($sql);
@@ -413,7 +458,8 @@ function getDriveNameById($drive_id) {
 }
 
 //Список комплектов резины по id автомобиля
-function getTiresListById($auto_id) {
+function getTiresListById($auto_id)
+{
   $pdo = conn();
   $sql = "SELECT tires_id FROM public.automobile WHERE auto_id = " . $auto_id;
   $tires = $pdo->query($sql)->fetch()['tires_id'];
@@ -427,16 +473,17 @@ function getTiresListById($auto_id) {
 }
 
 //Полная информация о комплекте резины id комплекта
-function getTiresInfoById($tires_id) {
+function getTiresInfoById($tires_id)
+{
   $pdo = conn();
   $sql = "SELECT * FROM public.tires WHERE tires_id = " . $tires_id;
   $tires = $pdo->query($sql)->fetch();
   if ($tires != null) {
     if ($tires['marking'] == null) {
-        $tires['marking'] = "-";
+      $tires['marking'] = "-";
     }
     if ($tires['date_buy'] == null) {
-        $tires['date_buy'] = "-";
+      $tires['date_buy'] = "-";
     }
     $arResult = [
       'tires_id' => $tires['tires_id'],
@@ -451,7 +498,8 @@ function getTiresInfoById($tires_id) {
 }
 
 //Название типа резины по id типа
-function getTiresTypeNameById($tire_type_id) {
+function getTiresTypeNameById($tire_type_id)
+{
   $pdo = conn();
   $sql = "SELECT name_tire_type FROM public.tire_type WHERE tire_type_id = " . $tire_type_id;
   $tire_type = $pdo->query($sql);
@@ -463,7 +511,8 @@ function getTiresTypeNameById($tire_type_id) {
 
 
 //Список автомобилей по id автовладельца
-function getAutosById($client_id) {
+function getAutosById($client_id)
+{
   $pdo = conn();
   $sql = "SELECT auto_id, brand_id, model_id FROM public.automobile WHERE client_id = " . $client_id;
   $autos = $pdo->query($sql);
@@ -495,12 +544,13 @@ function brands()
 }
 
 //все типы кузова
-function bodies() {
+function bodies()
+{
   $pdo = conn();
   $sql = "SELECT * FROM public.body ORDER BY name_body";
   $bodies = $pdo->query($sql);
   $arResult = [];
-  if (!empty($bodies)) {     
+  if (!empty($bodies)) {
     while ($body = $bodies->fetch()) { //для каждого кузова
       array_push($arResult, ['id' => $body['body_id'], 'name' => $body['name_body']]);
     }
@@ -510,12 +560,13 @@ function bodies() {
 }
 
 //все типы двигателя
-function engines() {
+function engines()
+{
   $pdo = conn();
   $sql = "SELECT * FROM public.engine ORDER BY name_engine";
   $engines = $pdo->query($sql);
   $arResult = [];
-  if (!empty($engines)) {     
+  if (!empty($engines)) {
     while ($engine = $engines->fetch()) { //для каждого типа двигателя
       array_push($arResult, ['id' => $engine['engine_id'], 'name' => $engine['name_engine']]);
     }
@@ -525,7 +576,8 @@ function engines() {
 }
 
 //все типы КПП
-function gearboxes() {
+function gearboxes()
+{
   $pdo = conn();
   $sql = "SELECT * FROM public.gearbox ORDER BY name_gearbox";
   $gearboxes = $pdo->query($sql);
@@ -540,12 +592,13 @@ function gearboxes() {
 }
 
 //все типы приводов
-function drives() {
+function drives()
+{
   $pdo = conn();
   $sql = "SELECT * FROM public.drive ORDER BY name_drive";
   $drives = $pdo->query($sql);
   $arResult = [];
-  if (!empty($drives)) {     
+  if (!empty($drives)) {
     while ($drive = $drives->fetch()) { //для каждого привода
       array_push($arResult, ['id' => $drive['drive_id'], 'name' => $drive['name_drive']]);
     }
@@ -555,12 +608,13 @@ function drives() {
 }
 
 //все типы резины
-function tires() {
+function tires()
+{
   $pdo = conn();
   $sql = "SELECT * FROM public.tire_type ORDER BY name_tire_type";
   $tire_types = $pdo->query($sql);
   $arResult = [];
-  if (!empty($tire_types)) {     
+  if (!empty($tire_types)) {
     while ($tire_type = $tire_types->fetch()) { //для каждого типа
       array_push($arResult, ['id' => $tire_type['tire_type_id'], 'name' => $tire_type['name_tire_type']]);
     }
@@ -634,11 +688,11 @@ function admin_appl_list()
         'Документ: ' . '<a href="' . $autoserv_info['document'] . '" target="_blank">Ссылка на документ</a>' . '</br> ';
 
       echo '<div class="con1">
-        <input name="autoserv_temp_id" type="hidden" value="' . $row['autoservice_temp_id'] . '"</input>
-        <input name="document" type="hidden" value="' . $autoserv_info['document'] . '"</input>
-        <input name="email" type="hidden" value="' . $autoserv_info['email_autoservice'] . '"</input>
-        <button id="cancel_btn" class="btn btn-secondary" type="button" >Отклонить заявку</button>
-        <button id="accept_btn" class="btn btn-primary" type="button" >Зарегистрировать СЦ</button>      
+        <input id="autoserv_temp_id' . "_$count" . '" name="autoserv_temp_id" type="hidden" value="' . $row['autoservice_temp_id'] . '"</input>
+        <input id="document' . "_$count" . '" name="document" type="hidden" value="' . $autoserv_info['document'] . '"</input>
+        <input id="email' . "_$count" . '" name="email" type="hidden" value="' . $autoserv_info['email_autoservice'] . '"</input>
+        <button role="button" name="cancel" id="cancel_btn' . "_$count" . '" value="' . $count . '" class="btn btn-secondary" type="button" >Отклонить заявку</button>
+        <button role="button" name="accept" id="accept_btn' . "_$count" . '" value="' . $count . '" class="btn btn-primary" type="button" >Зарегистрировать СЦ</button>      
         </div>';
       echo '</div></div></div>';
     }
@@ -647,7 +701,7 @@ function admin_appl_list()
 
 
 // Список категорий автосервиса
-function getAutoserviceCategoryList($autoservice_id) 
+function getAutoserviceCategoryList($autoservice_id)
 {
   $pdo = conn();
   $arService = getAutoserviceServiceList($autoservice_id);
@@ -661,12 +715,13 @@ function getAutoserviceCategoryList($autoservice_id)
     $category_name = $pdo->query($sql_category_name)->fetch();
     $arCategory[$category_id['serv_category_id']] = $category_name['name_category'];
   }
+  asort($arCategory);
   return $arCategory;
 }
 
 
 // Список услуг автосервиса
-function getAutoserviceServiceList($autoservice_id, $category = 'None') 
+function getAutoserviceServiceList($autoservice_id, $category = 'None')
 {
   $pdo = conn();
   if ($category != 'None') {
@@ -687,13 +742,14 @@ function getAutoserviceServiceList($autoservice_id, $category = 'None')
       $service = $pdo->query($sql_name)->fetch();
       $arService[$row['service_id']] = $service['name_service'];
     }
+    asort($arService);
     return $arService;
   }
 }
 
 
 // Информация о конкретной услуге автосервиса
-function getServiceInfo($autoservice_id, $service_id) 
+function getServiceInfo($autoservice_id, $service_id)
 {
   $pdo = conn();
   $sql = "SELECT price,text,certification FROM Public.autoservice_service
@@ -713,7 +769,8 @@ function getServiceInfo($autoservice_id, $service_id)
 
 
 // Название услуги по её id
-function getServiceNameById($service_id) {
+function getServiceNameById($service_id)
+{
   $pdo = conn();
   $sql = "SELECT name_service FROM Public.service WHERE service_id = " . $service_id;
   $service_name = $pdo->query($sql)->fetch()['name_service'];
@@ -722,7 +779,8 @@ function getServiceNameById($service_id) {
 
 
 // Название категории по id услуги
-function getCategoryNameById($service_id) {
+function getCategoryNameById($service_id)
+{
   $pdo = conn();
   $sql = "SELECT name_category FROM Public.serv_category JOIN Public.service USING(serv_category_id) WHERE service_id = " . $service_id;
   $category_name = $pdo->query($sql)->fetch()['name_category'];
@@ -746,7 +804,8 @@ function getServiceList($category_id, $autoservice_id)
 
 
 //Список сервисных центров, удовлетворяющих параметрам фильтрации
-function getAutoservicesByParameters($city_id = NULL) {
+function getAutoservicesByParameters($city_id = NULL)
+{
   $pdo = conn();
   $sql_autoserv = "SELECT autoservice_id, name_autoservice, phone_autoservice, address FROM public.autoservice ";
   if ($city_id != NULL) {
@@ -766,7 +825,7 @@ function getAutoservicesByParameters($city_id = NULL) {
       'address' => $autoservice['address']
     ]);
   }
-  if (!empty($arResult)) {    
+  if (!empty($arResult)) {
     return $arResult;
   }
   return null;
@@ -774,7 +833,8 @@ function getAutoservicesByParameters($city_id = NULL) {
 
 
 //Подробная информация о сервисном центре по id автосервиса для автовладельца
-function getAutoserviceInfoById($autoservice_id) {
+function getAutoserviceInfoById($autoservice_id)
+{
   $pdo = conn();
   $sql_autoserv = "SELECT autoservice_id, name_autoservice, phone_autoservice, address, photos, text FROM public.autoservice WHERE 
   autoservice_id = " . $autoservice_id;
@@ -806,16 +866,87 @@ function getAutoserviceInfoById($autoservice_id) {
 //транслитерация слов
 function translit($value)
 {
-	$converter = array(
-		'а' => 'a',    'б' => 'b',    'в' => 'v',    'г' => 'g',    'д' => 'd',
-		'е' => 'e',    'ё' => 'e',    'ж' => 'zh',   'з' => 'z',    'и' => 'i',
-		'й' => 'y',    'к' => 'k',    'л' => 'l',    'м' => 'm',    'н' => 'n',
-		'о' => 'o',    'п' => 'p',    'р' => 'r',    'с' => 's',    'т' => 't',
-		'у' => 'u',    'ф' => 'f',    'х' => 'h',    'ц' => 'c',    'ч' => 'ch',
-		'ш' => 'sh',   'щ' => 'sch',  'ь' => '',     'ы' => 'y',    'ъ' => '',
-		'э' => 'e',    'ю' => 'yu',   'я' => 'ya'
-	);
+  $converter = array(
+    'а' => 'a',    'б' => 'b',    'в' => 'v',    'г' => 'g',    'д' => 'd',
+    'е' => 'e',    'ё' => 'e',    'ж' => 'zh',   'з' => 'z',    'и' => 'i',
+    'й' => 'y',    'к' => 'k',    'л' => 'l',    'м' => 'm',    'н' => 'n',
+    'о' => 'o',    'п' => 'p',    'р' => 'r',    'с' => 's',    'т' => 't',
+    'у' => 'u',    'ф' => 'f',    'х' => 'h',    'ц' => 'c',    'ч' => 'ch',
+    'ш' => 'sh',   'щ' => 'sch',  'ь' => '',     'ы' => 'y',    'ъ' => '',
+    'э' => 'e',    'ю' => 'yu',   'я' => 'ya'
+  );
   $value = mb_strtolower($value);
-	$value = strtr($value, $converter);
-	return $value;
+  $value = strtr($value, $converter);
+  return $value;
+}
+
+// Подсчёт стоимости услуг
+function getTotalAmount($ArService, $autoservice_id)
+{
+  $pdo = conn();
+  $TotalAmount = 0;
+  if (is_array($ArService)) {
+
+    foreach ($ArService as $serv_id) {
+      $sql = "SELECT price FROM Public.autoservice_service WHERE
+    service_id=$serv_id AND autoservice_id=$autoservice_id";
+      $res = $pdo->query($sql)->fetch();
+      if ($res) {
+        $TotalAmount += $res['price'];
+      }
+    }
+  } else {
+    $sql = "SELECT price FROM Public.autoservice_service WHERE
+    service_id=$ArService AND autoservice_id=$autoservice_id";
+    $res = $pdo->query($sql)->fetch();
+    if ($res) {
+      $TotalAmount += $res['price'];
+    }
+  }
+  return $TotalAmount;
+}
+
+// Список категорий, по списку переданных услуг
+function getCategoryArService($ArService, $autoservice_id)
+{
+  $pdo = conn();
+  $arCategory = [];
+  if ($ArService != null) {
+    foreach ($ArService as $key => $value) { // $key - ID услуги
+      $sql = "SELECT serv_category_id FROM Public.service JOIN Public.autoservice_service USING(service_id)
+    WHERE service_id=" . $key . "AND autoservice_id=" . $autoservice_id;
+      $category_id = $pdo->query($sql)->fetch();
+      if ($category_id) {
+        $sql_category_name = "SELECT name_category FROM Public.serv_category
+      WHERE serv_category_id=" . $category_id['serv_category_id'];
+        $category_name = $pdo->query($sql_category_name)->fetch();
+        $arCategory[$category_id['serv_category_id']] = $category_name['name_category'];
+      } else {
+        continue;
+      }
+    }
+    if (empty($arCategory)) {
+      return null;
+    } else {
+
+      asort($arCategory);
+      return $arCategory;
+    }
+  }
+  return null;
+}
+
+function getAutoServiceServById($autoservice_id, $category_id)
+{
+  $pdo = conn();
+  $sql = "SELECT service_id, name_service FROM Public.service JOIN Public.autoservice_service USING(service_id) WHERE serv_category_id = " . $category_id . "AND autoservice_id=" . $autoservice_id . " ORDER BY name_service ASC";
+  $services = $pdo->query($sql);
+  $arServices = [];
+  if (!empty($services)) {
+    while ($service = $services->fetch()) {
+      $ArServices[$service["service_id"]] = $service['name_service'];
+    }
+    return $ArServices;
+  }
+  return NULL;
 }

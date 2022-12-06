@@ -67,15 +67,6 @@ function service_update($autoservice_id, $service_id, $price, $text, $certificat
             header('Location: /autoservice_service/');
             exit;
         }
-
-        // if (!is_dir($_SERVER['DOCUMENT_ROOT'] . $directory))
-        //     mkdir($_SERVER['DOCUMENT_ROOT'] . $directory, 0777, true);
-        // if (!move_uploaded_file($_FILES['certification']['tmp_name'], $full_path)) {
-        //     $_SESSION['message']['text'] = "Не удалось загрузить файл, попробуйте снова";
-        //     $_SESSION['message']['type'] = 'warning';
-        //     header('Location: /autoservice_service/');
-        //     exit;
-        // }
         $sql = "UPDATE Public.autoservice_service 
         SET price=" . $pdo->quote($price) .
             ",text=" . $pdo->quote($text) .
