@@ -37,7 +37,7 @@ function setServices(ar_services, type_of_change, category_id) {
       let label = document.getElementById("categories").getElementsByTagName("label")[0].cloneNode(true);
       label.setAttribute('for', ar_services[i]["id"]);      
       let input = label.getElementsByTagName("input")[0];
-      input.id = ar_services[i]["id"];
+      input.id = "services_id" + ar_services[i]["id"];
       input.checked = false;
       input.removeAttribute("onclick");
       label.innerText = "";
@@ -111,7 +111,7 @@ function searchAutoservices(search_button) {
   let amount_services_input = autoservice_services_input.length;
   for (let i = 0; i < amount_services_input; i++) {
     if (autoservice_services_input[i].checked == true) {
-      autoservice_services.push(autoservice_services_input[i].id);
+      autoservice_services.push(parseInt(autoservice_services_input[i].id.match(/\d+/), 10));
     }
   }
   let json_data = JSON.stringify({

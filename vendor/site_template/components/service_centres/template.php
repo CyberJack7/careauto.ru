@@ -190,13 +190,14 @@
                         echo '<label class="form-label name" for="autoserv_services">Описание</label>
                             <p>' . $service_info['text'] . '</p>
                         </div>
-                    </div>';
+                    </div>
+                </div>
+            <button class="btn btn-primary" id="create_application" type="button" onclick="createApplication(this)">Сформировать заявку</button>';
         } else {
-            echo 'Здесь мог бы быть Ваш автосервис';
+            echo 'Здесь мог бы быть Ваш автосервис</div>';
         }
         ?>
-        </div>
-        <button class="btn btn-primary" id="create_application" type="button" onclick="createApplication(this)">Сформировать заявку</button>
+        
         
     </div>
 </div>
