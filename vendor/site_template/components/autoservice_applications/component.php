@@ -32,7 +32,7 @@ function change_status($appl_id, $status, $date = '0', $time = '0', $ArServices,
             break;
     }
 
-    $sql = "UPDATE Public.application SET status=" . $pdo->quote("Выполнено") . ",
+    $sql = "UPDATE Public.application SET status=" . $pdo->quote($new_status) . ",
     price=" . $price . ",
     autoserv_serv_id=" . $pdo->quote($ArServices) . "
      WHERE application_id=" . $appl_id;
@@ -49,9 +49,6 @@ function change_status($appl_id, $status, $date = '0', $time = '0', $ArServices,
         $appl_history_id = $pdo->lastInsertId();
         $result_ins_client = $pdo->exec($sql_ins_client_history);
         $appl_client_history_id = $pdo->lastInsertId();
-        echo $text_autoservice;
-        echo $appl_history_id . '- ИД от аппликатион хистори';
-        echo $appl_client_history_id . '-ИД от клиент хистори';
         $sql_get_name_autoservice = "SELECT name_autoservice FROM public.autoservice WHERE
         autoservice_id=" . $_SESSION['user']['id'];
         $autoservice_name = $pdo->query($sql_get_name_autoservice)->fetch();
@@ -63,16 +60,24 @@ function change_status($appl_id, $status, $date = '0', $time = '0', $ArServices,
         name_autoservice=" . $autoservice_name . " WHERE history_id=" . $appl_client_history_id;
         $result1 = $pdo->exec($sql_upd_autoservice);
         $result2 = $pdo->exec($sql_upd_client);
+        $sql_del = "DELETE 
+                            FROM Public.application
+                            WHERE application_id=$appl_id";
+        $result = $pdo->exec($sql_del);
     } elseif ($new_status == "Отказ") {
+        $sql_ins = "INSERT INTO public.application_history(client_id,auto_id,autoservice_id,date,autoserv_serv_id,price,text,status,date_payment)
+        SELECT client_id,auto_id,autoservice_id,date,autoserv_serv_id,price,text,status,date_payment FROM public.application
+        WHERE application_id=" . $appl_id;
+        $result_ins = $pdo->exec($sql_ins);
+        $appl_history_id = $pdo->lastInsertId();
+        $sql_upd_autoservice = "UPDATE public.application_history SET text=$text_autoservice
+        WHERE application_id=" . $appl_history_id;
+        $result1 = $pdo->exec($sql_upd_autoservice);
+        $sql_del = "DELETE 
+        FROM Public.application
+        WHERE application_id=$appl_id";
+        $result = $pdo->exec($sql_del);
     }
-
-
-
-
-    // $sql_del = "DELETE 
-    //                     FROM Public.application
-    //                     WHERE application_id=$appl_id";
-    // $result = $pdo->exec($sql_del);
 }
 
 function getCarHistory($appl_id)
@@ -86,7 +91,6 @@ function getCarHistory($appl_id)
     if ($result) {
         $history_list = getAutoHistoryById($result['client_id'], $result['auto_id']);
         if (!empty($history_list)) {
-
             echo '<div class="modal" tabindex="-1">
                  <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
