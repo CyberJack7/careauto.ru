@@ -114,7 +114,7 @@ function appl_list($user_id, $status)
 
 
       echo  '<p>Стоимость услуг: </p><input disabled id="prices_' . $appl_id . '" value="' . $appl_info['price'] . '"> Рублей. </br>
-            Комментарий к заявке: ' . $appl_info['text'] . '</br>';
+            Комментарий от клиента: ' . $appl_info['text'] . '</br>';
       if ($status == "Ожидает подтверждения") {
         echo 'Дата заявки: <input id="date_' . $appl_id . '" name="date" type="date" value="' . $date . '"</input></br>
         Время заявки: <input id="time_' . $appl_id . '" name="time" type="datetime" value="' . $time . '"</input></br>';
@@ -142,10 +142,18 @@ function appl_list($user_id, $status)
             <button role="button" name="cancel" value="' . $appl_id . '" id="cancel_btn_' . $appl_id . '" class="btn btn-secondary" type="button" >Отклонить заявку</button>      
             </div>';
       }
+      if ($status == "Выполнено") {
+        echo '<div class="form-floating" name="comment">
+        <textarea class="form-control" placeholder="Комментарий от СЦ" id="autoserviceCommentary_' . $appl_id . '" style="height: 100px"></textarea>
+        <label for="autoserviceCommentary_' . $appl_id . '">Комментарий от СЦ</label>
+      </div>';
+      }
       echo '<div class="con1">
       <input id="status_' . $appl_id . '" name="status" type="hidden" value="' . $status . '"</input>
       <input id="appl_id_' . $appl_id . '" name="appl_id_' . $appl_id . '" type="hidden" value="' . $row['application_id'] . '"</input>
       <button role="button" name="accept" value="' . $appl_id . '" id="accept_btn_' . $appl_id . '" class="btn btn-primary" type="button" >' . $button_name . '</button>      
+      <button onclick="getCarHistory(this)" value="' . $appl_id . '" id="car_history_' . $appl_id . '"name="car_history" class="btn btn-info" type="button">История автомобиля</button>
+      
       </div>';
 
       echo '</div></div></div>';
@@ -640,9 +648,10 @@ function get_category_list()
 
 
 //Список всех услуг
-function getAllServicesList() {
+function getAllServicesList()
+{
   $pdo = conn();
-  $sql_services = "SELECT service_id, name_service FROM public.service ORDER BY name_service"; 
+  $sql_services = "SELECT service_id, name_service FROM public.service ORDER BY name_service";
   $services = $pdo->query($sql_services);
   $arServices = [];
   while ($service = $services->fetch()) {
@@ -998,7 +1007,8 @@ function getServicePriceById($autoservice_id, $service_id)
 
 
 //Список текущих услуг клиента
-function getApplicationsListById($client_id) {
+function getApplicationsListById($client_id)
+{
   $pdo = conn();
   $sql = "SELECT application_id, name_brand, name_model, name_autoservice, autoserv_serv_id, price, application.text, status, date_payment 
     FROM public.autoservice JOIN public.application USING(autoservice_id) JOIN public.automobile USING(auto_id) JOIN public.brand USING(brand_id) 
@@ -1021,7 +1031,7 @@ function getApplicationsListById($client_id) {
       }
     }
     foreach ($application as &$value) {
-      if($value == NULL) {
+      if ($value == NULL) {
         $value = '-';
       }
     }
@@ -1042,7 +1052,8 @@ function getApplicationsListById($client_id) {
 
 
 //Список записей обслуживания клиента
-function getAutoHistoryById($client_id, $auto_id) {
+function getAutoHistoryById($client_id, $auto_id)
+{
   $pdo = conn();
   $sql = "SELECT history_id, name_brand, name_model, name_autoservice, autoserv_serv_id, price, text, date_payment, confidentiality   
   FROM public.client_history JOIN public.automobile USING(auto_id) JOIN public.brand USING(brand_id) 
@@ -1065,7 +1076,7 @@ function getAutoHistoryById($client_id, $auto_id) {
       }
     }
     foreach ($history as &$value) {
-      if($value == NULL) {
+      if ($value == NULL) {
         $value = '-';
       }
     }
@@ -1171,4 +1182,62 @@ function getAutoServiceServById($autoservice_id, $category_id)
     return $ArServices;
   }
   return NULL;
+}
+
+function getAutoserviceHistoryById($autoservice_id, $status)
+{
+  $pdo = conn();
+  $sql = "SELECT application_id,client_id,auto_id,date,autoserv_serv_id,price,text,date_payment
+  FROM public.application_history WHERE autoservice_id = " . $autoservice_id . " AND status = " . $pdo->quote($status)
+    . " ORDER BY date DESC";
+  $histories = $pdo->query($sql);
+  $arHistory = [];
+  while ($history = $histories->fetch()) {
+
+
+
+    $sql_car_info = "SELECT name_brand,name_model FROM public.automobile JOIN public.model ON automobile.model_id=model.model_id
+    JOIN public.brand ON automobile.brand_id=brand.brand_id 
+    WHERE auto_id=" . $history['auto_id'] . " AND client_id=" . $history['client_id'];
+
+    $car_info = $pdo->query($sql_car_info)->fetch();
+    $sql_client_info = "SELECT name_client,email_client,phone_client FROM public.client
+    WHERE client_id=" . $history['client_id'];
+    $client_info = $pdo->query($sql_client_info)->fetch();
+    if ($history['date_payment'] != NULL) {
+      list($date_payment, $time_payment) = explode(" ", $history['date_payment']);
+    } else {
+      $date_payment = $time_payment = '-';
+    }
+    list($date_start, $time_start) = explode(" ", $history['date']);
+    $services = [];
+    if (substr($history['autoserv_serv_id'], 1, -1) != '') {
+      $sql_autoserv_services = "SELECT DISTINCT name_service FROM public.service
+      WHERE service_id IN (" . substr($history['autoserv_serv_id'], 1, -1) . ') ORDER BY name_service';
+      $services_names = $pdo->query($sql_autoserv_services);
+      while ($service_name = $services_names->fetch()) {
+        array_push($services, $service_name['name_service']);
+      }
+    }
+    foreach ($history as &$value) {
+      if ($value == NULL) {
+        $value = '-';
+      }
+    }
+    array_push($arHistory, [
+      'id' => $history['application_id'],
+      'name_client' => $client_info['name_client'],
+      'phone_client' => $client_info['phone_client'],
+      'email_client' => $client_info['email_client'],
+      'auto' => $car_info['name_brand'] . ' ' . $car_info['name_model'],
+      'date_payment' => $date_payment,
+      'time_payment' => $time_payment,
+      'services' => $services,
+      'price' => $history['price'],
+      'text' => $history['text'],
+      'date_start' => $date_start,
+      'time_start' => $time_start
+    ]);
+  }
+  return $arHistory;
 }

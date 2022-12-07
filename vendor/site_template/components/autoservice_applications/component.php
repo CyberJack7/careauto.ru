@@ -5,7 +5,7 @@ if (!isset($_SESSION['user']['id'])) {
 require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/lib/defines.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/lib/queries.php';
 require_once PATH_CONNECT;
-function change_status($appl_id, $status, $date = '0', $time = '0', $ArServices, $price)
+function change_status($appl_id, $status, $date = '0', $time = '0', $ArServices, $price, $text_autoservice = null)
 {
     $pdo = conn();
     switch ($status) {
@@ -32,22 +32,126 @@ function change_status($appl_id, $status, $date = '0', $time = '0', $ArServices,
             break;
     }
 
-    $sql = "UPDATE Public.application SET status=" . $pdo->quote($new_status) . ",
+    $sql = "UPDATE Public.application SET status=" . $pdo->quote("Выполнено") . ",
     price=" . $price . ",
     autoserv_serv_id=" . $pdo->quote($ArServices) . "
      WHERE application_id=" . $appl_id;
     $result = $pdo->exec($sql);
-    if (($new_status == "Отказ") || ($new_status == "Завершено")) {
-        $sql_ins = "INSERT INTO Public.application_history(client_id,auto_id,autoservice_id,date,autoserv_serv_id,price,text,status,date_payment)
-                        SELECT client_id,auto_id,autoservice_id,date,autoserv_serv_id,price,text,status,date_payment FROM Public.application
-                        WHERE application_id=$appl_id";
-        $result = $pdo->exec($sql_ins);
-        $sql_del = "DELETE 
-                        FROM Public.application
-                        WHERE application_id=$appl_id";
-        $result = $pdo->exec($sql_del);
+    if ($new_status == "Завершено") {
+        $sql_ins = "INSERT INTO public.application_history(client_id,auto_id,autoservice_id,date,autoserv_serv_id,price,text,status,date_payment)
+                        SELECT client_id,auto_id,autoservice_id,date,autoserv_serv_id,price,text,status,date_payment FROM public.application
+                        WHERE application_id=" . $appl_id;
+
+        $sql_ins_client_history = "INSERT INTO public.client_history(client_id,auto_id,autoserv_serv_id,price,date,date_payment,text)
+                        SELECT client_id,auto_id,autoserv_serv_id,price,date,date_payment,text FROM public.application
+                        WHERE application_id=" . $appl_id;
+        $result_ins = $pdo->exec($sql_ins);
+        $appl_history_id = $pdo->lastInsertId();
+        $result_ins_client = $pdo->exec($sql_ins_client_history);
+        $appl_client_history_id = $pdo->lastInsertId();
+        echo $text_autoservice;
+        echo $appl_history_id . '- ИД от аппликатион хистори';
+        echo $appl_client_history_id . '-ИД от клиент хистори';
+        $sql_get_name_autoservice = "SELECT name_autoservice FROM public.autoservice WHERE
+        autoservice_id=" . $_SESSION['user']['id'];
+        $autoservice_name = $pdo->query($sql_get_name_autoservice)->fetch();
+        $text_autoservice = $pdo->quote($text_autoservice);
+        $autoservice_name = $pdo->quote($autoservice_name['name_autoservice']);
+        $sql_upd_autoservice = "UPDATE public.application_history SET text=$text_autoservice
+        WHERE application_id=" . $appl_history_id;
+        $sql_upd_client = "UPDATE public.client_history SET text=$text_autoservice,
+        name_autoservice=" . $autoservice_name . " WHERE history_id=" . $appl_client_history_id;
+        $result1 = $pdo->exec($sql_upd_autoservice);
+        $result2 = $pdo->exec($sql_upd_client);
+    } elseif ($new_status == "Отказ") {
+    }
+
+
+
+
+    // $sql_del = "DELETE 
+    //                     FROM Public.application
+    //                     WHERE application_id=$appl_id";
+    // $result = $pdo->exec($sql_del);
+}
+
+function getCarHistory($appl_id)
+{
+    $pdo = conn();
+    $sql = "SELECT client_id,auto_id FROM public.application WHERE
+    application_id=" . $appl_id;
+    $count_displayed = 0;
+
+    $result = $pdo->query($sql)->fetch();
+    if ($result) {
+        $history_list = getAutoHistoryById($result['client_id'], $result['auto_id']);
+        if (!empty($history_list)) {
+
+            echo '<div class="modal" tabindex="-1">
+                 <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title">' . $history_list[0]['auto'] . '</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            <div id="history_area">';
+            foreach ($history_list as $history) {
+                if ($history['confidentiality'] != "-") {
+                    $count_displayed++;
+                    echo '<div class="plate" id="history_id_' . $history['id'] . '">';
+                    if ($history['autoservice'] == '-') {
+                        echo '<h3>Запись ' . $history['id'] . '</h3>';
+                    } else {
+                        echo '<h3>' . $history['autoservice'] . '</h3>';
+                    }
+                    echo '<div class="flex">
+                    <div>
+                        <p class="name">Дата</p><p class="value">' . $history['date'] . '</p>
+                        <p class="name">Время</p><p class="value">' . $history['time'] . '</p>
+                        </div>
+                        <div>
+                        <p class="name">Стоимость</p><p class="value">' . $history['price'] . ' р</p>
+                        <p class="name">Список услуг</p>';
+                    if (!empty($history['services'])) {
+                        echo '<div id="services">';
+                        $count = 1;
+                        foreach ($history['services'] as $service) {
+                            echo '<p>' . $count . '. ' . $service . '</p>';
+                            $count++;
+                        }
+                        echo '</div>';
+                    } else {
+                        echo '<p class="value">Консультация и осмотр автомобиля</p>';
+                    }
+                    echo '</div>
+                <div id="com_btn">
+                <div>
+                <p class="name"">Комментарий</p><p class="value">' . $history['text'] . '</p>
+                </div>';
+
+                    echo '</div>
+                </div>
+                </div>';
+                }
+            }
+            if ($count_displayed == 0) {
+                echo '<h3>Иcтория обслуживания пуста</h3>
+               <div class="plate">        
+                   <p>Для данного автомобиля не зафиксированно никаких записей в истории обслуживания. Либо они скрыты пользователем!</p>
+               </div>';
+            }
+            echo ' </div>        
+            <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть историю</button>
+        </div>
+        </div>
+        </div>
+        </div>';
+        }
     }
 }
+
 
 function getStartService($appl_numb, $ArCategory, $ApplServices)  // $ApplServices - услуги указанные в заявке
 {                                                                // $appl_numb - порядковый номер заявки
@@ -110,7 +214,11 @@ if (!empty($_POST['appl_numb']) and !empty($_POST['ArCategory']) and !empty($_PO
 
 
 if (!empty($_POST['status']) and !empty($_POST['appl_id']) and !empty($_POST['ArService']) and !empty($_POST['price'])) {
-    change_status($_POST['appl_id'], $_POST['status'], $_POST['date'], $_POST['time'], $_POST['ArService'], $_POST['price']);
+    if (!empty($_POST['text_autoservice']))
+        change_status($_POST['appl_id'], $_POST['status'], $_POST['date'], $_POST['time'], $_POST['ArService'], $_POST['price'], $_POST['text_autoservice']);
+    else {
+        change_status($_POST['appl_id'], $_POST['status'], $_POST['date'], $_POST['time'], $_POST['ArService'], $_POST['price']);
+    }
 } else {
 }
 
@@ -122,4 +230,8 @@ if (!empty($_POST['appl_numb']) and !empty($_POST['ArForPrices']) and !empty($_P
     } elseif ($_POST['Operation'] == "-") {
         echo $_POST['Old_value'] - getTotalAmount($_POST['ArForPrices'], $_SESSION['user']['id']);
     }
+}
+
+if (!empty($_POST['appl_numb']) and !empty($_POST['get_car'])) {
+    getCarHistory($_POST['appl_numb']);
 }

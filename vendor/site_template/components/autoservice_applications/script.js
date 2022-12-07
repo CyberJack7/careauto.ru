@@ -13,6 +13,12 @@ $(document).ready(function () {
     } else {
       fdata.append("status", $('input[id="status_' + appl_id + '"]').val());
     }
+    if ($('input[id="status_' + appl_id + '"]').val() == "Выполнено") {
+      var textArea = document.getElementById(
+        "autoserviceCommentary_" + appl_id
+      );
+      fdata.append("text_autoservice", textArea.value);
+    }
     fdata.append("appl_id", $('input[id="appl_id_' + appl_id + '"]').val());
     fdata.append("date", $('input[id="date_' + appl_id + '"]').val());
     fdata.append("time", $('input[id="time_' + appl_id + '"]').val());
@@ -45,6 +51,7 @@ $(document).ready(function () {
             $("#accordion2").load(" #accordion2");
             $("#accordion3").load(" #accordion3");
             $("#accordion4").load(" #accordion4");
+            // alert(responce);
           },
         });
       }
@@ -61,6 +68,31 @@ $(document).ready(function () {
     $("#accordion4").load(" #accordion4");
   });
 });
+var modalWrap = null;
+function getCarHistory(button) {
+  if (modalWrap !== null) {
+    modalWrap.remove();
+  }
+
+  $.post(
+    "/vendor/site_template/components/autoservice_applications/component.php",
+    {
+      appl_numb: button.value,
+      get_car: true,
+    },
+    function (responce) {
+      modalWrap = document.createElement("div");
+      modalWrap.innerHTML = responce;
+
+      //modalWrap.querySelector(".modal-success-btn").onclick = callback;
+
+      document.body.append(modalWrap);
+
+      var modal = new bootstrap.Modal(modalWrap.querySelector(".modal"));
+      modal.show();
+    }
+  );
+}
 
 function getStartServices(button) {
   var element = document.getElementById("categories_" + button.value);

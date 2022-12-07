@@ -29,7 +29,6 @@ unset($_SESSION['message']['text'], $_SESSION['message']['type']);
         </div>
     </div>
 </nav>
-
 <div class="container" id="test-id">
     <div class="tab-content" id="nav-tabContent">
         <div class="tab-pane fade show active" id="nav-new" role="tabpanel" aria-labelledby="nav-new-tab" tabindex="0">
@@ -64,6 +63,7 @@ unset($_SESSION['message']['text'], $_SESSION['message']['type']);
         </div>
     </div>
 </div>
+
 
 <!-- для заявок end -->
 <div class="container text-center my-5">
