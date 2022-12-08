@@ -24,3 +24,16 @@
 #cancel_btn {
   margin-top: 20px;
 }
+[name="accept"] {
+  margin-top: 20px;
+}
+[name="cancel"] {
+  margin-top: 20px;
+}
+[name="comment"] {
+  margin-top: 20px;
+}
+[name="car_history"] {
+  margin-top: 20px;
+  margin-left: 770px;
+}
