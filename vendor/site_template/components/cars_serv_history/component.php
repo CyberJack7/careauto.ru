@@ -63,7 +63,7 @@ function setAutoHistory($history_list) {
                 <p>Для данного автомобиля не зафиксированно никаких записей в истории обслуживания</p>
             </div>';
     }
-    $history_template .= '</div><button class="btn btn-primary" id="add_history_record" type="button" onclick="addHistoryRecord(this)">Добавить новую запись</button>';
+    $history_template .= '<button class="btn btn-primary" id="add_history_record" type="button" onclick="addHistoryRecord(this)">Добавить новую запись</button></div>';
     return $history_template;
   }
 

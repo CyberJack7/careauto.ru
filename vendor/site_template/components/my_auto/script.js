@@ -293,7 +293,7 @@ function addTires(add_tires_btn) {
     }
     let today = new Date();
     let cur_year = today.getFullYear();
-    if ((tires_date_buy == "") || (tires_date_buy != "" && year > 1886 && year < cur_year)) {
+    if ((tires_date_buy == "") || (tires_date_buy != "" && year > 1886 && year <= cur_year)) {
       document.getElementById("add_tires").style.display = "none";
       let marking = document.getElementById("marking");
       ar_add_tires[2] = marking.value;

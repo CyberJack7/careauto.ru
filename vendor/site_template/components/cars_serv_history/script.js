@@ -36,7 +36,7 @@ function deleteHistoryRecord(button) {
         if (document.getElementById("history_area").getElementsByClassName("plate").length == 0) {
             document.getElementById("history_area").remove();
             document.getElementById("show_applications").getElementsByTagName("h3")[0].remove();
-            document.getElementById("show_applications").insertAdjacentHTML('beforeend', '<h3>Иcтория обслуживания пуста</h3><div class="plate"><p>Для данного автомобиля не зафиксированно никаких записей в истории обслуживания</p></div>');
+            document.getElementById("show_applications").insertAdjacentHTML('beforeend', '<h3>Иcтория обслуживания пуста</h3><div class="plate"><p>Для данного автомобиля не зафиксированно никаких записей в истории обслуживания</p></div><button class="btn btn-primary" id="add_history_record" type="button" onclick="addHistoryRecord(this)">Добавить новую запись</button>');
         }
         let json_history_id = JSON.stringify(history_id);
         $.post("/vendor/site_template/components/cars_serv_history/component.php", {delete_history: json_history_id});
