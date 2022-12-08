@@ -68,7 +68,7 @@
         aria-current="page" href="/autoservice_service/">Услуги</a>
 </li>
 <li class="nav-item">
-    <a class="nav-link <?php if (mb_strpos($_SERVER['REQUEST_URI'], '/ /') !== false) { ?>active<?php } ?>"
+    <a class="nav-link <?php if (mb_strpos($_SERVER['REQUEST_URI'], '/autoservice_archive/') !== false) { ?>active<?php } ?>"
         aria-current="page" href="/autoservice_archive/">Архив</a>
 </li>
 </ul>

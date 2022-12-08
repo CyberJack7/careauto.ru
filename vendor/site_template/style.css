@@ -133,6 +133,7 @@ textarea {
 .photos > .minor_photo {
   align-self: start;
   flex-direction: row;
+  cursor: pointer;
 }
 
 .photos > img:last-child {
@@ -169,6 +170,7 @@ textarea {
 .selectBox {
   position: relative;
   width: 100% !important;
+  cursor: pointer;
 }
 
 .selectBox > option {
