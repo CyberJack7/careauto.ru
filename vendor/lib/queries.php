@@ -48,7 +48,7 @@ function appl_list($user_id, $status)
 
       $sql_serv = "SELECT autoserv_serv_id FROM Public.application WHERE application_id = " . $row['application_id'];
       $serv = $pdo->query($sql_serv)->fetch(); // Извлекаеаем массив услуг из заявки
-      if (!empty($serv['autoserv_serv_id'])) { // Если в заявке есть услуги!
+      if (!empty($serv['autoserv_serv_id']) and $serv['autoserv_serv_id'] != '{}') { // Если в заявке есть услуги!
         $str = str_replace(['{', '}', ' '], '', $serv['autoserv_serv_id']);
         $serv_id = explode(',', $str);
         $ArService = [];
@@ -112,7 +112,9 @@ function appl_list($user_id, $status)
       </div>
       <div class="checkboxes" id="services_' . $appl_id . '"></div></div>';
 
-
+      if (empty($appl_info['price'])) {
+        $appl_info['price'] = 0;
+      }
       echo  '<p>Стоимость услуг: </p><input disabled id="prices_' . $appl_id . '" value="' . $appl_info['price'] . '"> Рублей. </br>
             Комментарий от клиента: ' . $appl_info['text'] . '</br>';
       if ($status == "Ожидает подтверждения") {

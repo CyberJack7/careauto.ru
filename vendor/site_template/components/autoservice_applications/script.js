@@ -83,9 +83,6 @@ function getCarHistory(button) {
     function (responce) {
       modalWrap = document.createElement("div");
       modalWrap.innerHTML = responce;
-
-      //modalWrap.querySelector(".modal-success-btn").onclick = callback;
-
       document.body.append(modalWrap);
 
       var modal = new bootstrap.Modal(modalWrap.querySelector(".modal"));
@@ -224,6 +221,9 @@ function getStartAmount(button) {
       var ArServices = 0;
     }
     var operation = "start";
+  }
+  if (price.value == "") {
+    price.value = 0;
   }
   $.post(
     "/vendor/site_template/components/autoservice_applications/component.php",
