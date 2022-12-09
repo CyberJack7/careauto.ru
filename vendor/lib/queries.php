@@ -27,7 +27,7 @@ function appl_list($user_id, $status)
 {
   $pdo = conn();
   $sql_status = $pdo->quote($status);
-  $sql = "SELECT application_id FROM Public.application WHERE autoservice_id=" . $user_id . " AND status = " . $sql_status;
+  $sql = "SELECT application_id FROM Public.application WHERE autoservice_id=" . $user_id . " AND status = " . $sql_status . " ORDER BY application_id DESC";
   $appl = $pdo->query($sql);
   if ($appl->rowCount() == 0) {
     echo '<p><div class="alert alert-primary" role="alert">Заявок нет!</div></p>';
@@ -119,7 +119,7 @@ function appl_list($user_id, $status)
             Комментарий от клиента: ' . $appl_info['text'] . '</br>';
       if ($status == "Ожидает подтверждения") {
         echo 'Дата заявки: <input id="date_' . $appl_id . '" name="date" type="date" value="' . $date . '"</input></br>
-        Время заявки: <input id="time_' . $appl_id . '" name="time" type="datetime" value="' . $time . '"</input></br>';
+        Время заявки: <input id="time_' . $appl_id . '" name="time" type="time" value="' . $time . '"</input></br>';
       } else {
         echo 'Дата заявки: ' . $date . '</br>
               Время заявки: ' . $time . '</br>';
@@ -1242,4 +1242,18 @@ function getAutoserviceHistoryById($autoservice_id, $status)
     ]);
   }
   return $arHistory;
+}
+
+//
+function getAutoserviceServAndBrandAmountById($autoservice_id)
+{
+  $pdo = conn();
+  $sql_brands = "SELECT COUNT(autoserv_brand_id) as brands FROM Public.autoservice_brand WHERE autoservice_id = " . $autoservice_id;
+
+  $sql_services = "SELECT COUNT(autoserv_serv_id) as services FROM Public.autoservice_service WHERE autoservice_id = " . $autoservice_id;
+
+  $brands = $pdo->query($sql_brands)->fetch()['brands'];
+  $services = $pdo->query($sql_services)->fetch()['services'];
+  $arInfo = ['brands' => $brands, 'services' => $services];
+  return $arInfo;
 }

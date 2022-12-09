@@ -29,6 +29,7 @@
         </li>
         </ul>
     </div>
+    <p style="color: white; margin-right: 20px !important"><?=$_SESSION['user']['name']?></p>
     <button class="btn btn-primary" id="logout_btn" type="button">Выйти</button>
     <?php
                 } elseif ($_SESSION['user']['user_type'] == 'client') { //автовладелец 
@@ -53,8 +54,10 @@
 </div>
 <?php if (mb_strpos($_SERVER['REQUEST_URI'], '/profile/') !== false) { //если в профиле 
 ?>
+<p style="color: white; margin-right: 20px !important"><?=$_SESSION['user']['name']?></p>
 <button class="btn btn-primary" id="logout_btn" type="button">Выйти</button>
 <?php } else { ?>
+<p style="color: white; margin-right: 20px !important"><?=$_SESSION['user']['name']?></p>
 <a class="btn btn-primary" href="/profile/">Профиль</a>
 <?php }
                 } else { //автосервис 
@@ -75,8 +78,10 @@
 </div>
 <?php if (mb_strpos($_SERVER['REQUEST_URI'], '/profile/') !== false) { //если в профиле 
 ?>
+<p style="color: white; margin-right: 20px !important"><?=$_SESSION['user']['name']?></p>
 <button class="btn btn-primary" id="logout_btn" type="button">Выйти</button>
 <?php } else { ?>
+<p style="color: white; margin-right: 20px !important"><?=$_SESSION['user']['name']?></p>
 <a class="btn btn-primary" href="/profile/">Профиль</a>
 <?php }
                 } ?>

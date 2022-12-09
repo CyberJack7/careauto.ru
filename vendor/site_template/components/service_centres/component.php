@@ -168,80 +168,84 @@ if (isset($_POST['create_application'])) {
         $autoservice_info = getAutoserviceInfoById($data['autoservice_id']);
         $client_info = getAllUserInfo($data['client_id']);
         $application_template = '<div class="panel" id="send_application">
-            <h3>Заявка на обслуживание</h3>
-            <div class="autoservices_area">
-            <p class="name">Название сервисного центра</p><p class="value"><b>' . $autoservice_info['name'] . '</b></p>
-            <p class="name">ФИО</p><p class="value">' . $client_info['name_client'] . '</p>
-            <p class="name">Номер телефона</p><p class="value">' . $client_info['phone_client'] . '</p>
-            <div class="mb-3">
-                <label class="form-label name" for="auto_application">Автомобиль</label>
-                <select class="form-select req" id="auto_application" name="auto_application" aria-label="Default select example" required>';
-        if ($data['auto_id'] == '') {
-            $application_template .= '<option value="" disabled selected>Выберите ваш автомобиль</option>';
-            $autos = getAutosById($client_info['client_id']);
-            foreach ($autos as $auto_id => $ar_auto_info) {
-                $application_template .= '<option value="'. $auto_id . '">' . $ar_auto_info['brand'] . ' ' . $ar_auto_info['model'] . '</option>';
-            }
-        } else {
-            $autos = getAutosById($client_info['client_id']);
-            foreach ($autos as $auto_id => $ar_auto_info) {
-                if ($auto_id == $data['auto_id']) {
-                    $application_template .= '<option value="'. $auto_id . '" selected>' . $ar_auto_info['brand'] . ' ' . $ar_auto_info['model'] . '</option>';
-                } else {
+            <h3>Заявка на обслуживание</h3>';
+            if (getAutosById($client_info['client_id']) == NULL) {
+                $application_template .= '<p>Невозможно сформировать заявку с пустым списком автомобилей. Добавьте автомобиль во вкладке "Мои авто"</p></div>';
+            } else {
+                $application_template .= '<div class="autoservices_area">
+                <p class="name">Название сервисного центра</p><p class="value"><b>' . $autoservice_info['name'] . '</b></p>
+                <p class="name">ФИО</p><p class="value">' . $client_info['name_client'] . '</p>
+                <p class="name">Номер телефона</p><p class="value">' . $client_info['phone_client'] . '</p>
+                <div class="mb-3">
+                    <label class="form-label name" for="auto_application">Автомобиль</label>
+                    <select class="form-select req" id="auto_application" name="auto_application" aria-label="Default select example" required>';
+            if ($data['auto_id'] == '') {
+                $application_template .= '<option value="" disabled selected>Выберите ваш автомобиль</option>';
+                $autos = getAutosById($client_info['client_id']);
+                foreach ($autos as $auto_id => $ar_auto_info) {
                     $application_template .= '<option value="'. $auto_id . '">' . $ar_auto_info['brand'] . ' ' . $ar_auto_info['model'] . '</option>';
                 }
-            }
-        }
-        $application_template .= '</select>
-            </div>';
-        if (!empty($autoservice_info['services_id'])) {
-            $exists_services = array_intersect($data['services_id'], $autoservice_info['services_id']);
-            $application_template .= '<div class="multiselect mb-3">
-                <label class="form-label" for="show_application_services">Услуги</label>
-                <div class="form-select selectBox" id="show_application_services" onclick="showCheckboxes(this)">
-                    <option>Выбрано услуг: ' . count($exists_services) . '</option>
-                </div>
-                <div class="checkboxes" id="application_services">';
-                    foreach ($autoservice_info['services_id'] as $service_id) {
-                        if (in_array($service_id, $exists_services)) {
-                            $application_template .= '<label for="' . $service_id . '">
-                                <input type="checkbox" id="' . $service_id . '" onchange="setPrice(this)" checked/>' . getServiceNameById($service_id) . '</label>';
-                        } else {
-                            $application_template .= '<label for="' . $service_id . '">
-                                <input type="checkbox" id="' . $service_id . '" onchange="setPrice(this)"/>' . getServiceNameById($service_id) . '</label>';
-                        }
+            } else {
+                $autos = getAutosById($client_info['client_id']);
+                foreach ($autos as $auto_id => $ar_auto_info) {
+                    if ($auto_id == $data['auto_id']) {
+                        $application_template .= '<option value="'. $auto_id . '" selected>' . $ar_auto_info['brand'] . ' ' . $ar_auto_info['model'] . '</option>';
+                    } else {
+                        $application_template .= '<option value="'. $auto_id . '">' . $ar_auto_info['brand'] . ' ' . $ar_auto_info['model'] . '</option>';
                     }
-            $application_template .= '</div>
+                }
+            }
+            $application_template .= '</select>
                 </div>';
-        } else {
-            $application_template .= '<p class="name">Услуги</p><p class="value">Сервисный центр не указал перечень услуг</p>';
-        }
-        $price = 0;
-        foreach ($exists_services as $service_id) {
-            $price += getServicePriceById($data['autoservice_id'] ,$service_id);
-        }
-        $application_template .= '<div>
-                <label class="form-label name" for="price" style="margin-bottom: 0">Стоимость</label>
-                <p class="value" id="price"><b>' . $price . ' р</b></p>
+            if (!empty($autoservice_info['services_id'])) {
+                $exists_services = array_intersect($data['services_id'], $autoservice_info['services_id']);
+                $application_template .= '<div class="multiselect mb-3">
+                    <label class="form-label" for="show_application_services">Услуги</label>
+                    <div class="form-select selectBox" id="show_application_services" onclick="showCheckboxes(this)">
+                        <option>Выбрано услуг: ' . count($exists_services) . '</option>
+                    </div>
+                    <div class="checkboxes" id="application_services">';
+                        foreach ($autoservice_info['services_id'] as $service_id) {
+                            if (in_array($service_id, $exists_services)) {
+                                $application_template .= '<label for="' . $service_id . '">
+                                    <input type="checkbox" id="' . $service_id . '" onchange="setPrice(this)" checked/>' . getServiceNameById($service_id) . '</label>';
+                            } else {
+                                $application_template .= '<label for="' . $service_id . '">
+                                    <input type="checkbox" id="' . $service_id . '" onchange="setPrice(this)"/>' . getServiceNameById($service_id) . '</label>';
+                            }
+                        }
+                $application_template .= '</div>
+                    </div>';
+            } else {
+                $application_template .= '<p class="name">Услуги</p><p class="value">Сервисный центр не указал перечень услуг</p>';
+            }
+            $price = 0;
+            foreach ($exists_services as $service_id) {
+                $price += getServicePriceById($data['autoservice_id'] ,$service_id);
+            }
+            $application_template .= '<div>
+                    <label class="form-label name" for="price" style="margin-bottom: 0">Стоимость</label>
+                    <p class="value" id="price"><b>' . $price . ' р</b></p>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label name" for="desired_date">Желаемая дата</label>
+                    <input class="form-control" id="desired_date" name="desired_date" type="date" min="' . date('Y-m-d') .'" placeholder="Желаемая дата обслуживания"/>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label name" for="desired_time">Желаемая время</label>
+                    <input class="form-control" id="desired_time" name="desired_time" type="time" value="12:00" placeholder="Желаемое время записи на обслуживание"/>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="comment">Комментарий</label>
+                    <textarea class="form-control" id="comment" name="comment" type="textarea" placeholder="Комментарий к заявке"></textarea>
+                </div>
             </div>
-            <div class="mb-3">
-                <label class="form-label name" for="desired_date">Желаемая дата</label>
-                <input class="form-control" id="desired_date" name="desired_date" type="date" min="' . date('Y-m-d') .'" placeholder="Желаемая дата обслуживания"/>
+            <div class="btn_div">
+                <button class="btn btn-primary" id="send_application" type="button" onclick="sendApplication(this)">Отправить</button>
+                <button class="btn btn-secondary" id="cancel_application" type="button" onclick="cancelApplication()">Отменить</button>
             </div>
-            <div class="mb-3">
-                <label class="form-label name" for="desired_time">Желаемая время</label>
-                <input class="form-control" id="desired_time" name="desired_time" type="time" value="12:00" placeholder="Желаемое время записи на обслуживание"/>
-            </div>
-            <div class="mb-3">
-                <label class="form-label" for="comment">Комментарий</label>
-                <textarea class="form-control" id="comment" name="comment" type="textarea" placeholder="Комментарий к заявке"></textarea>
-            </div>
-        </div>
-        <div class="btn_div">
-            <button class="btn btn-primary" id="send_application" type="button" onclick="sendApplication(this)">Отправить</button>
-            <button class="btn btn-secondary" id="cancel_application" type="button" onclick="cancelApplication()">Отменить</button>
-        </div>
-        </div>';
+            </div>';
+            }
         echo $application_template;
     } else {
         return NULL;
