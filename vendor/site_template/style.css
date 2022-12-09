@@ -1,0 +1,282 @@
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 300;
+  color: #333;
+}
+
+body {
+  background-color: #f2f2f2;
+  height: 100vh;
+  font-family: Helvetica, sans-serif;
+  color: #555;
+  font-weight: 300;
+  font-size: 16px;
+}
+
+a {
+  color: #7c9ab7;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+p {
+  margin: 7px 0 7px 0 !important;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+}
+
+input {
+  margin: 10px 0;
+  padding: 10px;
+  border: unset;
+  border-bottom: 2px solid #e3e3e3;
+  outline: none;
+}
+
+textarea {
+  height: 152px;
+}
+
+.btn-group {
+  margin-bottom: 10px;
+}
+
+.central {
+  align-items: flex-start;
+  justify-content: flex-start;
+  display: flex;
+  height: auto;
+}
+.content {
+  height: 85% !important;
+}
+
+.column {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.panel {
+  padding: 20px;
+  margin: 10px;
+  border: 1px solid #0d6efd;
+  border-radius: 10px;
+  width: 500px !important;
+  height: min-content;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 50%);
+  justify-self: center;
+}
+
+.panel > form {
+  width: auto !important;
+}
+
+.panel > button {
+  margin-top: 10px;
+  width: -webkit-fill-available;
+}
+
+.navigation {
+  margin: 10px 10px 10px 0;
+  padding: 0;
+  width: 300px !important;
+  align-self: flex-start;
+}
+
+.navigation > a {
+  margin-bottom: 10px;
+  width: -webkit-fill-available;
+  text-align: left;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 50%);
+}
+
+.navigation > button {
+  margin: 10px 0;
+  width: -webkit-fill-available;
+  text-align: center;
+}
+
+.list-group {
+  --bs-list-group-border-color: #0d6efd !important;
+}
+
+.item_active {
+  background-color: #0d6efd !important;
+  color: #fff !important;
+}
+
+/*фотографии*/
+.photos {
+  margin: 13px 0px 0px;
+}
+
+.photos > img {
+  border-radius: 10px;
+  object-fit: contain;
+  background-color: #000;
+}
+
+.photos > .major_photo {
+  align-self: start;
+}
+
+.photos > .minor_photo {
+  align-self: start;
+  flex-direction: row;
+  cursor: pointer;
+}
+
+.photos > img:last-child {
+  margin: 2px 0 0 0;
+}
+
+/*кнопки в линию*/
+.btn_div {
+  display: flex;
+}
+
+.btn_div > h5 {
+  margin: 0;
+}
+
+.btn_div > button {
+  width: 50%;
+  margin: 13px 1px 0;
+}
+
+.btn_div > button:last-child {
+  margin-right: 0;
+}
+
+.btn_div > button:first-child {
+  margin-left: 0;
+}
+
+/*выпадающее окно с чекбоксами*/
+.multiselect {
+  width: 100%;
+}
+
+.selectBox {
+  position: relative;
+  width: 100% !important;
+  cursor: pointer;
+}
+
+.selectBox > option {
+  user-select: none;  
+}
+
+.selectBox select {
+  width: 100%;
+  font-weight: bold;
+}
+
+.checkboxes {
+  display: none;
+  border: 1px #dadada solid;
+  overflow: auto;
+  max-height: 195px; 
+}
+
+.checkboxes > p {
+  margin: 0 !important;
+  padding: 2px 4px;
+}
+
+.checkboxes label {
+  display: block;
+  padding: 2px 4px;
+  line-height: 1.2;
+}
+
+.checkboxes label > input {
+  margin: 2px 4px 2px 0;
+}
+
+.checkboxes label:hover {
+  background-color: #0d6efd;
+  color: white;
+}
+
+/*всё что касается plate*/
+.plate {
+  margin: 10px 0;
+  padding: 15px;
+  width: auto !important;
+  border: 1px solid #808080;
+  border-radius: 10px;
+}
+
+.plate > h5 {
+  margin: 0;
+  
+}
+
+.plate:hover {
+  background-color: #f8f9fa;
+}
+
+.plate > .btn_div {
+  justify-content: space-between;
+}
+
+.dropdown_img {
+  padding: 2px 5px 2px 2px;
+  display: flex;
+  cursor: pointer;
+  border-radius: 3px;
+  border: 1px solid rgba(0,0,0,0);
+}
+
+.dropdown_img > h5 {
+  margin: 0;
+  user-select: none;
+}
+
+.dropdown_img > img,
+.edit_img,
+.delete_img {
+  width: 24px;
+  height: 24px;
+  padding: 2px;
+  opacity: 0.7;
+  border-radius: 3px;  
+  cursor: pointer;
+  user-select: none;
+}
+
+.dropdown_img:hover,
+.edit_img:hover {
+  background-color: #bebebe;
+  border: 1px solid #838383;
+}
+
+.delete_img:hover {
+  background-color: #f39898;
+  border: 1px solid #8f3e3e;
+}
+
+.alert {
+  margin-bottom: 10px !important;
+}
+
+
+/*Краткая информация в plate*/
+.text_list {
+  width: 50%;
+}
+
+.name {
+  color: rgb(100, 100, 100);
+}

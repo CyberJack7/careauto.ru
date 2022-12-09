@@ -1,0 +1,27 @@
+h5 {
+  color: #0d6efd;
+  margin: 9px 0 17px;
+}
+
+.form_box .req:invalid {
+  border: 2px solid red;
+}
+.form_box .req:valid {
+  border: 2px solid green;
+}
+
+.red {
+  color: red;
+}
+
+.major_photo {
+  width: 458px;
+  height: 258px;
+}
+
+.minor_photo {
+  margin: 2px 2px 0 0;
+  width: 90px;
+  height: 50px;
+}
+

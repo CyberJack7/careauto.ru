@@ -1,0 +1,8 @@
+/* для выделения полей */
+
+.form_box .req:invalid {
+  border: 2px solid red;
+}
+.form_box .req:valid {
+  border: 2px solid green;
+}

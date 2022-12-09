@@ -1,0 +1,39 @@
+.con1 {
+  display: inline-block;
+  margin-left: 2px;
+}
+#reset-img {
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+}
+#reset-btn {
+  border: none;
+  float: right;
+  background-color: white;
+}
+#reset-img:hover {
+  background-color: rgb(237, 234, 234);
+}
+#spinner {
+  visibility: hidden;
+}
+#accept_btn {
+  margin-top: 20px;
+}
+#cancel_btn {
+  margin-top: 20px;
+}
+[name="accept"] {
+  margin-top: 20px;
+}
+[name="cancel"] {
+  margin-top: 20px;
+}
+[name="comment"] {
+  margin-top: 20px;
+}
+[name="car_history"] {
+  margin-top: 20px;
+  margin-left: 770px;
+}

@@ -1,0 +1,24 @@
+
+#tires {
+  margin-right: 0;
+}
+
+#show_tires > button,
+#add_tires > button,
+.show_tires > button {
+  margin-top: 10px;
+  width: -webkit-fill-available;
+}
+
+.show_tires {
+  overflow: auto;
+  max-height: 413px;
+}
+
+.req:invalid {
+  border: 2px solid red;
+}
+
+.req:valid {
+  border: 2px solid green;
+}

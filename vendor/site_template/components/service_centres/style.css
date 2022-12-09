@@ -1,0 +1,129 @@
+
+.panel {
+  padding: 15px;
+}
+
+.search {  
+  margin: 10px 10px 10px 0;
+  width: 300px !important;
+  align-self: flex-start;
+}
+
+.search > button {
+  margin: 10px 0;
+  width: -webkit-fill-available;
+  text-align: center;
+}
+
+.services_by_catedory > p {
+  margin: 0 !important;
+  padding: 2px 4px;
+}
+
+.search {
+  width: 24% !important;
+}
+
+.search > button {
+  margin-bottom: 0;
+}
+
+#search_autoservices {
+  width: 33% !important;
+  max-height: 748px !important;
+}
+
+.autoservices_area {
+  max-height: 635px;
+  overflow: auto;
+  border-top: 1px solid #bababa;
+  border-bottom: 1px solid #bababa;
+}
+
+.with_btn {
+  max-height: 620.6px !important;
+}
+
+.autoservices_area > button {
+  width: -webkit-fill-available;
+  margin-bottom: 10px;
+}
+
+#current_autoservice {
+  width: 43% !important;
+  margin-right: 0;
+  max-height: fit-content;
+}
+
+.plate > h3 {
+  margin-bottom: 0;
+}
+
+.major_photo {
+  width: 100%;
+  height: 270px;
+}
+
+.minor_photo {
+  margin: 2px 2px 0 0;
+  width: 19.6%;
+  height: 53px;
+}
+
+#service_info {
+  display: block;
+  max-height: 210px;
+  overflow: auto;
+}
+
+#service_info > label {
+  margin-bottom: 0;
+}
+
+.central > p {
+  margin: 2px 0 !important;
+}
+
+#autoservice_brands {
+  display: block;
+  max-height: 110px;
+  overflow: auto;
+}
+
+.show_autoservice .central {
+ border-radius: 8px 0 0 8px;
+}
+
+.mb-3 > .central {
+  border: 1px solid #ced4da;
+  padding-left: 10px;
+}
+
+.btn_div {
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.btn_div > .form-label {
+  margin-bottom: 0;
+  margin-right: 10px;
+}
+
+#send_application > .autoservices_area {
+  max-height: 277.6px;
+}
+
+.autoservices_area > .mb-3 {
+  margin-bottom: 10px !important;
+}
+
+#send_application > p {
+  margin-top: 0;
+}
+
+.req:invalid {
+  border: 2px solid red;
+}
+.req:valid {
+  border: 2px solid green;
+}
