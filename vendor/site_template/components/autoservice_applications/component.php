@@ -101,7 +101,7 @@ function getCarHistory($appl_id)
             <div class="modal-body">
             <div id="history_area">';
             foreach ($history_list as $history) {
-                if ($history['confidentiality'] != "-") {
+                if ($history['confidentiality'] != 1) {
                     $count_displayed++;
                     echo '<div class="plate" id="history_id_' . $history['id'] . '">';
                     if ($history['autoservice'] == '-') {
@@ -152,6 +152,25 @@ function getCarHistory($appl_id)
         </div>
         </div>
         </div>';
+        } else {
+            echo '<div class="modal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-scrollable">
+       <div class="modal-content">
+       <div class="modal-header">
+       <h5 class="modal-title">' . "Ууууупс..." . '</h5>
+       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+       </div>
+       <div class="modal-body">
+       <div id="history_area">';
+            echo '<p>У данного авто нет истории!</p>';
+
+            echo ' </div>        
+       <div class="modal-footer">
+   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть историю</button>
+   </div>
+   </div>
+   </div>
+   </div>';
         }
     }
 }
