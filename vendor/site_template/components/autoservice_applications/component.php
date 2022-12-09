@@ -101,7 +101,7 @@ function getCarHistory($appl_id)
             <div class="modal-body">
             <div id="history_area">';
             foreach ($history_list as $history) {
-                if ($history['confidentiality'] != "-") {
+                if ($history['confidentiality'] == "-") {
                     $count_displayed++;
                     echo '<div class="plate" id="history_id_' . $history['id'] . '">';
                     if ($history['autoservice'] == '-') {
