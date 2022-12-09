@@ -43,6 +43,13 @@ if (empty($_SESSION['user'])) {
                 }
             }
             unset($_SESSION['message']['text'], $_SESSION['message']['type']);
+            if ($_SESSION['user']['user_type'] == 'autoservice') {
+                $infoamount = getAutoserviceServAndBrandAmountById($_SESSION['user']['id']);
+                if ($infoamount['brands'] == 0 || $infoamount['services'] == 0) {
+                    echo '<p><div class="alert alert-warning" role="alert">
+                    Сервисные центры с пустым перечнем обслуживаемых марок и предоставляемых услуг клиентам не видны!</div></p>';
+                }
+            }
             ?>
         </p>
     </div>
