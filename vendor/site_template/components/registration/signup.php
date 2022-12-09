@@ -92,8 +92,7 @@ if ($user_type == "client") { // для клиента
         "phone" => str_replace(['(', ')', '-', ' '], '', $_POST['phone']),
         "password" => password_hash($_POST['password'], PASSWORD_DEFAULT),
         "document" => $path_to_file,
-        //"code" => send_email($_POST['email']),
-        "code" => "1234",
+        "code" => send_email($_POST['email']),
         "attempt" => 3
     ];
     header('Location: /confirmation_code/');
