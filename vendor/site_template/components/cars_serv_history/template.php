@@ -7,6 +7,7 @@
     if (!($_SESSION['user']['user_type'] == 'client')) {
         header('Location: /');
     }
+    var_dump(getAutoHistoryById(32, 3));
 ?>
 
 <h1 class="container">История обслуживания</h1>

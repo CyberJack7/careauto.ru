@@ -70,7 +70,7 @@ if ($user_type == "client") { // для клиента
         "city_id" => $_POST['city_id'],
         "phone" => str_replace(['(', ')', '-', ' '], '', $_POST['phone']),
         "password" => password_hash($_POST['password'], PASSWORD_DEFAULT),
-        "code" => send_email($_POST['email']),
+        "code" => '1',
         "attempt" => 3
     ];
     header('Location: /confirmation_code/');
@@ -93,7 +93,7 @@ if ($user_type == "client") { // для клиента
         "password" => password_hash($_POST['password'], PASSWORD_DEFAULT),
         "document" => $path_to_file,
         //"code" => send_email($_POST['email']),
-        "code" => "1234",
+        "code" => '1',
         "attempt" => 3
     ];
     header('Location: /confirmation_code/');

@@ -7,7 +7,7 @@
     if (!($_SESSION['user']['user_type'] == 'client')) {
         header('Location: /');
     }
-    // var_dump(getAutoservicesByParameters(['city' => 2, 'services' => [7, 8, 39], 'categories' => [1, 2]]));
+    // var_dump(getAutoservicesByParameters(['city' => 1]));
 ?>
 
 <h1 class="container">Сервисные центры</h1>
