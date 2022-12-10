@@ -12,7 +12,6 @@ require_once PATH_CONNECT;
 require_once PATH_QUERIES;
 $pdo = conn();
 
-var_dump($_FILES);
 
 if ($_POST['del_photo'] === true) {
 
@@ -24,7 +23,7 @@ if ($_POST['del_photo'] === true) {
     $_SESSION['message']['type'] = 'success';
     // exit;
 } else {
-    $requisites_id = requisites_id($_SESSION['user']['id']);
+    $requisites_id = getRequisitesId($_SESSION['user']['id']);
     
     $sql_requisites_delete = "DELETE FROM public.requisites WHERE requisites_id = " . $requisites_id;
     $stmt = $pdo->exec($sql_requisites_delete);

@@ -46,7 +46,7 @@ if (isset($_POST['dataQuery'])) { //нажата кнопка del_photo или d
         $_SESSION['message']['type'] = 'success';
     }
 } else { //нажата кнопка reset_requisites
-    $requisites_id = requisites_id($_SESSION['user']['id']);
+    $requisites_id = getRequisitesId($_SESSION['user']['id']);
     
     $sql_requisites_delete = "DELETE FROM public.requisites WHERE requisites_id = " . $requisites_id;
     $stmt = $pdo->exec($sql_requisites_delete);

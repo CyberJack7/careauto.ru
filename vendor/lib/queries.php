@@ -208,19 +208,22 @@ function doc_path($user_id)
 }
 
 //requisites_id по autoservice_id
-function requisites_id($autoservice_id)
+function getRequisitesId($autoservice_id)
 {
   $pdo = conn();
   $sql_find_requisites_id = "SELECT requisites_id FROM public.autoservice WHERE autoservice_id = " . $autoservice_id;
-  $requisites_id = $pdo->query($sql_find_requisites_id)->fetch()['requisites_id'];
-  return $requisites_id;
+  if ($pdo->query($sql_find_requisites_id)->fetch()) {
+    $requisites_id = $pdo->query($sql_find_requisites_id)->fetch()['requisites_id'];
+    return $requisites_id;
+  }
+  return NULL;
 }
 
 //реквизиты по autoservice_id
-function requisites($autoservice_id)
+function getRequisitesInfo($autoservice_id)
 {
   $pdo = conn();
-  $requisites_id = requisites_id($autoservice_id);
+  $requisites_id = getRequisitesId($autoservice_id);
 
   if ($requisites_id != null) {
     $sql_find_requisites = "SELECT * FROM public.requisites WHERE requisites_id = '" . $requisites_id . "'";
@@ -1012,14 +1015,14 @@ function getServicePriceById($autoservice_id, $service_id)
 function getApplicationsListById($client_id)
 {
   $pdo = conn();
-  $sql = "SELECT application_id, name_brand, name_model, name_autoservice, autoserv_serv_id, price, application.text, status, date_payment 
+  $sql = "SELECT application_id, name_brand, name_model, autoservice_id, name_autoservice, autoserv_serv_id, price, application.text, status, date, date_payment 
     FROM public.autoservice JOIN public.application USING(autoservice_id) JOIN public.automobile USING(auto_id) JOIN public.brand USING(brand_id) 
     JOIN public.model USING(model_id) WHERE application.client_id = " . $client_id . " AND status NOT IN ('Завершено') ORDER BY name_autoservice";
   $applications = $pdo->query($sql);
   $arApplications = [];
   while ($application = $applications->fetch()) {
-    if ($application['date_payment'] != NULL) {
-      list($date, $time) = explode(" ", $application['date_payment']);
+    if ($application['date'] != NULL) {
+      list($date, $time) = explode(" ", $application['date']);
     } else {
       $date = $time = '-';
     }
@@ -1041,6 +1044,7 @@ function getApplicationsListById($client_id)
       'id' => $application['application_id'],
       'auto' => $application['name_brand'] . ' ' . $application['name_model'],
       'autoservice' => $application['name_autoservice'],
+      'autoservice_id' => $application['autoservice_id'],
       'date' => $date,
       'date_payment' => $application['date_payment'],
       'time' => $time,

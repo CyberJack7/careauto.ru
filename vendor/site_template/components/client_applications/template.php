@@ -49,11 +49,16 @@
                         } else if ($application['status'] == "Выполнено") {
                             echo '<p class="name"">Статус оплаты</p>';
                             if ($application['date_payment'] == '-') {
-                                echo '<p class="value">Не оплачено</p></div><div>
-                                    <button class="btn btn-primary" id="pay_application_id_' . $application['id'] . '" type="button" onclick="payApplication(this)">Оплатить</button>
-                                </div>';
+                                echo '<p class="value">Не оплачено</p></div>';
+                                if (getRequisitesInfo($application['autoservice_id']) != NULL) {
+                                    echo '<div>
+                                            <button class="btn btn-primary" id="pay_application_id_' . $application['id'] . '" type="button" onclick="payApplication(this)">Оплатить</button>
+                                        </div>';
+                                }
                             } else {
-                                echo '<p class="value">Оплачено</p></div>';
+                                echo '<p class="value">Оплачено</p>
+                                    <p class="name"">Дата и время оплаты</p>
+                                    <p class="value">' . $application['date_payment'] . '</p></div>';
                             }
                         } else {
                             echo '</div>';
