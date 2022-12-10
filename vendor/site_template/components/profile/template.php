@@ -7,6 +7,7 @@ if (empty($_SESSION['user'])) {
     header('Location: /');
     exit;
 }
+getUserBanInfoById($_SESSION['user']['id']); //проверка на бан
 ?>
 <h1 class="container">Настройки</h1>
 <div class="container central">

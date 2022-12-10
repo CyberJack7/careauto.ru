@@ -10,8 +10,8 @@
 if (!($_SESSION['user']['user_type'] == 'autoservice')) {
     header('Location: /');
 }
+getUserBanInfoById($_SESSION['user']['id']); //проверка на бан
 ?>
-<!--  -->
 <div class="container" id="main_con">
     <div id="show_autoserv_serv" class="panel">
         <h4>Просмотр предоставляемых услуг</h4>

@@ -8,7 +8,7 @@ if (!empty($_SESSION['user'])) {
     header('Location: /');
 }
 ?>
-<div class="container central column">
+<div class="container central column content">
     <div id="form_email" class="form_box">
         <form class="panel"
             action="<?php $_SERVER['DOCUMENT_ROOT'] ?>/vendor/site_template/components/password_recovery/component.php"

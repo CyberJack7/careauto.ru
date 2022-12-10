@@ -1014,7 +1014,7 @@ function getApplicationsListById($client_id)
   $pdo = conn();
   $sql = "SELECT application_id, name_brand, name_model, name_autoservice, autoserv_serv_id, price, application.text, status, date_payment 
     FROM public.autoservice JOIN public.application USING(autoservice_id) JOIN public.automobile USING(auto_id) JOIN public.brand USING(brand_id) 
-    JOIN public.model USING(model_id) WHERE application.client_id = " . $client_id . ' ORDER BY name_autoservice';
+    JOIN public.model USING(model_id) WHERE application.client_id = " . $client_id . " AND status NOT IN ('Завершено') ORDER BY name_autoservice";
   $applications = $pdo->query($sql);
   $arApplications = [];
   while ($application = $applications->fetch()) {
@@ -1042,6 +1042,7 @@ function getApplicationsListById($client_id)
       'auto' => $application['name_brand'] . ' ' . $application['name_model'],
       'autoservice' => $application['name_autoservice'],
       'date' => $date,
+      'date_payment' => $application['date_payment'],
       'time' => $time,
       'services' => $services,
       'price' => $application['price'],
@@ -1244,7 +1245,7 @@ function getAutoserviceHistoryById($autoservice_id, $status)
   return $arHistory;
 }
 
-//
+//проверка наличия марок и услуг у СЦ
 function getAutoserviceServAndBrandAmountById($autoservice_id)
 {
   $pdo = conn();
@@ -1257,3 +1258,21 @@ function getAutoserviceServAndBrandAmountById($autoservice_id)
   $arInfo = ['brands' => $brands, 'services' => $services];
   return $arInfo;
 }
+
+
+//проверка пользователя на нахождение в бан-листе
+function getUserBanInfoById($user_id) {
+  $pdo = conn();
+  $sql_ban = "SELECT * FROM public.ban_list WHERE user_id = " . $user_id;
+  $ban_result = $pdo->query($sql_ban)->fetch();
+  if (!empty($ban_result)) {
+    $_SESSION['message']['text'] = "Данный аккаунт заблокирован " .  $ban_result['date'] . " по причине: " . $ban_result['text'];
+    $_SESSION['message']['type'] = 'danger';
+    if ($_SESSION['user']) {
+      unset($_SESSION['user']);
+    }
+    header('Location: /authorization/');
+    exit;
+  }
+}
+

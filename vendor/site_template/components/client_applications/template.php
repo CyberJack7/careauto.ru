@@ -7,9 +7,10 @@
     if (!($_SESSION['user']['user_type'] == 'client')) {
         header('Location: /');
     }
+    getUserBanInfoById($_SESSION['user']['id']); //проверка на бан
 ?>
 
-<h1 class="container">Список заявок</h1>
+<h1 class="container" id="<?=$_SESSION['user']['id']?>">Список заявок</h1>
 <div class="container column">
     <?php //вывод всех текущих заявок клиента
     $applications = getApplicationsListById($_SESSION['user']['id']);
@@ -24,7 +25,7 @@
                         <p class="name">Время</p><p class="value">' . $application['time'] . '</p>
                     </div>
                     <div>
-                        <p class="name">Стоимость</p><p class="value">' . $application['price'] . ' р</p>
+                        <p class="name">Стоимость</p><p class="value" id="price_' . $application['id'] . '">' . $application['price'] . ' р</p>
                         <p class="name">Список услуг</p>';
                         if (!empty($application['services'])) {
                             echo '<div id="services">';
@@ -40,16 +41,27 @@
                     echo '</div>
                     <div id="com_btn">
                         <div>
-                            <p class="name"">Комментарий</p><p class="value">' . $application['text'] . '</p>
-                        </div>';
+                            <p class="name"">Комментарий</p><p class="value">' . $application['text'] . '</p>';
                         if ($application['status'] == "Ожидает подтверждения" || $application['status'] == "Подтверждено") {
-                            echo '<div>
+                            echo '</div><div>
                                     <button class="btn btn-secondary" id="delete_application_id_' . $application['id'] . '" type="button" onclick="deleteApplication(this)">Отменить заявку</button>
                                 </div>';
+                        } else if ($application['status'] == "Выполнено") {
+                            echo '<p class="name"">Статус оплаты</p>';
+                            if ($application['date_payment'] == '-') {
+                                echo '<p class="value">Не оплачено</p></div><div>
+                                    <button class="btn btn-primary" id="pay_application_id_' . $application['id'] . '" type="button" onclick="payApplication(this)">Оплатить</button>
+                                </div>';
+                            } else {
+                                echo '<p class="value">Оплачено</p></div>';
+                            }
+                        } else {
+                            echo '</div>';
                         }
                     echo '</div>
                         </div>
-                    </div>';
+                        </div>';
+                        
         }
     }
     ?>

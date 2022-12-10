@@ -7,8 +7,9 @@
 if (!empty($_SESSION['user'])) {
     header('Location: /');
 }
-if (!empty($_SESSION['password_recovery']))
+if (!empty($_SESSION['password_recovery'])) {
     unset($_SESSION['password_recovery']);
+}
 ?>
 <div class="container central content column">
     <h1>Вход</h1>

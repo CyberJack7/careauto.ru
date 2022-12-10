@@ -8,6 +8,9 @@ if (empty($_SESSION['user']['new_email']) && empty($_SESSION['new_user']) && emp
     header('Location: /');
     exit;
 }
+if (!empty($_SESSION['user'])) {
+    getUserBanInfoById($_SESSION['user']['id']);
+}
 ?>
 
 <div class="container central column content">

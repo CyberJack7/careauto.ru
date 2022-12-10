@@ -11,6 +11,7 @@ if (!($_SESSION['user']['user_type'] == 'autoservice')) {
     header('Location: /');
 }
 unset($_SESSION['message']['text'], $_SESSION['message']['type']);
+getUserBanInfoById($_SESSION['user']['id']); //проверка на бан
 ?>
 
 <nav>

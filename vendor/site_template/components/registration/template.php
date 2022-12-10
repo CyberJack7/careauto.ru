@@ -8,7 +8,7 @@ if (!empty($_SESSION['user'])) {
 }
 ?>
 
-<div class="container central column">
+<div class="container central column content">
     <h1>Регистрация</h1>
     <form id=client class="radio-blocks" action="/vendor/site_template/components/registration/signup.php" method="post" 
         enctype="multipart/form-data">

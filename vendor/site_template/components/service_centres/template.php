@@ -7,6 +7,7 @@
     if (!($_SESSION['user']['user_type'] == 'client')) {
         header('Location: /');
     }
+    getUserBanInfoById($_SESSION['user']['id']); //проверка на бан
 ?>
 
 <h1 class="container">Сервисные центры</h1>
@@ -197,6 +198,6 @@
         }
         ?>
         
-        
+        </div> 
     </div>
 </div>
