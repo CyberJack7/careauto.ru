@@ -35,5 +35,11 @@
 }
 [name="car_history"] {
   margin-top: 20px;
-  margin-left: 770px;
+}
+[name="show_complaint"] {
+  margin-top: 20px;
+}
+.four_buttons {
+  display: flex;
+  justify-content: space-between;
 }

@@ -175,6 +175,51 @@ function getCarHistory($appl_id)
     }
 }
 
+function show_complaint($appl_id)
+{ // $user_id - тот, на кого жалуемся // text - причина из-за которой жалуемся // $appl_id - ид заявки
+    $pdo = conn();
+    $sql = "SELECT name_client,client_id FROM public.application JOIN public.client USING(client_id) WHERE application_id=" . $appl_id;
+    $client = $pdo->query($sql)->fetch();
+    $sql_check_complaint = "SELECT complainant_id FROM public.complaint WHERE complainant_id=" . $_SESSION['user']['id']
+        . " AND inspected_user_id=" . $client['client_id'];
+    $result = $pdo->query($sql_check_complaint)->fetch();
+    if ($result) {
+        $text_modal = '<p>Вы уже отправляли жалобу на ' . $client['name_client'] . ' Администратор обязательно проверит ее</p>';
+        $button_accept = '<button type="button" data-bs-dismiss="modal" class="btn btn-primary">Ясно Понятно</button>';
+    } else {
+        $text_modal = '<p>Тут будешь плакать как литтл бейби. ID этого придурка - ' . $client['client_id'] . '</p>
+        <p>Опиши причину своей жалобы здесь. Мб этот негодяй не принимает твой курсач? Мы оформим его</p>
+        
+        <div class="form-floating" name="complaint_text">
+              <textarea class="form-control" placeholder="Причина жалобы" id="complaint_' . $appl_id . '" style="height: 100px"></textarea>
+              <label for="complaint_' . $appl_id . '">Причина жалобы</label>
+        </div>';
+        $button_accept = '<button onclick="sendcomplaint(this)" type="button" data-bs-dismiss="modal" value="' . $appl_id . '" class="btn btn-primary">Отправить жалобу</button>';
+    }
+
+
+    echo '<div class="modal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Оформление жалобы на ' . $client['name_client'] . '</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+        ' . $text_modal . '       
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+          ' . $button_accept . '
+        </div>
+      </div>
+    </div>
+  </div>';
+}
+
+
+
 
 function getStartService($appl_numb, $ArCategory, $ApplServices)  // $ApplServices - услуги указанные в заявке
 {                                                                // $appl_numb - порядковый номер заявки
@@ -257,4 +302,15 @@ if (!empty($_POST['appl_numb']) and !empty($_POST['ArForPrices']) and !empty($_P
 
 if (!empty($_POST['appl_numb']) and !empty($_POST['get_car'])) {
     getCarHistory($_POST['appl_numb']);
+}
+if (!empty($_POST['appl_numb']) and !empty($_POST['show_complaint'])) {
+    show_complaint($_POST['appl_numb']);
+}
+
+if (!empty($_POST['appl_numb']) and !empty($_POST['text_complaint'])) {
+    $pdo = conn();
+    $appl_id = $pdo->quote($_POST['appl_numb']);
+    $sql = "SELECT client_id FROM public.application WHERE application_id=" . $appl_id;
+    $client = $pdo->query($sql)->fetch();
+    send_complaint($client['client_id'], $_POST['text_complaint'], $_SESSION['user']['id']); // в queries
 }

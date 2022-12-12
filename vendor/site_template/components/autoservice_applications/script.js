@@ -90,6 +90,43 @@ function getCarHistory(button) {
     }
   );
 }
+var modalWrapcomplaint = null;
+function showcomplaint(button) {
+  if (modalWrapcomplaint !== null) {
+    modalWrapcomplaint.remove();
+  }
+  $.post(
+    "/vendor/site_template/components/autoservice_applications/component.php",
+    {
+      appl_numb: button.value,
+      show_complaint: true,
+    },
+    function (responce) {
+      modalWrapcomplaint = document.createElement("div");
+      modalWrapcomplaint.innerHTML = responce;
+      document.body.append(modalWrapcomplaint);
+      var modal = new bootstrap.Modal(
+        modalWrapcomplaint.querySelector(".modal")
+      );
+      modal.show();
+    }
+  );
+}
+function sendcomplaint(button) {
+  var text = document.getElementById("complaint_" + button.value).value;
+  if (text.trim() != "") {
+    $.post(
+      "/vendor/site_template/components/autoservice_applications/component.php",
+      {
+        appl_numb: button.value,
+        text_complaint: text,
+      },
+      function (responce) {}
+    );
+  } else {
+    alert("Ты ничего не ввел, дурень!");
+  }
+}
 
 function getStartServices(button) {
   var element = document.getElementById("categories_" + button.value);
