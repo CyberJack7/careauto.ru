@@ -190,10 +190,9 @@ function show_complaint($appl_id)
     $result = $pdo->query($sql_check_complaint)->fetch();
     if ($result) {
         $text_modal = '<p>Вы уже отправляли жалобу на ' . $client['name_client'] . ' Администратор обязательно проверит ее</p>';
-        $button_accept = '<button type="button" data-bs-dismiss="modal" class="btn btn-primary">Ясно Понятно</button>';
+        $button_accept = '<button type="button" data-bs-dismiss="modal" class="btn btn-primary">Понятно</button>';
     } else {
-        $text_modal = '<p>Тут будешь плакать как литтл бейби. ID этого придурка - ' . $client['client_id'] . '</p>
-        <p>Опиши причину своей жалобы здесь. Мб этот негодяй не принимает твой курсач? Мы оформим его</p>
+        $text_modal = '<p>Опишите причину жалобы в поле ниже. Спасибо, что делаете мир лучше!</p>
         
         <div class="form-floating" name="complaint_text">
               <textarea class="form-control" placeholder="Причина жалобы" id="complaint_' . $appl_id . '" style="height: 100px"></textarea>
@@ -215,8 +214,8 @@ function show_complaint($appl_id)
 
         </div>
         <div class="modal-footer">
+        ' . $button_accept . '
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-          ' . $button_accept . '
         </div>
       </div>
     </div>

@@ -309,10 +309,10 @@ if (isset($_POST['autoservice_id']) and isset($_POST['show_complaint'])) {
     $result = $pdo->query($sql_check_complaint)->fetch();
     if ($result) {
         $text_modal = '<p>Вы уже отправляли жалобу на ' . $autoservice['name_autoservice'] . ' Администратор обязательно проверит ее</p>';
-        $button_accept = '<button type="button" data-bs-dismiss="modal" class="btn btn-primary">Ясно Понятно</button>';
+        $button_accept = '<button type="button" data-bs-dismiss="modal" class="btn btn-primary">Понятно</button>';
     } else {
-        $text_modal = '<p>Тут будешь плакать как литтл бейби. ID этого придурка - ' . $autoservice_id . '</p>
-        <p>Опиши причину своей жалобы здесь. Мб этот негодяй не принимает твой курсач? Мы оформим его</p>
+        $text_modal = '
+        <p>Опишите причину жалобы в поле ниже. Спасибо, что делаете мир лучше!</p>
         
         <div class="form-floating" name="complaint_text">
               <textarea class="form-control" placeholder="Причина жалобы" id="complaint_' . $autoservice_id . '" style="height: 100px"></textarea>
@@ -326,7 +326,7 @@ if (isset($_POST['autoservice_id']) and isset($_POST['show_complaint'])) {
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Оформление жалобы на ' . $autoservice['autoservice_name'] . '</h5>
+          <h5 class="modal-title">Оформление жалобы на ' . $autoservice['name_autoservice'] . '</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -334,8 +334,8 @@ if (isset($_POST['autoservice_id']) and isset($_POST['show_complaint'])) {
 
         </div>
         <div class="modal-footer">
+        ' . $button_accept . '
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-          ' . $button_accept . '
         </div>
       </div>
     </div>
