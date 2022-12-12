@@ -1017,7 +1017,7 @@ function getApplicationsListById($client_id)
   $pdo = conn();
   $sql = "SELECT application_id, name_brand, name_model, autoservice_id, name_autoservice, autoserv_serv_id, price, application.text, status, date, date_payment 
     FROM public.autoservice JOIN public.application USING(autoservice_id) JOIN public.automobile USING(auto_id) JOIN public.brand USING(brand_id) 
-    JOIN public.model USING(model_id) WHERE application.client_id = " . $client_id . " AND status NOT IN ('Завершено') ORDER BY name_autoservice";
+    JOIN public.model USING(model_id) WHERE application.client_id = " . $client_id . " AND status NOT IN ('Завершено') ORDER BY application_id DESC";
   $applications = $pdo->query($sql);
   $arApplications = [];
   while ($application = $applications->fetch()) {

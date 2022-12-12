@@ -54,6 +54,8 @@
                                     echo '<div>
                                             <button class="btn btn-primary" id="pay_application_id_' . $application['id'] . '" type="button" onclick="payApplication(this)">Оплатить</button>
                                         </div>';
+                                } else {
+                                    echo '<p><div class="alert alert-info" role="alert">Для данного сервисного центра не доступна онлайн-оплата</div></p>';
                                 }
                             } else {
                                 echo '<p class="value">Оплачено</p>
