@@ -5,7 +5,7 @@ if (!isset($_SESSION['user']['id'])) {
 require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/lib/defines.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/lib/queries.php';
 require_once PATH_CONNECT;
-function change_status($appl_id, $status, $date = '0', $time = '0', $ArServices, $price, $text_autoservice = null)
+function change_status($appl_id, $status, $date = '0', $time = '0', $ArServices, $price, $text_autoservice = null, $date_payment = null)
 {
     $pdo = conn();
     switch ($status) {
@@ -26,8 +26,13 @@ function change_status($appl_id, $status, $date = '0', $time = '0', $ArServices,
             break;
         case "Выполнено":
             $new_status = "Завершено";
-            $date_pay = date('Y-m-d h:i:s', time());
-            $sql = "UPDATE Public.application SET date_payment=" . $pdo->quote($date_pay) . "WHERE application_id=" . $appl_id;
+            if ($date_payment == 'null') {
+                date_default_timezone_set('Europe/Moscow');
+                $date_pay = $pdo->quote(date('Y-m-d h:i:s', time()));
+            } else {
+                $date_pay = $pdo->quote($date_payment);
+            }
+            $sql = "UPDATE Public.application SET date_payment=" . $date_pay . "WHERE application_id=" . $appl_id;
             $result = $pdo->exec($sql);
             break;
     }
@@ -282,8 +287,8 @@ if (!empty($_POST['appl_numb']) and !empty($_POST['ArCategory']) and !empty($_PO
 
 
 if (!empty($_POST['status']) and !empty($_POST['appl_id']) and !empty($_POST['ArService']) and !empty($_POST['price'])) {
-    if (!empty($_POST['text_autoservice']))
-        change_status($_POST['appl_id'], $_POST['status'], $_POST['date'], $_POST['time'], $_POST['ArService'], $_POST['price'], $_POST['text_autoservice']);
+    if (!empty($_POST['text_autoservice']) and !empty($_POST['date_payment']))
+        change_status($_POST['appl_id'], $_POST['status'], $_POST['date'], $_POST['time'], $_POST['ArService'], $_POST['price'], $_POST['text_autoservice'], $_POST['date_payment']);
     else {
         change_status($_POST['appl_id'], $_POST['status'], $_POST['date'], $_POST['time'], $_POST['ArService'], $_POST['price']);
     }

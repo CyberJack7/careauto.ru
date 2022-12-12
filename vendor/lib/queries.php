@@ -140,6 +140,22 @@ function appl_list($user_id, $status)
           break;
       }
       if ($status == "Выполнено") {
+        $sql_datepay = "SELECT date_payment FROM public.application WHERE application_id=" . $appl_id;
+        $date_pay = $pdo->query($sql_datepay)->fetch();
+        if (empty($date_pay['date_payment'])) {
+          echo '<p>Статус оплаты - не оплачено</p>';
+          echo '<div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="pay_checkbox_' . $appl_id . '">
+                <label class="form-check-label" for="pay_check_' . $appl_id . '">
+                  Оплата в салоне
+                </label>
+                <input id="pay_' . $appl_id . '" name="date_payment" type="hidden" value="null"</input>
+        </div>';
+        } else {
+          echo '<p>Статус оплаты - оплачено от: ' . $date_pay['date_payment'] . '</p>
+          <input id="pay_' . $appl_id . '" name="date_payment" type="hidden" value="' . $date_pay['date_payment'] . '"</input>';
+        }
+
         echo '<div class="form-floating" name="comment">
         <textarea class="form-control" placeholder="Комментарий от СЦ" id="autoserviceCommentary_' . $appl_id . '" style="height: 100px"></textarea>
         <label for="autoserviceCommentary_' . $appl_id . '">Комментарий от СЦ</label>
