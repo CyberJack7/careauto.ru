@@ -27,9 +27,17 @@
             <a class="nav-link <?php if (mb_strpos($_SERVER['REQUEST_URI'], '/admin_reg_applications/') !== false) { ?>active<?php } ?>"
                 href="/admin_reg_applications/">Заявки на регистрацию</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link <?php if (mb_strpos($_SERVER['REQUEST_URI'], '/admin_complaint/') !== false) { ?>active<?php } ?>"
+                href="/admin_complaint/">Жалобы от пользователей</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link <?php if (mb_strpos($_SERVER['REQUEST_URI'], '/admin_banlist/') !== false) { ?>active<?php } ?>"
+                href="/admin_banlist/">Бан-лист пользователей</a>
+        </li>
         </ul>
     </div>
-    <p style="color: white; margin-right: 20px !important"><?=$_SESSION['user']['name']?></p>
+    <p style="color: white; margin-right: 20px !important"><?= $_SESSION['user']['name'] ?></p>
     <button class="btn btn-primary" id="logout_btn" type="button">Выйти</button>
     <?php
                 } elseif ($_SESSION['user']['user_type'] == 'client') { //автовладелец 
@@ -54,10 +62,10 @@
 </div>
 <?php if (mb_strpos($_SERVER['REQUEST_URI'], '/profile/') !== false) { //если в профиле 
 ?>
-<p style="color: white; margin-right: 20px !important"><?=$_SESSION['user']['name']?></p>
+<p style="color: white; margin-right: 20px !important"><?= $_SESSION['user']['name'] ?></p>
 <button class="btn btn-primary" id="logout_btn" type="button">Выйти</button>
 <?php } else { ?>
-<p style="color: white; margin-right: 20px !important"><?=$_SESSION['user']['name']?></p>
+<p style="color: white; margin-right: 20px !important"><?= $_SESSION['user']['name'] ?></p>
 <a class="btn btn-primary" href="/profile/">Профиль</a>
 <?php }
                 } else { //автосервис 
@@ -78,10 +86,10 @@
 </div>
 <?php if (mb_strpos($_SERVER['REQUEST_URI'], '/profile/') !== false) { //если в профиле 
 ?>
-<p style="color: white; margin-right: 20px !important"><?=$_SESSION['user']['name']?></p>
+<p style="color: white; margin-right: 20px !important"><?= $_SESSION['user']['name'] ?></p>
 <button class="btn btn-primary" id="logout_btn" type="button">Выйти</button>
 <?php } else { ?>
-<p style="color: white; margin-right: 20px !important"><?=$_SESSION['user']['name']?></p>
+<p style="color: white; margin-right: 20px !important"><?= $_SESSION['user']['name'] ?></p>
 <a class="btn btn-primary" href="/profile/">Профиль</a>
 <?php }
                 } ?>

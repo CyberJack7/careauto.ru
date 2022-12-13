@@ -1,0 +1,8 @@
+.con1 {
+  display: inline-block;
+  margin-left: 2px;
+}
+[name="text_admin"] {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}

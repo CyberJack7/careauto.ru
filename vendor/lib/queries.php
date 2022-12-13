@@ -139,25 +139,42 @@ function appl_list($user_id, $status)
           $button_name = "Завершить";
           break;
       }
-      if ($status == "Ожидает подтверждения" or $status == "Подтверждено") {
-        echo '<div class="con1">
-            <button role="button" name="cancel" value="' . $appl_id . '" id="cancel_btn_' . $appl_id . '" class="btn btn-secondary" type="button" >Отклонить заявку</button>      
-            </div>';
-      }
       if ($status == "Выполнено") {
+        $sql_datepay = "SELECT date_payment FROM public.application WHERE application_id=" . $appl_id;
+        $date_pay = $pdo->query($sql_datepay)->fetch();
+        if (empty($date_pay['date_payment'])) {
+          echo '<p>Статус оплаты - не оплачено</p>';
+          echo '<div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="pay_checkbox_' . $appl_id . '">
+                <label class="form-check-label" for="pay_check_' . $appl_id . '">
+                  Оплата в салоне
+                </label>
+                <input id="pay_' . $appl_id . '" name="date_payment" type="hidden" value="null"</input>
+        </div>';
+        } else {
+          echo '<p>Статус оплаты - оплачено от: ' . $date_pay['date_payment'] . '</p>
+          <input id="pay_' . $appl_id . '" name="date_payment" type="hidden" value="' . $date_pay['date_payment'] . '"</input>';
+        }
+
         echo '<div class="form-floating" name="comment">
         <textarea class="form-control" placeholder="Комментарий от СЦ" id="autoserviceCommentary_' . $appl_id . '" style="height: 100px"></textarea>
         <label for="autoserviceCommentary_' . $appl_id . '">Комментарий от СЦ</label>
-      </div>';
+        </div>';
       }
-      echo '<div class="con1">
-      <input id="status_' . $appl_id . '" name="status" type="hidden" value="' . $status . '"</input>
-      <input id="appl_id_' . $appl_id . '" name="appl_id_' . $appl_id . '" type="hidden" value="' . $row['application_id'] . '"</input>
-      <button role="button" name="accept" value="' . $appl_id . '" id="accept_btn_' . $appl_id . '" class="btn btn-primary" type="button" >' . $button_name . '</button>      
-      <button onclick="getCarHistory(this)" value="' . $appl_id . '" id="car_history_' . $appl_id . '"name="car_history" class="btn btn-info" type="button">История автомобиля</button>
-      
-      </div>';
-
+      echo '<input id="status_' . $appl_id . '" name="status" type="hidden" value="' . $status . '"</input>
+      <input id="appl_id_' . $appl_id . '" name="appl_id_' . $appl_id . '" type="hidden" value="' . $row['application_id'] . '"</input>';
+      echo '<div class="four_buttons">';
+      echo '<div class="btn_div">';
+      echo '<button role="button" name="accept" value="' . $appl_id . '" id="accept_btn_' . $appl_id . '" class="btn btn-primary" type="button" >' . $button_name . '</button>';
+      if ($status == "Ожидает подтверждения" or $status == "Подтверждено") {
+        echo '<button role="button" name="cancel" value="' . $appl_id . '" id="cancel_btn_' . $appl_id . '" class="btn btn-secondary" type="button" >Отклонить заявку</button>';
+      }
+      echo '</div>';
+      echo '<div class="btn_div">';
+      echo '<button onclick="showcomplaint(this)" value="' . $appl_id . '" id="show_complaint_' . $appl_id . '"name="show_complaint" class="btn btn-outline-danger" type="button">Пожаловаться</button>
+            <button onclick="getCarHistory(this)" value="' . $appl_id . '" id="car_history_' . $appl_id . '"name="car_history" class="btn btn-outline-primary" type="button">История автомобиля</button>';
+      echo '</div>';
+      echo '</div>';
       echo '</div></div></div>';
     }
   }
@@ -864,7 +881,7 @@ function getAutoservicesByParameters($parametres = NULL)
 {
   $pdo = conn();
   $sql_autoserv = "SELECT DISTINCT autoservice_id, name_autoservice FROM public.autoservice_brand JOIN public.autoservice 
-    USING(autoservice_id) JOIN public.autoservice_service USING(autoservice_id) JOIN public.service USING(service_id)    ";
+    USING(autoservice_id) JOIN public.autoservice_service USING(autoservice_id) JOIN public.service USING(service_id) ";
   if ($parametres != NULL) {
     if (isset($parametres['name']) && $parametres['name'] != NULL) {
       if (mb_strpos($sql_autoserv, "WHERE") === false) {
@@ -901,7 +918,10 @@ function getAutoservicesByParameters($parametres = NULL)
       $sql_autoserv .= "service_id IN " . $str_services . ' AND ';
     }
   }
-  $sql_autoserv = substr($sql_autoserv, 0, strlen($sql_autoserv) - 4);
+  if (mb_strpos($sql_autoserv, "WHERE") === false) {
+    $sql_autoserv .= "WHERE ";
+  }
+  $sql_autoserv .= "autoservice_id NOT IN (SELECT user_id FROM public.ban_list)";
   $sql_autoserv .= " ORDER BY name_autoservice ASC";
   $autoservices = $pdo->query($sql_autoserv);
   $full_accord = [];
@@ -1265,7 +1285,8 @@ function getAutoserviceServAndBrandAmountById($autoservice_id)
 
 
 //проверка пользователя на нахождение в бан-листе
-function getUserBanInfoById($user_id) {
+function getUserBanInfoById($user_id)
+{
   $pdo = conn();
   $sql_ban = "SELECT * FROM public.ban_list WHERE user_id = " . $user_id;
   $ban_result = $pdo->query($sql_ban)->fetch();
@@ -1279,4 +1300,147 @@ function getUserBanInfoById($user_id) {
     exit;
   }
 }
+function send_complaint($inspected, $text, $complaintant)
+{
+  $pdo = conn();
+  $data = [
+    'complainant_id' => $complaintant,
+    'inspected_user_id' => $inspected,
+    'date' => date('Y-m-d h:i:s', time()),
+    'text' => $text,
+  ];
+  $sql = "INSERT INTO public.complaint(complainant_id, inspected_user_id, date,text) 
+    VALUES (:complainant_id, :inspected_user_id, :date,:text)";
+  $stmt = $pdo->prepare($sql);
+  $stmt->execute($data);
+  return ($stmt);
+}
 
+function get_complaints($status)
+{
+  $pdo = conn();
+  $sql = "SELECT complaint_id,complainant_id,inspected_user_id,date,text FROM
+  public.complaint WHERE status=" . $pdo->quote($status) . " ORDER BY date desc";
+  $complaints = $pdo->query($sql);
+  $arComplaints = [];
+  while ($complaint = $complaints->fetch()) {
+    $sql_check_client = "SELECT name_client,phone_client,email_client FROM
+    public.client WHERE client_id=" . $complaint['inspected_user_id'];
+    $sql_check_autoservice = "SELECT name_autoservice,email_autoservice,phone_autoservice
+    FROM public.autoservice WHERE autoservice_id=" . $complaint['inspected_user_id'];
+    $inspected_user_info = $pdo->query($sql_check_client)->fetch();
+    if ($inspected_user_info) { // тот, на кого жалуются - клиент
+      $sql_complaintant = "SELECT name_autoservice,phone_autoservice,email_autoservice
+      FROM public.autoservice WHERE autoservice_id=" . $complaint['complainant_id'];
+      $complaintant_info = $pdo->query($sql_complaintant)->fetch();
+      array_push($arComplaints, [
+        'id' => $complaint['complaint_id'],
+        'name_complainant' => $complaintant_info['name_autoservice'],
+        'phone_complainant' => $complaintant_info['phone_autoservice'],
+        'email_complainant' => $complaintant_info['email_autoservice'],
+        'name_inspected' => $inspected_user_info['name_client'],
+        'phone_inspected' => $inspected_user_info['phone_client'],
+        'email_inspected' => $inspected_user_info['email_client'],
+        'text' => $complaint['text'],
+        'date' => $complaint['date'],
+        'type_of_inspected' => "client"
+      ]);
+    } else { // тот, на кого жалуются - автосервис
+      $inspected_user_info = $pdo->query($sql_check_autoservice)->fetch();
+      if (!$inspected_user_info) {
+        continue;
+      }
+      $sql_complaintant = "SELECT name_client,email_client,phone_client
+      FROM public.client WHERE client_id=" . $complaint['complainant_id'];
+      $complaintant_info = $pdo->query($sql_complaintant)->fetch();
+      array_push($arComplaints, [
+        'id' => $complaint['complaint_id'],
+        'name_complainant' => $complaintant_info['name_client'],
+        'phone_complainant' => $complaintant_info['phone_client'],
+        'email_complainant' => $complaintant_info['email_client'],
+        'name_inspected' => $inspected_user_info['name_autoservice'],
+        'phone_inspected' => $inspected_user_info['phone_autoservice'],
+        'email_inspected' => $inspected_user_info['email_autoservice'],
+        'text' => $complaint['text'],
+        'date' => $complaint['date'],
+        'type_of_inspected' => "autoservice"
+      ]);
+    }
+  }
+  return $arComplaints;
+}
+
+function sendToBan($ban_id, $admin_id, $text)
+{
+  $pdo = conn();
+  $data = [
+    'user_id' => $ban_id,
+    'admin_id' => $admin_id,
+    'date' => date('Y-m-d h:i:s', time()),
+    'text' => $text,
+  ];
+  $sql = "INSERT INTO public.ban_list(user_id, admin_id, date,text) 
+    VALUES (:user_id, :admin_id, :date,:text)";
+  $stmt = $pdo->prepare($sql);
+  $stmt->execute($data);
+
+  $sql = "DELETE FROM public.complaint WHERE inspected_user_id=" . $ban_id;
+  $res = $pdo->exec($sql);
+  return;
+}
+
+function getBanlist($user_type)
+{
+  $pdo = conn();
+  $arBanlist = [];
+  if ($user_type == "client") {
+    $sql = "SELECT name_client,phone_client,email_client,user_id,public.ban_list.admin_id,name_admin,email_admin,date,text FROM
+    public.ban_list JOIN public.client ON public.ban_list.user_id=public.client.client_id JOIN public.admin 
+    ON public.admin.admin_id=public.ban_list.admin_id
+    ORDER BY date desc";
+    $res = $pdo->query($sql);
+    while ($user = $res->fetch()) {
+      array_push($arBanlist, [
+        'id' => $user['user_id'],
+        'name_user' => $user['name_client'],
+        'phone_user' => $user['phone_client'],
+        'email_user' => $user['email_client'],
+        'text' => $user['text'],
+        'date' => $user['date'],
+        'name_admin' => $user['name_admin'],
+        'email_admin' => $user['email_admin'],
+        'admin_id' => $user['admin_id']
+      ]);
+    }
+  } else {
+    $sql = "SELECT name_autoservice,phone_autoservice,email_autoservice,user_id,public.ban_list.admin_id,name_admin,email_admin,date,public.ban_list.text FROM
+    public.ban_list JOIN public.autoservice ON public.ban_list.user_id=public.autoservice.autoservice_id JOIN public.admin
+    ON public.admin.admin_id=public.ban_list.admin_id
+ 
+   ORDER BY date desc";
+    $res = $pdo->query($sql);
+    while ($user = $res->fetch()) {
+      array_push($arBanlist, [
+        'id' => $user['user_id'],
+        'name_user' => $user['name_autoservice'],
+        'phone_user' => $user['phone_autoservice'],
+        'email_user' => $user['email_autoservice'],
+        'text' => $user['text'],
+        'date' => $user['date'],
+        'name_admin' => $user['name_admin'],
+        'email_admin' => $user['email_admin'],
+        'admin_id' => $user['admin_id']
+      ]);
+    }
+  }
+  return $arBanlist;
+}
+
+function unban_user($unban_id)
+{
+  $pdo = conn();
+  $sql_del = "DELETE FROM public.ban_list WHERE
+  user_id=" . $unban_id;
+  $res = $pdo->exec($sql_del);
+  return $res;
+}
