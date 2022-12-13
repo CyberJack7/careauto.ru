@@ -63,8 +63,8 @@ if (!($_SESSION['user']['user_type'] == 'admin')) {
                             </div>
 
                             <div class="buttons">
-                            <button role="button" name="cancel" id="cancel_btn_' . $complaint['id'] . '" value="' . $complaint['id'] . '" class="btn btn-secondary" type="button" >Отклонить жалобу</button>
-                            <button role="button" name="accept" id="accept_btn_' . $complaint['id'] . '" value="' . $complaint['id'] . '" class="btn btn-primary" type="button" >Заблокировать обвиняемого</button>
+                                <button role="button" name="accept" id="accept_btn_' . $complaint['id'] . '" value="' . $complaint['id'] . '" class="btn btn-primary" type="button" >Заблокировать</button>
+                                <button role="button" name="cancel" id="cancel_btn_' . $complaint['id'] . '" value="' . $complaint['id'] . '" class="btn btn-secondary" type="button" >Отклонить жалобу</button>
                             </div>
                             </div></div></div></div>';
                         }
@@ -111,8 +111,8 @@ if (!($_SESSION['user']['user_type'] == 'admin')) {
                                 <label for="autoserviceCommentary_' . $complaint['id'] . '">Причина блокировки</label>
                                 </div>
                                 <div class="buttons">
-                                <button role="button" name="cancel" id="cancel_btn_' . $complaint['id'] . '" value="' . $complaint['id'] . '" class="btn btn-secondary" type="button" >Отклонить жалобу</button>
-                                <button role="button" name="accept" id="accept_btn_' . $complaint['id'] . '" value="' . $complaint['id'] . '" class="btn btn-primary" type="button" >Заблокировать обвиняемого</button>
+                                    <button role="button" name="accept" id="accept_btn_' . $complaint['id'] . '" value="' . $complaint['id'] . '" class="btn btn-primary" type="button" >Заблокировать</button>
+                                    <button role="button" name="cancel" id="cancel_btn_' . $complaint['id'] . '" value="' . $complaint['id'] . '" class="btn btn-secondary" type="button" >Отклонить жалобу</button>
                                 </div>
                                 </div></div></div></div>';
                         }

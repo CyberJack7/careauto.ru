@@ -164,13 +164,13 @@ function appl_list($user_id, $status)
       echo '<input id="status_' . $appl_id . '" name="status" type="hidden" value="' . $status . '"</input>
       <input id="appl_id_' . $appl_id . '" name="appl_id_' . $appl_id . '" type="hidden" value="' . $row['application_id'] . '"</input>';
       echo '<div class="four_buttons">';
-      echo '<div class="first_buttons">';
+      echo '<div class="btn_div">';
       echo '<button role="button" name="accept" value="' . $appl_id . '" id="accept_btn_' . $appl_id . '" class="btn btn-primary" type="button" >' . $button_name . '</button>';
       if ($status == "Ожидает подтверждения" or $status == "Подтверждено") {
         echo '<button role="button" name="cancel" value="' . $appl_id . '" id="cancel_btn_' . $appl_id . '" class="btn btn-secondary" type="button" >Отклонить заявку</button>';
       }
       echo '</div>';
-      echo '<div class="second_buttons">';
+      echo '<div class="btn_div">';
       echo '<button onclick="showcomplaint(this)" value="' . $appl_id . '" id="show_complaint_' . $appl_id . '"name="show_complaint" class="btn btn-outline-danger" type="button">Пожаловаться</button>
             <button onclick="getCarHistory(this)" value="' . $appl_id . '" id="car_history_' . $appl_id . '"name="car_history" class="btn btn-outline-primary" type="button">История автомобиля</button>';
       echo '</div>';
@@ -881,7 +881,7 @@ function getAutoservicesByParameters($parametres = NULL)
 {
   $pdo = conn();
   $sql_autoserv = "SELECT DISTINCT autoservice_id, name_autoservice FROM public.autoservice_brand JOIN public.autoservice 
-    USING(autoservice_id) JOIN public.autoservice_service USING(autoservice_id) JOIN public.service USING(service_id)    ";
+    USING(autoservice_id) JOIN public.autoservice_service USING(autoservice_id) JOIN public.service USING(service_id) ";
   if ($parametres != NULL) {
     if (isset($parametres['name']) && $parametres['name'] != NULL) {
       if (mb_strpos($sql_autoserv, "WHERE") === false) {
@@ -918,7 +918,10 @@ function getAutoservicesByParameters($parametres = NULL)
       $sql_autoserv .= "service_id IN " . $str_services . ' AND ';
     }
   }
-  $sql_autoserv = substr($sql_autoserv, 0, strlen($sql_autoserv) - 4);
+  if (mb_strpos($sql_autoserv, "WHERE") === false) {
+    $sql_autoserv .= "WHERE ";
+  }
+  $sql_autoserv .= "autoservice_id NOT IN (SELECT user_id FROM public.ban_list)";
   $sql_autoserv .= " ORDER BY name_autoservice ASC";
   $autoservices = $pdo->query($sql_autoserv);
   $full_accord = [];
