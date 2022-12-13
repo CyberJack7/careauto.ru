@@ -30,6 +30,7 @@ if (!($_SESSION['user']['user_type'] == 'admin')) {
             tabindex="0">
             <div id="accordion1" class="accordion">
                 <?php
+                $flag = false;
                 $arComplaints = get_complaints("Не рассмотрена");
                 if (empty($arComplaints)) {
                     echo '<div class="alert alert-primary" role="alert">
@@ -38,6 +39,7 @@ if (!($_SESSION['user']['user_type'] == 'admin')) {
                 } else {
                     foreach ($arComplaints as $complaint) {
                         if ($complaint['type_of_inspected'] == "client") {
+                            $flag = true;
 
                             echo '<div id="complaint_"' . $complaint['id'] . '>
                         <div class="accordion-item">
@@ -69,6 +71,11 @@ if (!($_SESSION['user']['user_type'] == 'admin')) {
                             </div></div></div></div>';
                         }
                     }
+                    if (!$flag) {
+                        echo '<div class="alert alert-primary" role="alert">
+                    Жалоб нет, пейте побольше чая с лимоном!
+                  </div>';
+                    }
                 }
 
                 ?>
@@ -78,7 +85,7 @@ if (!($_SESSION['user']['user_type'] == 'admin')) {
             tabindex="0">
             <div class="accordion" id="accordion2">
                 <?php
-
+                $flag = false;
                 $arComplaints = get_complaints("Не рассмотрена");
                 if (empty($arComplaints)) {
                     echo '<div class="alert alert-primary" role="alert">
@@ -87,6 +94,7 @@ if (!($_SESSION['user']['user_type'] == 'admin')) {
                 } else {
                     foreach ($arComplaints as $complaint) {
                         if ($complaint['type_of_inspected'] == "autoservice") {
+                            $flag = true;
 
                             echo '<div id="complaint_"' . $complaint['id'] . '>
                         <div class="accordion-item">
@@ -116,6 +124,11 @@ if (!($_SESSION['user']['user_type'] == 'admin')) {
                                 </div>
                                 </div></div></div></div>';
                         }
+                    }
+                    if (!$flag) {
+                        echo '<div class="alert alert-primary" role="alert">
+                    Жалоб нет, пейте побольше чая с лимоном!
+                  </div>';
                     }
                 }
 

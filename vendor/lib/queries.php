@@ -1217,9 +1217,6 @@ function getAutoserviceHistoryById($autoservice_id, $status)
   $histories = $pdo->query($sql);
   $arHistory = [];
   while ($history = $histories->fetch()) {
-
-
-
     $sql_car_info = "SELECT name_brand,name_model FROM public.automobile JOIN public.model ON automobile.model_id=model.model_id
     JOIN public.brand ON automobile.brand_id=brand.brand_id 
     WHERE auto_id=" . $history['auto_id'] . " AND client_id=" . $history['client_id'];
@@ -1247,6 +1244,10 @@ function getAutoserviceHistoryById($autoservice_id, $status)
       if ($value == NULL) {
         $value = '-';
       }
+    }
+    if (empty($car_info)) {
+      $car_info['name_brand'] = "";
+      $car_info['name_model'] = "";
     }
     array_push($arHistory, [
       'id' => $history['application_id'],
