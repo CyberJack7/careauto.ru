@@ -65,7 +65,6 @@ $(document).ready(function () {
           processData: false,
           contentType: false,
           success: function (responce) {
-            alert(responce);
             $("#accordion1").load(" #accordion1");
             $("#accordion2").load(" #accordion2");
             $("#accordion3").load(" #accordion3");
