@@ -8,12 +8,12 @@ function main_contacts() {
   '<div class="mb-3">
       <label class="form-label" for="email">Адрес электронной почты</label>
       <input class="form-control" id="email" name="email" type="email" value="' . $_SESSION['user']['email'] . '" placeholder="Эл. почта" 
-          aria-describedby="emailHelp" required/>
+          aria-describedby="emailHelp" required onchange="validInput(this)"/>
   </div>
   <div class="mb-3">
       <label class="form-label" for="phone">Номер телефона</label>
       <input class="form-control" id="phone" name="phone" type="text" value="' . $_SESSION['user']['phone'] . '" placeholder="Номер телефона" 
-          data-phone-pattern required/>
+          data-phone-pattern required onchange="validInput(this)"/>
   </div>
   <div class="mb-3">
       <label class="form-label" for="city">Город</label>

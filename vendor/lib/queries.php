@@ -27,7 +27,7 @@ function appl_list($user_id, $status)
 {
   $pdo = conn();
   $sql_status = $pdo->quote($status);
-  $sql = "SELECT application_id FROM Public.application WHERE autoservice_id=" . $user_id . " AND status = " . $sql_status . " ORDER BY application_id DESC";
+  $sql = "SELECT application_id FROM Public.application WHERE autoservice_id=" . $user_id . " AND status = " . $sql_status . " ORDER BY date";
   $appl = $pdo->query($sql);
   if ($appl->rowCount() == 0) {
     echo '<p><div class="alert alert-primary" role="alert">Заявок нет!</div></p>';
