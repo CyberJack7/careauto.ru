@@ -307,6 +307,10 @@ function addTires(add_tires_btn) {
     
       //добавление комплекта в область
       let cloned_plate = document.getElementsByClassName("plate")[0];
+      console.log(cloned_plate.getElementsByTagName("div")[6]);
+      if(cloned_plate.getElementsByTagName("div")[6]) {
+        cloned_plate.removeChild(cloned_plate.getElementsByTagName("div")[6]);        
+      }
       if (typeof cloned_plate != "undefined") { //скопировали структуру плашки с резиной, добавили и заполнили нужной инфой
         cloned_plate = cloned_plate.cloneNode(true);
         ar_add_tires_copy[1] = getTireTypeNameById(ar_add_tires_copy[1]);
@@ -322,7 +326,7 @@ function addTires(add_tires_btn) {
           }
         }
         let cur_tires_area = document.getElementById("tires_auto_id_" + cur_auto_id);
-        cur_tires_area.insertBefore(cloned_plate, cur_tires_area.getElementsByClassName("btn btn-primary")[0]);
+        cur_tires_area.appendChild(cloned_plate);
       } else { //если комплектов нет, создаём первый
         location.reload();
       }
@@ -357,7 +361,7 @@ function cancelAddTires(cancel_add_tires_btn) {
   let show_add_tires = document.getElementById("add_tires");
   show_add_tires.style.display = "none"; //скрыть область добавления нового комплекта резины
   show_add_tires.parentNode.getElementsByTagName("h3")[0].innerHTML = "Комплекты резины";
-  show_add_tires.parentNode.getElementsByTagName("button")[0].style.display = "block";
+  document.getElementById("show_add_tires").removeAttribute("style");
   cancel_add_tires_btn.parentNode.parentNode.parentNode.getElementsByClassName("dropdown_img")[0].getElementsByTagName("img")[0].style.transform = 'rotate(0deg)';
 }
 

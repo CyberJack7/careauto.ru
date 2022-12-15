@@ -38,7 +38,7 @@ function service_info($autoservice_id, $service_id)
         <button id="add_service" type="button" class="btn btn-outline-primary">Добавить услугу</button>
         </div>';
     } else {
-        echo '<div id="con2" class="con2"> Стоимость услуги: ' . '<input name="price" id="price" class="form-control-plaintext" type="number" value="' . $arService['price'] . '" readonly required>'  .
+        echo '<div id="con2" class="con2"> Стоимость услуги: ' . '<input name="price" id="price" class="form-control-plaintext " type="number" value="' . $arService['price'] . '" readonly required>'  .
             'Описание услуги: ' . '<textarea class="form-control" id="text" name="text" type="textarea" maxlength="200" placeholder="Описание услуги" style="max-height: 100px">' . $arService['text'] . '</textarea>' .
             'Сертификация: ' . '<a id="link" target="_blank" href="' . $arService['certification'] . '">' . mb_substr($arService['certification'], 1 + strpos($arService['certification'], '-')) . '</a>
         <input disabled name="certification" id="certification" accept="application/pdf" class="form-control" type="file">
