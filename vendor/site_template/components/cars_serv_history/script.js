@@ -56,29 +56,31 @@ function addHistoryRecord() {
 
 //создание записи об обслуживании
 function createHistoryRecord() {
-    let array_create_history = {};
-    array_create_history['client_id'] = document.getElementsByClassName("central")[0].id;
-    array_create_history['auto_id'] = document.getElementsByClassName("item_active")[0].id;
-    array_create_history['name_autoservice'] = document.getElementById("name_autoservice").value;
-    array_create_history['date'] = document.getElementById("date").value;
-    array_create_history['price'] = document.getElementById("price").value;
-    array_create_history['text'] = document.getElementById("text").value;
-    let services = [];
-    let services_inputs = document.getElementById("services").getElementsByTagName("input");
-    let amount_inputs
-    for (let i = 0; i < amount_inputs; i++) {
-        if (services_inputs[i].checked == true) {
-            services.push(parseInt(services_inputs[i].id.match(/\d+/), 10));
+    if (document.getElementById("date").checkValidity() && document.getElementById("price").checkValidity()) {
+        let array_create_history = {};
+        array_create_history['client_id'] = document.getElementsByClassName("central")[0].id;
+        array_create_history['auto_id'] = document.getElementsByClassName("item_active")[0].id;
+        array_create_history['name_autoservice'] = document.getElementById("name_autoservice").value;
+        array_create_history['date'] = document.getElementById("date").value;
+        array_create_history['price'] = document.getElementById("price").value;
+        array_create_history['text'] = document.getElementById("text").value;
+        let services = [];
+        let services_inputs = document.getElementById("services").getElementsByTagName("input");
+        let amount_inputs
+        for (let i = 0; i < amount_inputs; i++) {
+            if (services_inputs[i].checked == true) {
+                services.push(parseInt(services_inputs[i].id.match(/\d+/), 10));
+            }
         }
+        array_create_history['services'] = services;
+    
+        let json_data = JSON.stringify(array_create_history);
+        $.post("/vendor/site_template/components/cars_serv_history/component.php", {create_history_record: json_data},
+        function(data){
+            cancelAddHistoryRecord();
+            showAutoServHistory(document.getElementsByClassName("item_active")[0]);
+        });
     }
-    array_create_history['services'] = services;
-
-    let json_data = JSON.stringify(array_create_history);
-    $.post("/vendor/site_template/components/cars_serv_history/component.php", {create_history_record: json_data},
-    function(data){
-        cancelAddHistoryRecord();
-        showAutoServHistory(document.getElementsByClassName("item_active")[0]);
-    });
 }
 
 
@@ -87,5 +89,13 @@ function cancelAddHistoryRecord() {
     if (document.getElementById("add_history")) {
         document.getElementById("add_history").remove();
         document.getElementById("show_applications").style.display = 'block';
+    }
+}
+
+function validInput(input) {
+    if (input.value != "") {
+        input.className = "form-control req";        
+    } else {
+        input.className = "form-control";
     }
 }

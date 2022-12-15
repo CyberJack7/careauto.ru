@@ -17,7 +17,25 @@ $(document).ready(function () {
       var textArea = document.getElementById(
         "autoserviceCommentary_" + appl_id
       );
-      fdata.append("text_autoservice", textArea.value);
+      if (textArea.value.trim() == "") {
+        fdata.append("text_autoservice", null);
+      } else {
+        fdata.append("text_autoservice", textArea.value);
+      }
+      var date_payment = document.getElementById("pay_" + appl_id);
+      if (date_payment.value == "null") {
+        var date_payment_checkbox = document.getElementById(
+          "pay_checkbox_" + appl_id
+        );
+        if (!date_payment_checkbox.checked) {
+          alert("Заявка не оплачена!");
+          exit();
+        } else {
+          fdata.append("date_payment", null);
+        }
+      } else {
+        fdata.append("date_payment", date_payment.value);
+      }
     }
     fdata.append("appl_id", $('input[id="appl_id_' + appl_id + '"]').val());
     fdata.append("date", $('input[id="date_' + appl_id + '"]').val());
@@ -89,6 +107,44 @@ function getCarHistory(button) {
       modal.show();
     }
   );
+}
+var modalWrapcomplaint = null;
+function showcomplaint(button) {
+  if (modalWrapcomplaint !== null) {
+    modalWrapcomplaint.remove();
+  }
+  $.post(
+    "/vendor/site_template/components/autoservice_applications/component.php",
+    {
+      appl_numb: button.value,
+      show_complaint: true,
+    },
+    function (responce) {
+      modalWrapcomplaint = document.createElement("div");
+      modalWrapcomplaint.innerHTML = responce;
+      document.body.append(modalWrapcomplaint);
+      var modal = new bootstrap.Modal(
+        modalWrapcomplaint.querySelector(".modal")
+      );
+      modal.show();
+    }
+  );
+}
+function sendcomplaint(button) {
+  var text = document.getElementById("complaint_" + button.value).value;
+  if (text.trim() != "") {
+    $.post(
+      "/vendor/site_template/components/autoservice_applications/component.php",
+      {
+        appl_numb: button.value,
+        text_complaint: text,
+      },
+      function (responce) {}
+    );
+    alert("Жалоба отправлена на рассмотрение");
+  } else {
+    alert("Введите причину жалобы!");
+  }
 }
 
 function getStartServices(button) {

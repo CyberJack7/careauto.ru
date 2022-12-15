@@ -31,16 +31,16 @@ function service_info($autoservice_id, $service_id)
         $arService['price'] = '';
         $arService['text'] = '';
         $arService['certification'] = '';
-        echo '<div id="con2" class="con2"> Стоимость услуги(обязательно): ' . '<input name="add_price" id="add_price" class="form-control" type="text" value="' . $arService['price'] . '">' . '</br>' .
-            'Описание услуги(необязательно): ' . '<input name="add_text" id="add_text" class="form-control" type="add_text" value="' . $arService['text'] . '">' . '</br>' .
+        echo '<div id="con2" class="con2"> Стоимость услуги(обязательно): ' . '<input name="add_price" id="add_price" class="form-control" type="number" value="' . $arService['price'] . '" required>' .
+            'Описание услуги(необязательно): ' . '<textarea class="form-control" id="text" name="text" type="textarea" maxlength="200" placeholder="Описание услуги" style="max-height: 100px"></textarea>' .
             'Сертификация(необязательно): ' .
             '<input name="add_certification" id="add_certification" accept="application/pdf" class="form-control" type="file">
         <button id="add_service" type="button" class="btn btn-outline-primary">Добавить услугу</button>
         </div>';
     } else {
-        echo '<div id="con2" class="con2"> Стоимость услуги: ' . '<input name="price" id="price" class="form-control-plaintext" type="text" value="' . $arService['price'] . '"readonly>' . '</br>' .
-            'Описание услуги: ' . '<input name="text" id="text" class="form-control-plaintext" type="text" value="' . $arService['text'] . '"readonly >' . '</br>' .
-            'Сертификация: ' . '<a id="link" target="_blank" href="' . $arService['certification'] . '">' . mb_substr($arService['certification'], 1 + strpos($arService['certification'], '-')) . '</a></br>
+        echo '<div id="con2" class="con2"> Стоимость услуги: ' . '<input name="price" id="price" class="form-control-plaintext " type="number" value="' . $arService['price'] . '" readonly required>'  .
+            'Описание услуги: ' . '<textarea class="form-control" id="text" name="text" type="textarea" maxlength="200" placeholder="Описание услуги" style="max-height: 100px">' . $arService['text'] . '</textarea>' .
+            'Сертификация: ' . '<a id="link" target="_blank" href="' . $arService['certification'] . '">' . mb_substr($arService['certification'], 1 + strpos($arService['certification'], '-')) . '</a>
         <input disabled name="certification" id="certification" accept="application/pdf" class="form-control" type="file">
         <button id="edit" type="button" class="btn btn-outline-primary" status="off">Редактировать</button>
         <button id="del_service" value="' . $service_id . '" type="button" class="btn btn-outline-danger">Удалить</button>

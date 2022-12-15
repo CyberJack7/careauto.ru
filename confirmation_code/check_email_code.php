@@ -128,6 +128,7 @@ if (!empty($_SESSION['new_user'])) { //подтверждение регистр
     }
     if ($_SESSION['password_recovery']['attempt'] >= 1) { // 2 попытки на ввод кода!
         if ($_SESSION['password_recovery']['code'] === $code_inp) { // если код введен верно
+            $_SESSION['password_recovery']['valid'] = true;
             header('Location: /password_recovery/');
             exit();
         } else {

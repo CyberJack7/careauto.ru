@@ -25,3 +25,10 @@ h5 {
   height: 50px;
 }
 
+.req:invalid {
+  border: 2px solid red;
+}
+.req:valid {
+  border: 2px solid green;
+}
+

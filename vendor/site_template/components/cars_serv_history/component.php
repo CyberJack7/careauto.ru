@@ -74,19 +74,19 @@ function showAddHistoryRecord() {
             <h3>Добавление записи в историю обслуживания</h3>
             <div class="mb-3">
                 <label class="form-label" for="name_autoservice">Название сервисного центра</label>
-                <input class="form-control" id="name_autoservice" name="name_autoservice" type="text" placeholder="Название сервисного центра"/>
+                <input class="form-control" id="name_autoservice" name="name_autoservice" type="text" onchange="validInput(this)" placeholder="Название сервисного центра"/>
             </div>
             <div class="mb-3">
                 <label class="form-label" for="date">Дата</label>
-                <input class="form-control" id="date" name="date" type="date" placeholder="Дата обслуживания"/>
+                <input class="form-control" id="date" name="date" type="date" min="1886-01-29" max="' . date('Y-m-d') . '" onchange="validInput(this)" placeholder="Дата обслуживания"/>
             </div>
             <div class="mb-3">
                 <label class="form-label" for="price">Стоимость обслуживания</label>
-                <input class="form-control" id="price" name="price" type="number" placeholder="Стоимость обслуживания"/>
+                <input class="form-control" id="price" name="price" type="number" min="0" onchange="validInput(this)" placeholder="Стоимость обслуживания"/>
             </div>
             <div class="mb-3">
                 <label class="form-label" for="text">Описание</label>
-                <textarea class="form-control" id="text" name="text" type="textarea" placeholder="Описание"></textarea>
+                <textarea class="form-control" id="text" name="text" maxlength="200" type="textarea" onchange="validInput(this)" placeholder="Описание"></textarea>
             </div>
             <div class="multiselect mb-3">
                 <label class="form-label" for="services">Перечень выполненных работ</label>

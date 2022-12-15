@@ -7,6 +7,7 @@ if (empty($_SESSION['user'])) {
     header('Location: /');
     exit;
 }
+getUserBanInfoById($_SESSION['user']['id']); //проверка на бан
 ?>
 <h1 class="container">Настройки</h1>
 <div class="container central">
@@ -15,7 +16,7 @@ if (empty($_SESSION['user'])) {
         if ($_SESSION['user']['user_type'] == 'autoservice') { ?>
             <a class="btn btn-outline-primary" id="main_data_caption" name="main_data_caption" type="button" href="#main_data">Основная информация</a>
             <a class="btn btn-outline-primary" id="contacts_caption" name="contacts_caption" type="button" href="#contacts">Контакты</a>
-            <a class="btn btn-outline-primary" id="requisites_caption" name="requisites_caption" type="button" href="#requisites" style="display: none">Реквизиты</a>
+            <a class="btn btn-outline-primary" id="requisites_caption" name="requisites_caption" type="button" href="#requisites">Реквизиты</a>
             <a class="btn btn-outline-primary" id="change_password_caption" name="change_password_caption" type="button" href="#change_password">Смена пароля</a>
             <a class="btn btn-outline-primary" id="delete_account_caption" name="delete_account_caption" type="button" href="#delete_account">Удаление аккаунта</a>
         <?php } else { ?>
@@ -70,7 +71,7 @@ if (empty($_SESSION['user'])) {
             </div>
             <div class="mb-3">
                 <label class="form-label" for="description">Описание</label>
-                <textarea class="form-control" id="description" name="description" type="textarea" placeholder="Описание Вашего сервисного центра"><?=$autoservice['text']?></textarea>
+                <textarea class="form-control" id="description" name="description" type="textarea" maxlength="300" placeholder="Описание Вашего сервисного центра"><?=$autoservice['text']?></textarea>
             </div>
             <div class="mb-3">
                 <label class="form-label" for="photos">Фотографии (до 5 шт; рекомендуемый формат - 16:9)</label>
@@ -159,40 +160,42 @@ if (empty($_SESSION['user'])) {
         </form>
         
         <?php if ($_SESSION['user']['user_type'] == 'autoservice') {?>
-        <form class="panel" action="<?php $_SERVER['DOCUMENT_ROOT']?>/vendor/site_template/components/profile/change_requisites.php" method="post" style="display: none">
+        <form class="panel" action="<?php $_SERVER['DOCUMENT_ROOT']?>/vendor/site_template/components/profile/change_requisites.php" method="post">
             <h3 id="requisites">Реквизиты</h3>
             <div class="mb-3">
                 <label class="form-label" for="inn">ИНН</label>
                 <input class="form-control" id="inn" name="inn" type="text" value="<?php
-                    if (!empty(requisites($_SESSION['user']['id']))) {echo requisites($_SESSION['user']['id'])['inn'];}?>" 
+                    if (!empty(getRequisitesInfo($_SESSION['user']['id']))) {echo getRequisitesInfo($_SESSION['user']['id'])['inn'];}?>" 
                     placeholder="ИНН организации" maxlength="10" required/>
             </div>
             <div class="mb-3">
                 <label class="form-label" for="kpp">КПП</label>
                 <input class="form-control" id="kpp" name="kpp" type="text" value="<?php 
-                    if (!empty(requisites($_SESSION['user']['id']))) {echo requisites($_SESSION['user']['id'])['kpp'];}?>" 
+                    if (!empty(getRequisitesInfo($_SESSION['user']['id']))) {echo getRequisitesInfo($_SESSION['user']['id'])['kpp'];}?>" 
                     placeholder="КПП организации" maxlength="9"/>
             </div>
             <div class="mb-3">
                 <label class="form-label" for="bik">БИК</label>
                 <input class="form-control" id="bik" name="bik" type="text" value="<?php 
-                    if (!empty(requisites($_SESSION['user']['id']))) {echo requisites($_SESSION['user']['id'])['bik'];}?>" 
+                    if (!empty(getRequisitesInfo($_SESSION['user']['id']))) {echo getRequisitesInfo($_SESSION['user']['id'])['bik'];}?>" 
                     placeholder="БИК организации" maxlength="9" required/>
             </div>
             <div class="mb-3">
                 <label class="form-label" for="check_acc">Расчётный счёт</label>
                 <input class="form-control" id="check_acc" name="check_acc" type="text" value="<?php 
-                    if (!empty(requisites($_SESSION['user']['id']))) {echo requisites($_SESSION['user']['id'])['check_acc'];}?>" 
+                    if (!empty(getRequisitesInfo($_SESSION['user']['id']))) {echo getRequisitesInfo($_SESSION['user']['id'])['check_acc'];}?>" 
                     placeholder="Рассчётный счёт организации" maxlength="20" required/>
             </div>
             <div class="mb-3">
                 <label class="form-label" for="corr_acc">Корреспондентский счёт</label>
                 <input class="form-control" id="corr_acc" name="corr_acc" type="text" value="<?php 
-                    if (!empty(requisites($_SESSION['user']['id']))) {echo requisites($_SESSION['user']['id'])['corr_acc'];}?>" 
+                    if (!empty(getRequisitesInfo($_SESSION['user']['id']))) {echo getRequisitesInfo($_SESSION['user']['id'])['corr_acc'];}?>" 
                     placeholder="Корреспонденсткий счёт организации" maxlength="20"/>
             </div>
-            <button class="btn btn-primary" id="change_requisites" name="change_requisites" type="submit">Сохранить</button>
-            <button class="btn btn-secondary" id="reset_requisites" name="reset_requisites" type="button">Очистить</button>
+            <div class="btn_div">
+                <button class="btn btn-primary" id="change_requisites" name="change_requisites" type="submit">Сохранить</button>
+                <button class="btn btn-secondary" id="reset_requisites" name="reset_requisites" type="button">Очистить</button>
+            </div>
         </form>
         <?php } ?>
 

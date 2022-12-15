@@ -5,7 +5,7 @@ if (!isset($_SESSION['user']['id'])) {
 require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/lib/defines.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/lib/queries.php';
 require_once PATH_CONNECT;
-function change_status($appl_id, $status, $date = '0', $time = '0', $ArServices, $price, $text_autoservice = null)
+function change_status($appl_id, $status, $date = '0', $time = '0', $ArServices, $price, $text_autoservice = null, $date_payment = null)
 {
     $pdo = conn();
     switch ($status) {
@@ -26,8 +26,13 @@ function change_status($appl_id, $status, $date = '0', $time = '0', $ArServices,
             break;
         case "Выполнено":
             $new_status = "Завершено";
-            $date_pay = date('Y-m-d h:i:s', time());
-            $sql = "UPDATE Public.application SET date_payment=" . $pdo->quote($date_pay) . "WHERE application_id=" . $appl_id;
+            if ($date_payment == 'null') {
+                date_default_timezone_set('Europe/Moscow');
+                $date_pay = $pdo->quote(date('Y-m-d h:i:s', time()));
+            } else {
+                $date_pay = $pdo->quote($date_payment);
+            }
+            $sql = "UPDATE Public.application SET date_payment=" . $date_pay . "WHERE application_id=" . $appl_id;
             $result = $pdo->exec($sql);
             break;
     }
@@ -175,6 +180,50 @@ function getCarHistory($appl_id)
     }
 }
 
+function show_complaint($appl_id)
+{ // $user_id - тот, на кого жалуемся // text - причина из-за которой жалуемся // $appl_id - ид заявки
+    $pdo = conn();
+    $sql = "SELECT name_client,client_id FROM public.application JOIN public.client USING(client_id) WHERE application_id=" . $appl_id;
+    $client = $pdo->query($sql)->fetch();
+    $sql_check_complaint = "SELECT complainant_id FROM public.complaint WHERE complainant_id=" . $_SESSION['user']['id']
+        . " AND inspected_user_id=" . $client['client_id'];
+    $result = $pdo->query($sql_check_complaint)->fetch();
+    if ($result) {
+        $text_modal = '<p>Вы уже отправляли жалобу на ' . $client['name_client'] . ' <br>Администратор обязательно проверит её</p>';
+        $button_accept = '<button type="button" data-bs-dismiss="modal" class="btn btn-primary">Понятно</button>';
+    } else {
+        $text_modal = '<p>Опишите причину жалобы в поле ниже. Спасибо, что делаете мир лучше!</p>
+        
+        <div class="form-floating" name="complaint_text">
+              <textarea class="form-control" placeholder="Причина жалобы" id="complaint_' . $appl_id . '" maxlength="200" style="height: 100px"></textarea>
+              <label for="complaint_' . $appl_id . '">Причина жалобы</label>
+        </div>';
+        $button_accept = '<button onclick="sendcomplaint(this)" type="button" data-bs-dismiss="modal" value="' . $appl_id . '" class="btn btn-primary">Отправить жалобу</button>';
+    }
+
+
+    echo '<div class="modal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Оформление жалобы на ' . $client['name_client'] . '</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+        ' . $text_modal . '       
+
+        </div>
+        <div class="modal-footer">
+        ' . $button_accept . '
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+        </div>
+      </div>
+    </div>
+  </div>';
+}
+
+
+
 
 function getStartService($appl_numb, $ArCategory, $ApplServices)  // $ApplServices - услуги указанные в заявке
 {                                                                // $appl_numb - порядковый номер заявки
@@ -237,8 +286,8 @@ if (!empty($_POST['appl_numb']) and !empty($_POST['ArCategory']) and !empty($_PO
 
 
 if (!empty($_POST['status']) and !empty($_POST['appl_id']) and !empty($_POST['ArService']) and !empty($_POST['price'])) {
-    if (!empty($_POST['text_autoservice']))
-        change_status($_POST['appl_id'], $_POST['status'], $_POST['date'], $_POST['time'], $_POST['ArService'], $_POST['price'], $_POST['text_autoservice']);
+    if (!empty($_POST['text_autoservice']) and !empty($_POST['date_payment']))
+        change_status($_POST['appl_id'], $_POST['status'], $_POST['date'], $_POST['time'], $_POST['ArService'], $_POST['price'], $_POST['text_autoservice'], $_POST['date_payment']);
     else {
         change_status($_POST['appl_id'], $_POST['status'], $_POST['date'], $_POST['time'], $_POST['ArService'], $_POST['price']);
     }
@@ -257,4 +306,15 @@ if (!empty($_POST['appl_numb']) and !empty($_POST['ArForPrices']) and !empty($_P
 
 if (!empty($_POST['appl_numb']) and !empty($_POST['get_car'])) {
     getCarHistory($_POST['appl_numb']);
+}
+if (!empty($_POST['appl_numb']) and !empty($_POST['show_complaint'])) {
+    show_complaint($_POST['appl_numb']);
+}
+
+if (!empty($_POST['appl_numb']) and !empty($_POST['text_complaint'])) {
+    $pdo = conn();
+    $appl_id = $pdo->quote($_POST['appl_numb']);
+    $sql = "SELECT client_id FROM public.application WHERE application_id=" . $appl_id;
+    $client = $pdo->query($sql)->fetch();
+    send_complaint($client['client_id'], $_POST['text_complaint'], $_SESSION['user']['id']); // в queries
 }

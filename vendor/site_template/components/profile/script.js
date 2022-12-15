@@ -127,3 +127,11 @@ function set_brand(cb) {
     );
   }
 }
+
+function validInput(input) {
+  if (input.value != "") {
+      input.className = "form-control req";        
+  } else {
+      input.className = "form-control";
+  }
+}

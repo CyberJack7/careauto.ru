@@ -3,9 +3,13 @@
 <link rel="stylesheet" href="<?php $_SERVER['DOCUMENT_ROOT']?>/vendor/site_template/components/my_auto/style.css">
 
 <?php 
-    //на странице автомобилей автовладельца может находиться только автовладелец
+    //на странице автомобилей автовладельца может находиться только НЕЗАБАНЕННЫЙ АВТОВЛАДЕЛЕЦ
     if (!($_SESSION['user']['user_type'] == 'client')) {
         header('Location: /');
+    }
+    getUserBanInfoById($_SESSION['user']['id']);
+    if (isset($_SESSION['message'])) {
+        unset($_SESSION['message']);
     }
 ?>
 
@@ -81,7 +85,7 @@
             </div>
             <div class="mb-3">
                 <label class="form-label" for="auto_year">Год выпуска</label>
-                <input class="form-control" id="auto_year" name="auto_year" type="number" min="1886" max="<?=date('o')?>" placeholder="Год выпуска автомобиля"/>
+                <input class="form-control" id="auto_year" name="auto_year" type="number" min="1886" max="<?=date('o')?>" onchange="synchDateBuy(this)" placeholder="Год выпуска автомобиля"/>
             </div>
             <div class="mb-3">
                 <label class="form-label" for="date_buy">Дата покупки</label>

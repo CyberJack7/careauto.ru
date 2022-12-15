@@ -27,3 +27,18 @@ button {
   flex-direction: column;
   justify-content: space-between;
 }
+
+.line{
+  display: flex;
+  justify-content: space-between;
+ }
+ 
+ #card_number, 
+ #cardholder_name{
+   width: 300px;
+ }
+ 
+ #cvc_cvv, 
+ #validity_date {
+   width: 120px;
+ }

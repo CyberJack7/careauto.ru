@@ -26,7 +26,7 @@ if (!empty($_POST['corr_acc'])) {
     $corr_acc = null;
 }
 
-$requisites_id = requisites_id($_SESSION['user']['id']);
+$requisites_id = getRequisitesId($_SESSION['user']['id']);
 if ($requisites_id == null) { //если реквизиты ещё не добавлялись
     $sql_insert_requisites = "INSERT INTO public.requisites(inn, kpp, bik, check_acc, corr_acc) VALUES (:inn, :kpp, :bik, :check_acc, :corr_acc)";
     $stmt = $pdo->prepare($sql_insert_requisites);

@@ -29,6 +29,7 @@ function check_email($email)
     $_SESSION['password_recovery']['type'] = $usertype;
     $_SESSION['password_recovery']['email'] = $email;
     $_SESSION['password_recovery']['code'] = $code;
+    $_SESSION['password_recovery']['valid'] = false;
     header('Location: /confirmation_code/');
     return;
 }

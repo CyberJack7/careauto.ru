@@ -7,7 +7,7 @@
     if (!($_SESSION['user']['user_type'] == 'client')) {
         header('Location: /');
     }
-    var_dump(getAutoHistoryById(32, 3));
+    getUserBanInfoById($_SESSION['user']['id']); //проверка на бан
 ?>
 
 <h1 class="container">История обслуживания</h1>

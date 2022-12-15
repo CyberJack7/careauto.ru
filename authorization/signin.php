@@ -4,6 +4,7 @@ session_start();
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/vendor/lib/defines.php';
 require_once PATH_CONNECT;
+require_once PATH_QUERIES;
 $pdo = conn();
 
 $email = htmlspecialchars($_POST['email']);
@@ -18,6 +19,20 @@ $sql_autoservice = "SELECT * FROM public.autoservice WHERE email_autoservice = '
 
 $result = $pdo->query($sql_admin)->fetch();
 
+$_SESSION['not_auth_user']['attempt']--;
+if ($_SESSION['not_auth_user']['attempt'] == 2) {
+    $_SESSION['message']['text'] = "Неверный логин или пароль! <br>
+    Если данные введены верно, смените тип пользователя. Осталось <b>две</b> попытки.";
+    $_SESSION['message']['type'] = 'warning';
+} elseif ($_SESSION['not_auth_user']['attempt'] == 1) {
+    $_SESSION['message']['text'] = "Неверный логин или пароль! <br>
+    Если данные введены верно, смените тип пользователя. Осталась <b>одна</b> попытка.";
+    $_SESSION['message']['type'] = 'warning';
+} else {
+    $_SESSION['message']['text'] = "Неверный логин или пароль! Вы потратили все попытки. Вход заблокирован на 30 секунд!";
+    $_SESSION['message']['type'] = 'danger';
+}
+
 if (password_verify($password, $result['password_admin'])) {
     $_SESSION['user'] = [
         "user_type" => "admin",
@@ -30,16 +45,7 @@ if (password_verify($password, $result['password_admin'])) {
     $result = $pdo->query($sql_client)->fetch();
     if (password_verify($password, $result['password_client'])) {
         $user_id = $result['client_id'];
-        /*$sql_ban_client = "SELECT * FROM public.ban_list
-        WHERE user_id = '$user_id'";
-        $ban_result = $pdo->query($sql_ban_client)->fetch();
-        if (!empty($ban_result)) {
-            $_SESSION['message']['text'] = "Данный аккаунт заблокирован " .  $ban_result['date'] .
-                " по причине: " . $ban_result['text'];
-            $_SESSION['message']['type'] = 'danger';
-            header('Location: /authorization/');
-            exit;
-        }*/
+        getUserBanInfoById($user_id);
         $_SESSION['user'] = [
             "user_type" => "client",
             "id" => $result['client_id'],
@@ -50,27 +56,16 @@ if (password_verify($password, $result['password_admin'])) {
         ];
         $_SESSION['message']['text'] = "Вы авторизованы как автовладелец!";
         $_SESSION['message']['type'] = 'success';
+        unset($_SESSION['not_auth_user']['attempt']);
         header('Location: /my_auto/');
     } else {
-        $_SESSION['message']['text'] = "Неверный логин или пароль! <br>
-            Если данные введены верно, смените тип пользователя";
-        $_SESSION['message']['type'] = 'warning';
         header('Location: /authorization/');
     }
 } else { //autoservice
     $result = $pdo->query($sql_autoservice)->fetch();
     if (password_verify($password, $result['password_autoservice'])) {
         $user_id = $result['autoservice_id'];
-        /*$sql_ban_client = "SELECT * FROM public.ban_list
-        WHERE user_id = '$user_id'";
-        $ban_result = $pdo->query($sql_ban_client)->fetch();
-        if (!empty($ban_result)) {
-            $_SESSION['message']['text'] = "Данный аккаунт заблокирован " .  $ban_result['date'] .
-                " по причине: " . $ban_result['text'];
-            $_SESSION['message']['type'] = 'danger';
-            header('Location: /authorization/');
-            exit;
-        }*/
+        getUserBanInfoById($user_id);
         $_SESSION['user'] = [
             "user_type" => "autoservice",
             "id" => $result['autoservice_id'],
@@ -81,11 +76,9 @@ if (password_verify($password, $result['password_admin'])) {
         ];
         $_SESSION['message']['text'] = "Вы авторизованы как сервисный центр!";
         $_SESSION['message']['type'] = 'success';
+        unset($_SESSION['not_auth_user']['attempt']);
         header('Location: /autoservice_applications/');
     } else {
-        $_SESSION['message']['text'] = "Неверный логин или пароль! <br>
-            Если данные введены верно, смените тип пользователя";
-        $_SESSION['message']['type'] = 'warning';
         header('Location: /authorization/');
     }
 }

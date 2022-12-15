@@ -25,3 +25,11 @@ button {
   justify-content: center;
   align-items: flex-start;
 }
+
+.req:invalid {
+  border: 2px solid red;
+}
+
+.req:valid {
+  border: 2px solid green;
+}

@@ -10,35 +10,39 @@ $(document).ready(function () {
       $("#edit").attr("status", "on");
       document.querySelector("#edit").textContent = "Сохранить изменения";
     } else {
-      $("#edit").attr("status", "off");
-      event.preventDefault();
-      var fdata = new FormData();
-      fdata.append("price", $('input[id="price"]').val());
-      fdata.append("text", $('input[id="text"]').val());
-      fdata.append("service_id", $('select[name="autoserv_service"]').val());
-      if ($("#certification")[0].files.length > 0)
-        fdata.append("certification", $("#certification")[0].files[0]);
-      else fdata.append("certification", null);
-      $.ajax({
-        type: "POST",
-        url: "/vendor/site_template/components/autoservice_service/component.php",
-        data: fdata,
-        processData: false,
-        contentType: false,
-        success: function (responce) {
-          $('div[name="service_info"]').html(responce);
-        },
-      });
-      $('input[id="certification"]').prop("disabled", true);
-      document.getElementById("price").setAttribute("readonly", "true");
-      document.getElementById("text").setAttribute("readonly", "true");
-      document
-        .getElementById("price")
-        .setAttribute("class", "form-control-plaintext");
-      document
-        .getElementById("text")
-        .setAttribute("class", "form-control-plaintext");
-      document.querySelector("#edit").textContent = "Редактировать";
+      if (document.getElementById("price").value != "") {
+        $("#edit").attr("status", "off");
+        event.preventDefault();
+        var fdata = new FormData();
+        fdata.append("price", $('input[id="price"]').val());
+        fdata.append("text", $('textarea[id="text"]').val());
+        fdata.append("service_id", $('select[name="autoserv_service"]').val());
+        if ($("#certification")[0].files.length > 0)
+          fdata.append("certification", $("#certification")[0].files[0]);
+        else fdata.append("certification", null);
+        $.ajax({
+          type: "POST",
+          url: "/vendor/site_template/components/autoservice_service/component.php",
+          data: fdata,
+          processData: false,
+          contentType: false,
+          success: function (responce) {
+            $('div[name="service_info"]').html(responce);
+          },
+        });
+        $('input[id="certification"]').prop("disabled", true);
+        document.getElementById("price").setAttribute("readonly", "true");
+        document.getElementById("text").setAttribute("readonly", "true");
+        document
+          .getElementById("price")
+          .setAttribute("class", "form-control-plaintext");
+        document
+          .getElementById("text")
+          .setAttribute("class", "form-control-plaintext");
+        document.querySelector("#edit").textContent = "Редактировать";
+      } else {
+        document.getElementById("price").setAttribute("class", "form-control req");
+      }
     }
   });
   $("#category").on("change", function (event) {
@@ -93,24 +97,29 @@ $(document).ready(function () {
     });
   });
   $(document).on("click", "#add_service", function (event) {
-    event.preventDefault();
-    var fdata = new FormData();
-    fdata.append("add_price", $('input[id="add_price"]').val());
-    fdata.append("add_text", $('input[id="add_text"]').val());
-    fdata.append("add_service_id", $('select[name="service"]').val());
-    if ($("#add_certification")[0].files.length > 0)
-      fdata.append("add_certification", $("#add_certification")[0].files[0]);
-    else fdata.append("add_certification", null);
-    $.ajax({
-      type: "POST",
-      url: "/vendor/site_template/components/autoservice_service/component.php",
-      data: fdata,
-      processData: false,
-      contentType: false,
-      success: function (responce) {
-        location.reload();
-      },
-    });
+    if (document.getElementById("add_price").value != "") {
+      document.getElementById("add_price").className = "form-control";
+      event.preventDefault();
+      var fdata = new FormData();
+      fdata.append("add_price", $('input[id="add_price"]').val());
+      fdata.append("add_text", $('input[id="add_text"]').val());
+      fdata.append("add_service_id", $('select[name="service"]').val());
+      if ($("#add_certification")[0].files.length > 0)
+        fdata.append("add_certification", $("#add_certification")[0].files[0]);
+      else fdata.append("add_certification", null);
+      $.ajax({
+        type: "POST",
+        url: "/vendor/site_template/components/autoservice_service/component.php",
+        data: fdata,
+        processData: false,
+        contentType: false,
+        success: function (responce) {
+          location.reload();
+        },
+      });
+    } else {
+      document.getElementById("add_price").className = "form-control req";
+    }
   });
   $(document).on("click", "#del_service", function (event) {
     event.preventDefault();
