@@ -33,6 +33,14 @@ if (!empty($_SESSION['user'])) {
                 <button id="change_password" name="change_password" type="submit" class="btn btn-primary">Изменить
                     пароль</button>';
                 }
+            } else {
+                echo '
+                    <label for="exampleInputEmail1" class="form-label">Адрес электронной почты, указанный при
+                        регистрации</label>
+                        <input type="email" required placeholder="email" name="email" class="form-control" id="email"
+                        aria-describedby="emailHelp" />
+                        <button id="send_code" name="send_code" type="submit" class="btn btn-primary">Отправить код на
+                            почту</button>';
             }
             ?>
             <p>Желаете вернуться на страницу авторизации? - <a href="/authorization/">Авторизироваться</a></p>
