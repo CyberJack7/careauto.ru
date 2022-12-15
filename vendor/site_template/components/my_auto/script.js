@@ -178,10 +178,18 @@ function showChangeAuto() {
   let amount_input = input_index.length;
   for (let i = 0; i < amount_input; i++) {
     mb_3[input_index[i]].getElementsByTagName("input")[0].value = cur_auto_value_p[input_index[i]].innerHTML;
+    mb_3[input_index[i]].getElementsByTagName("input")[0].className = "form-control req";
+    if (mb_3[input_index[i]].getElementsByTagName("input")[0].id == "date_buy") {
+      mb_3[input_index[i]].getElementsByTagName("input")[0].id = "change_date_buy";
+    }
+    if (mb_3[input_index[i]].getElementsByTagName("input")[0].id == "auto_year") {
+      mb_3[input_index[i]].getElementsByTagName("input")[0].id = "change_auto_year";
+    }
   }
   let amount_select = select_index.length;
   for (let i = 0; i < amount_select; i++) {
     let select = mb_3[select_index[i]].getElementsByTagName("select")[0].getElementsByTagName('option');
+    mb_3[select_index[i]].getElementsByTagName("select")[0].className = "form-select req";
     let amount_option = select.length
     for (let j = 0; j < amount_option; j++) {
       if (select[j].innerHTML === cur_auto_value_p[select_index[i]].innerHTML) {
@@ -537,9 +545,26 @@ function deleteTires(tires) {
 
 //синхронизировать год выпуска и дату покупки
 function synchDateBuy(auto_year) {
-  if (auto_year.value != "") {
-    document.getElementById("date_buy").setAttribute("min", auto_year.value + "-01-01");
+  if (auto_year.id == "auto_year") {
+    if (auto_year.value != "") {
+      document.getElementById("date_buy").setAttribute("min", auto_year.value + "-01-01");
+    } else {
+      document.getElementById("date_buy").setAttribute("min", "1886-01-29");
+    }
   } else {
-    document.getElementById("date_buy").setAttribute("min", "1886-01-29");
+    if (auto_year.value != "") {
+      document.getElementById("change_date_buy").setAttribute("min", auto_year.value + "-01-01");
+    } else {
+      document.getElementById("change_date_buy").setAttribute("min", "1886-01-29");
+    }
+  }
+}
+
+
+function validInput(input) {
+  if (input.value != "") {
+      input.className = "form-control req";        
+  } else {
+      input.className = "form-control";
   }
 }
