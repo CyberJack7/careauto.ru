@@ -60,6 +60,11 @@ if (isset($_POST['submit_pay_application'])) {
     $user_requisites = $pdo->query($sql_user_requisites)->fetch();
     $valid = 0; //всё в порядке
     if (!empty($user_requisites)) {
+        $sql_price = "SELECT price FROM public.application WHERE application_id = " . $application_pay['application_id'];
+        $application_price = $pdo->query($sql_price)->fetch()['price'];
+        if ($application_price > $user_requisites['fund_balance']) {
+            $valid = 2; //недостаточно средств
+        }
         foreach($application_pay as $key => $item) {
             if ($key == 'cardholder_name') {
                 if ($user_requisites[$key] != '' && $item != mb_strtolower($user_requisites[$key])) {
@@ -70,11 +75,6 @@ if (isset($_POST['submit_pay_application'])) {
                 $valid = 1; //данные неверны
                 break;
             }
-        }
-        $sql_price = "SELECT price FROM public.application WHERE application_id = " . $application_pay['application_id'];
-        $application_price = $pdo->query($sql_price)->fetch()['price'];
-        if ($application_price > $user_requisites['fund_balance']) {
-            $valid = 2; //недостаточно средств
         }
         if ($valid == 0) {
             $sql_fund_balance = "UPDATE public.user_requisites SET fund_balance = " . ($user_requisites['fund_balance'] - $application_price) . " 

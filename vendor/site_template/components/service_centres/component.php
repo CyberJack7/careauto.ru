@@ -318,7 +318,7 @@ if (isset($_POST['autoservice_id']) and isset($_POST['show_complaint'])) {
         <p>Опишите причину жалобы в поле ниже. Спасибо, что делаете мир лучше!</p>
         
         <div class="form-floating" name="complaint_text">
-              <textarea class="form-control" placeholder="Причина жалобы" id="complaint_' . $autoservice_id . '" style="height: 100px"></textarea>
+              <textarea class="form-control" placeholder="Причина жалобы" id="complaint_' . $autoservice_id . '" maxlength="200" style="height: 100px"></textarea>
               <label for="complaint_' . $autoservice_id . '">Причина жалобы</label>
         </div>';
         $button_accept = '<button onclick="sendcomplaint(this)" type="button" data-bs-dismiss="modal" value="' . $autoservice_id . '" class="btn btn-primary">Отправить жалобу</button>';

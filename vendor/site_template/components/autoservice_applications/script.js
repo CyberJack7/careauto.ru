@@ -142,8 +142,9 @@ function sendcomplaint(button) {
       },
       function (responce) {}
     );
+    alert("Жалоба отправлена на рассмотрение");
   } else {
-    alert("Ты ничего не ввел, дурень!");
+    alert("Введите причину жалобы!");
   }
 }
 
