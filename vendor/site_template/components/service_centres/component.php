@@ -183,23 +183,26 @@ if (isset($_POST['create_application'])) {
                 <p class="name">ФИО</p><p class="value">' . $client_info['name_client'] . '</p>
                 <p class="name">Номер телефона</p><p class="value">' . $client_info['phone_client'] . '</p>
                 <div class="mb-3">
-                    <label class="form-label name" for="auto_application">Автомобиль</label>
-                    <select class="form-select req" id="auto_application" name="auto_application" aria-label="Default select example" required>';
-            if ($data['auto_id'] == '') {
-                $application_template .= '<option value="" disabled selected>Выберите ваш автомобиль</option>';
-                $autos = getAutosById($client_info['client_id']);
-                foreach ($autos as $auto_id => $ar_auto_info) {
-                    $application_template .= '<option value="' . $auto_id . '">' . $ar_auto_info['brand'] . ' ' . $ar_auto_info['model'] . '</option>';
-                }
-            } else {
-                $autos = getAutosById($client_info['client_id']);
-                foreach ($autos as $auto_id => $ar_auto_info) {
-                    if ($auto_id == $data['auto_id']) {
-                        $application_template .= '<option value="' . $auto_id . '" selected>' . $ar_auto_info['brand'] . ' ' . $ar_auto_info['model'] . '</option>';
-                    } else {
+                    <label class="form-label name" for="auto_application">Автомобиль</label>';
+            $autos = getAutosById($client_info['client_id'], $autoservice_info['id']);
+            if (!empty($autos)) {
+                $application_template .= '<select class="form-select req" id="auto_application" name="auto_application" aria-label="Default select example" required>';
+                if ($data['auto_id'] == '') {
+                    $application_template .= '<option value="" disabled selected>Выберите ваш автомобиль</option>';
+                    foreach ($autos as $auto_id => $ar_auto_info) {
                         $application_template .= '<option value="' . $auto_id . '">' . $ar_auto_info['brand'] . ' ' . $ar_auto_info['model'] . '</option>';
                     }
+                } else {                    
+                    foreach ($autos as $auto_id => $ar_auto_info) {
+                        if ($auto_id == $data['auto_id']) {
+                            $application_template .= '<option value="' . $auto_id . '" selected>' . $ar_auto_info['brand'] . ' ' . $ar_auto_info['model'] . '</option>';
+                        } else {
+                            $application_template .= '<option value="' . $auto_id . '">' . $ar_auto_info['brand'] . ' ' . $ar_auto_info['model'] . '</option>';
+                        }
+                    }
                 }
+            } else {
+                $application_template .= '<div class="alert alert-warning" role="alert">Данный сервисный центр не обслуживает марки Ваших автомобилей</div>';
             }
             $application_template .= '</select>
                 </div>';

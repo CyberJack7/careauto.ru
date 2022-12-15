@@ -8,6 +8,7 @@ $("document").ready(function () {
       let show_tires = document.getElementsByClassName("show_tires");
       document.getElementById("tires").style.display = "none"; //скрыть панель комплектов резины
       document.getElementById("show_autos").style.display = "none"; //скрыть панель отображения информации об автомобилях
+      document.getElementById("change_auto_area").remove(); //скрыть панель редактирования информации об автомобилях
       document.getElementsByClassName('item_active')[0].className = "list-group-item list-group-item-action"; // подсветка акт. полей навигации
       let amount = show_autos.length;
       for (i = 0; i < amount; i++) { //скрыть все комплектов резины внутри и все панели авто
