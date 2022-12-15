@@ -189,7 +189,7 @@ function show_complaint($appl_id)
         . " AND inspected_user_id=" . $client['client_id'];
     $result = $pdo->query($sql_check_complaint)->fetch();
     if ($result) {
-        $text_modal = '<p>Вы уже отправляли жалобу на ' . $client['name_client'] . ' Администратор обязательно проверит ее</p>';
+        $text_modal = '<p>Вы уже отправляли жалобу на ' . $client['name_client'] . ' <br>Администратор обязательно проверит её</p>';
         $button_accept = '<button type="button" data-bs-dismiss="modal" class="btn btn-primary">Понятно</button>';
     } else {
         $text_modal = '<p>Опишите причину жалобы в поле ниже. Спасибо, что делаете мир лучше!</p>

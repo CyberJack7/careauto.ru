@@ -178,6 +178,7 @@ function searchAutoservices(search_button) {
   );
 }
 
+
 //получение информации о сервисном центре
 function getAutoserviceInfo(plate) {
   cancelApplication();
@@ -199,6 +200,7 @@ function getAutoserviceInfo(plate) {
     }
   );
 }
+
 
 //отображение информации об услуге
 function setServiceInfo(ar_service_info) {
@@ -222,6 +224,7 @@ function setServiceInfo(ar_service_info) {
   }
 }
 
+
 //получение информации об услуге
 function getServiceInfo(select) {
   let service_id = select.options[select.selectedIndex].value; //id выбранной услуги
@@ -242,13 +245,12 @@ function getServiceInfo(select) {
   );
 }
 
-//получение информации об услуге
+
+//окно формирования заявки
 function createApplication(btn) {
   let current_autoservice = document.getElementById("current_autoservice");
-  current_autoservice
-    .getElementsByClassName("autoservices_area")[0]
-    .style.setProperty("max-height", "251.4px", "important");
-  btn.style.display = "none";
+  current_autoservice.getElementsByClassName("autoservices_area")[0].style.setProperty("max-height", "259px", "important");
+  btn.parentNode.style.display = "none";
   current_autoservice.insertAdjacentHTML(
     "beforeend",
     '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>'
@@ -381,6 +383,7 @@ function sendApplication(btn) {
       function (data) {
         //функция которая будет выполнена после успешного запроса
         cancelApplication();
+        alert("Заявка на обслуживание отправлена");
       }
     );
   }
@@ -389,7 +392,7 @@ function sendApplication(btn) {
 //отменить заявку
 function cancelApplication() {
   if (document.getElementById("send_application")) {
-    document.getElementById("create_application").style.display = "block";
+    document.getElementById("create_application").parentNode.removeAttribute("style");;
     document.getElementById("send_application").remove();
     document
       .getElementById("current_autoservice")

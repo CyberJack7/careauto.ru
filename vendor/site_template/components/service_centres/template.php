@@ -192,7 +192,10 @@
                         </div>
                     </div>
                 </div>
-            <button class="btn btn-primary" id="create_application" type="button" onclick="createApplication(this)">Сформировать заявку</button>';
+                <div class="btn_div">
+                    <button class="btn btn-primary" id="create_application" type="button" onclick="createApplication(this)">Сформировать заявку</button>
+                    <button onclick="showcomplaint(this)" value="' . $autoservice_info['id'] . '" id="show_complaint_' . $autoservice_info['id'] . '"name="show_complaint" class="btn btn-outline-danger" type="button">Пожаловаться</button>
+                </div>';
         } else {
             echo 'Здесь мог бы быть Ваш автосервис</div>';
         }
