@@ -395,9 +395,11 @@ function editTires(tires) {
       if (typeof cloned_mb_3[i].getElementsByTagName("input")[0] != "undefined") {
         input[i] = cloned_mb_3[i].getElementsByTagName("input")[0].cloneNode(true);
         input[i].id = "change_" + cloned_mb_3[i].getElementsByTagName("input")[0].id;
+        input[i].className = "form-control req";
       } else {
         input[i] = cloned_mb_3[i].getElementsByTagName("select")[0].cloneNode(true);
         input[i].id = "change_" + cloned_mb_3[i].getElementsByTagName("select")[0].id;
+        input[i].className = "form-control req";
       }
     }
     input[0].required = true;
@@ -459,7 +461,8 @@ function editTires(tires) {
 
 //сохранение изменений комплекта резины
 function confirmChangeTires(tires_id) {
-  if (document.getElementById("change_tires_brand").checkValidity() && document.getElementById("change_tires_type").checkValidity()) {
+  if (document.getElementById("change_tires_brand").checkValidity() && document.getElementById("change_tires_type").checkValidity() 
+    && document.getElementById("change_marking").checkValidity() && document.getElementById("change_tires_date_buy").checkValidity()) {
     //формирование массива изменённых данных
     let change_tires_area = document.getElementById("change_tires_area_" + tires_id);
     let info_div = change_tires_area.getElementsByClassName("info");

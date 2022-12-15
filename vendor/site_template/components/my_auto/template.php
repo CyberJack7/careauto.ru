@@ -8,6 +8,9 @@
         header('Location: /');
     }
     getUserBanInfoById($_SESSION['user']['id']);
+    if (isset($_SESSION['message'])) {
+        unset($_SESSION['message']);
+    }
 ?>
 
 <h1 class="container">Мои авто</h1>
