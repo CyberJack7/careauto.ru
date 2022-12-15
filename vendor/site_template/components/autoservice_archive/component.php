@@ -41,11 +41,15 @@ function setAutoserviceHistory($history_list, $status)
             Комментарий: ' . $history['text'] . '</br>
 
             Дата подачи заявки: ' . $history['date_start'] . '</br>
-            Время подачи заявки: ' . $history['time_start'] . '</br>
+            Время подачи заявки: ' . $history['time_start'] . '</br>';
 
-            Дата оплаты: ' . $history['date_payment'] . '</br>
+            if ($status != "Отказ") {
 
-            Время оплаты: ' . $history['time_payment'] . '</br>';
+                echo '
+                Дата оплаты: ' . $history['date_payment'] . '</br>
+                
+                Время оплаты: ' . $history['time_payment'] . '</br>';
+            }
 
 
 
