@@ -32,16 +32,6 @@ if (password_verify($password, $result['password_admin'])) {
     if (password_verify($password, $result['password_client'])) {
         $user_id = $result['client_id'];
         getUserBanInfoById($user_id);
-        /*$sql_ban_client = "SELECT * FROM public.ban_list
-        WHERE user_id = '$user_id'";
-        $ban_result = $pdo->query($sql_ban_client)->fetch();
-        if (!empty($ban_result)) {
-            $_SESSION['message']['text'] = "Данный аккаунт заблокирован " .  $ban_result['date'] .
-                " по причине: " . $ban_result['text'];
-            $_SESSION['message']['type'] = 'danger';
-            header('Location: /authorization/');
-            exit;
-        }*/
         $_SESSION['user'] = [
             "user_type" => "client",
             "id" => $result['client_id'],
@@ -64,15 +54,6 @@ if (password_verify($password, $result['password_admin'])) {
     if (password_verify($password, $result['password_autoservice'])) {
         $user_id = $result['autoservice_id'];
         getUserBanInfoById($user_id);
-        /*$sql_ban_client = "SELECT * FROM public.ban_list
-        WHERE user_id = '$user_id'";
-        $ban_result = $pdo->query($sql_ban_client)->fetch();
-        if (!empty($ban_result)) {
-            $_SESSION['message']['text'] = "Данный аккаунт заблокирован " .  $ban_result['date'] . " по причине: " . $ban_result['text'];
-            $_SESSION['message']['type'] = 'danger';
-            header('Location: /authorization/');
-            exit;
-        }*/
         $_SESSION['user'] = [
             "user_type" => "autoservice",
             "id" => $result['autoservice_id'],
