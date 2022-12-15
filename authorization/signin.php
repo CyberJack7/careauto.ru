@@ -19,6 +19,20 @@ $sql_autoservice = "SELECT * FROM public.autoservice WHERE email_autoservice = '
 
 $result = $pdo->query($sql_admin)->fetch();
 
+$_SESSION['not_auth_user']['attempt']--;
+if ($_SESSION['not_auth_user']['attempt'] == 2) {
+    $_SESSION['message']['text'] = "Неверный логин или пароль! <br>
+    Если данные введены верно, смените тип пользователя. Осталось <b>две</b> попытки.";
+    $_SESSION['message']['type'] = 'warning';
+} elseif ($_SESSION['not_auth_user']['attempt'] == 1) {
+    $_SESSION['message']['text'] = "Неверный логин или пароль! <br>
+    Если данные введены верно, смените тип пользователя. Осталась <b>одна</b> попытка.";
+    $_SESSION['message']['type'] = 'warning';
+} else {
+    $_SESSION['message']['text'] = "Неверный логин или пароль! Вы потратили все попытки. Вход заблокирован на 30 секунд!";
+    $_SESSION['message']['type'] = 'danger';
+}
+
 if (password_verify($password, $result['password_admin'])) {
     $_SESSION['user'] = [
         "user_type" => "admin",
@@ -42,11 +56,9 @@ if (password_verify($password, $result['password_admin'])) {
         ];
         $_SESSION['message']['text'] = "Вы авторизованы как автовладелец!";
         $_SESSION['message']['type'] = 'success';
+        unset($_SESSION['not_auth_user']['attempt']);
         header('Location: /my_auto/');
     } else {
-        $_SESSION['message']['text'] = "Неверный логин или пароль! <br>
-            Если данные введены верно, смените тип пользователя";
-        $_SESSION['message']['type'] = 'warning';
         header('Location: /authorization/');
     }
 } else { //autoservice
@@ -64,10 +76,9 @@ if (password_verify($password, $result['password_admin'])) {
         ];
         $_SESSION['message']['text'] = "Вы авторизованы как сервисный центр!";
         $_SESSION['message']['type'] = 'success';
+        unset($_SESSION['not_auth_user']['attempt']);
         header('Location: /autoservice_applications/');
     } else {
-        $_SESSION['message']['text'] = "Неверный логин или пароль!<br>Если данные введены верно, смените тип пользователя";
-        $_SESSION['message']['type'] = 'warning';
         header('Location: /authorization/');
     }
 }

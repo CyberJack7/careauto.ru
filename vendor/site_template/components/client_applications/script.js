@@ -54,7 +54,6 @@ function submitPayApplication(pay_btn) {
   });
   $.post("/vendor/site_template/components/client_applications/component.php", {submit_pay_application: json_application_pay}, 
   function(data){
-    console.log(data);
     let valid = JSON.parse(data);
     if (document.getElementsByClassName("alert")[0]) {
       document.getElementsByClassName("alert")[0].remove();

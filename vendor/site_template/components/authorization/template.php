@@ -10,6 +10,9 @@ if (!empty($_SESSION['user'])) {
 if (!empty($_SESSION['password_recovery'])) {
     unset($_SESSION['password_recovery']);
 }
+if (!isset($_SESSION['not_auth_user']['attempt'])) {
+    $_SESSION['not_auth_user']['attempt'] = 3;
+}
 ?>
 <div class="container central content column">
     <h1>Вход</h1>
@@ -33,7 +36,7 @@ if (!empty($_SESSION['password_recovery'])) {
                     id="exampleInputPassword1" />
             </div>
         </div>
-        <button id="auth_button" name="auth_button" type="submit" class="btn btn-primary">Войти</button>
+        <button class="btn btn-primary" id="auth_button_<?=$_SESSION['not_auth_user']['attempt']?>" name="auth_button" type="submit">Войти</button>
         <p>Забыли пароль? - <a href="/password_recovery/"> Восстановление пароля</a>
         <p>У вас еще нет аккаунта? - <a href="/registration/">Зарегистрируйтесь</a>
 
@@ -53,7 +56,9 @@ if (!empty($_SESSION['password_recovery'])) {
                 ' . $_SESSION['message']['text'] . '</div></p>';
                 }
             }
-            unset($_SESSION['message']['text'], $_SESSION['message']['type']);
+            if ($_SESSION['not_auth_user']['attempt'] != 0) {
+                unset($_SESSION['message']['text'], $_SESSION['message']['type']);
+            }
             ?>
 
     </form>
