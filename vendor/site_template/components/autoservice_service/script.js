@@ -93,24 +93,29 @@ $(document).ready(function () {
     });
   });
   $(document).on("click", "#add_service", function (event) {
-    event.preventDefault();
-    var fdata = new FormData();
-    fdata.append("add_price", $('input[id="add_price"]').val());
-    fdata.append("add_text", $('input[id="add_text"]').val());
-    fdata.append("add_service_id", $('select[name="service"]').val());
-    if ($("#add_certification")[0].files.length > 0)
-      fdata.append("add_certification", $("#add_certification")[0].files[0]);
-    else fdata.append("add_certification", null);
-    $.ajax({
-      type: "POST",
-      url: "/vendor/site_template/components/autoservice_service/component.php",
-      data: fdata,
-      processData: false,
-      contentType: false,
-      success: function (responce) {
-        location.reload();
-      },
-    });
+    if (document.getElementById("add_price").value != "") {
+      document.getElementById("add_price").className = "form-control";
+      event.preventDefault();
+      var fdata = new FormData();
+      fdata.append("add_price", $('input[id="add_price"]').val());
+      fdata.append("add_text", $('input[id="add_text"]').val());
+      fdata.append("add_service_id", $('select[name="service"]').val());
+      if ($("#add_certification")[0].files.length > 0)
+        fdata.append("add_certification", $("#add_certification")[0].files[0]);
+      else fdata.append("add_certification", null);
+      $.ajax({
+        type: "POST",
+        url: "/vendor/site_template/components/autoservice_service/component.php",
+        data: fdata,
+        processData: false,
+        contentType: false,
+        success: function (responce) {
+          location.reload();
+        },
+      });
+    } else {
+      document.getElementById("add_price").className = "form-control req";
+    }
   });
   $(document).on("click", "#del_service", function (event) {
     event.preventDefault();

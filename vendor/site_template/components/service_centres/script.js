@@ -349,43 +349,50 @@ function sendApplication(btn) {
       )
     ); //стоимость
     let date;
-    if (document.getElementById("desired_date").value != "") {
-      date =
-        document.getElementById("desired_date").value +
-        " " +
-        document.getElementById("desired_time").value; //желаемая дата и время
+    let today = new Date();
+    let cur_year = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
+    if (document.getElementById("desired_date").value > cur_year ) {
+      document.getElementById("desired_date").className = "form-control";
+      if (document.getElementById("desired_date").value != "") {
+        date =
+          document.getElementById("desired_date").value +
+          " " +
+          document.getElementById("desired_time").value; //желаемая дата и время
+      } else {
+        date = document.getElementById("desired_date").value;
+      }
+      let comment = document.getElementById("comment").value; //комментарий
+      let services_id = []; //массив id услуг
+      let services_option = document
+        .getElementById("application_services")
+        .getElementsByTagName("input");
+      let amount_services_option = services_option.length;
+      for (let i = 0; i < amount_services_option; i++) {
+        if (services_option[i].checked == true) {
+          services_id.push(services_option[i].id);
+        }
+      }
+      json_data = JSON.stringify({
+        client_id: client_id,
+        auto_id: auto_id,
+        autoservice_id: autoservice_id,
+        services_id: services_id,
+        price: price,
+        date: date,
+        comment: comment,
+      });
+      $.post(
+        "/vendor/site_template/components/service_centres/component.php",
+        { send_application: json_data },
+        function (data) {
+          //функция которая будет выполнена после успешного запроса
+          cancelApplication();
+          alert("Заявка на обслуживание отправлена");
+        }
+      );
     } else {
-      date = document.getElementById("desired_date").value;
+      document.getElementById("desired_date").className = "form-control req";
     }
-    let comment = document.getElementById("comment").value; //комментарий
-    let services_id = []; //массив id услуг
-    let services_option = document
-      .getElementById("application_services")
-      .getElementsByTagName("input");
-    let amount_services_option = services_option.length;
-    for (let i = 0; i < amount_services_option; i++) {
-      if (services_option[i].checked == true) {
-        services_id.push(services_option[i].id);
-      }
-    }
-    json_data = JSON.stringify({
-      client_id: client_id,
-      auto_id: auto_id,
-      autoservice_id: autoservice_id,
-      services_id: services_id,
-      price: price,
-      date: date,
-      comment: comment,
-    });
-    $.post(
-      "/vendor/site_template/components/service_centres/component.php",
-      { send_application: json_data },
-      function (data) {
-        //функция которая будет выполнена после успешного запроса
-        cancelApplication();
-        alert("Заявка на обслуживание отправлена");
-      }
-    );
   }
 }
 

@@ -11,6 +11,9 @@ if (empty($_SESSION['user']['new_email']) && empty($_SESSION['new_user']) && emp
 if (!empty($_SESSION['user'])) {
     getUserBanInfoById($_SESSION['user']['id']);
 }
+if (!empty($_SESSION['password_recovery'])) {
+    $_SESSION['password_recovery']['valid'] = false;
+}
 ?>
 
 <div class="container central column content">

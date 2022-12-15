@@ -86,7 +86,7 @@ function showAddHistoryRecord() {
             </div>
             <div class="mb-3">
                 <label class="form-label" for="text">Описание</label>
-                <textarea class="form-control" id="text" name="text" type="textarea" placeholder="Описание"></textarea>
+                <textarea class="form-control" id="text" name="text" maxlength="200" type="textarea" placeholder="Описание"></textarea>
             </div>
             <div class="multiselect mb-3">
                 <label class="form-label" for="services">Перечень выполненных работ</label>

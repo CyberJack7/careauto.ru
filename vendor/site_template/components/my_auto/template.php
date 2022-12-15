@@ -82,7 +82,7 @@
             </div>
             <div class="mb-3">
                 <label class="form-label" for="auto_year">Год выпуска</label>
-                <input class="form-control" id="auto_year" name="auto_year" type="number" min="1886" max="<?=date('o')?>" placeholder="Год выпуска автомобиля"/>
+                <input class="form-control" id="auto_year" name="auto_year" type="number" min="1886" max="<?=date('o')?>" onchange="synchDateBuy(this)" placeholder="Год выпуска автомобиля"/>
             </div>
             <div class="mb-3">
                 <label class="form-label" for="date_buy">Дата покупки</label>

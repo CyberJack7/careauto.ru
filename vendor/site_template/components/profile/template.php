@@ -71,7 +71,7 @@ getUserBanInfoById($_SESSION['user']['id']); //проверка на бан
             </div>
             <div class="mb-3">
                 <label class="form-label" for="description">Описание</label>
-                <textarea class="form-control" id="description" name="description" type="textarea" placeholder="Описание Вашего сервисного центра"><?=$autoservice['text']?></textarea>
+                <textarea class="form-control" id="description" name="description" type="textarea" maxlength="300" placeholder="Описание Вашего сервисного центра"><?=$autoservice['text']?></textarea>
             </div>
             <div class="mb-3">
                 <label class="form-label" for="photos">Фотографии (до 5 шт; рекомендуемый формат - 16:9)</label>

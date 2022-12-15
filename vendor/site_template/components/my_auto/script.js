@@ -526,3 +526,13 @@ function deleteTires(tires) {
     }  
   }
 }
+
+
+//синхронизировать год выпуска и дату покупки
+function synchDateBuy(auto_year) {
+  if (auto_year.value != "") {
+    document.getElementById("date_buy").setAttribute("min", auto_year.value + "-01-01");
+  } else {
+    document.getElementById("date_buy").setAttribute("min", "1886-01-29");
+  }
+}

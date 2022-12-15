@@ -6,6 +6,9 @@
 if (!empty($_SESSION['user'])) {
     header('Location: /');
 }
+if (!empty($_SESSION['new_user']['email'])) {
+    unset($_SESSION['new_user']);
+}
 ?>
 
 <div class="container central column content">

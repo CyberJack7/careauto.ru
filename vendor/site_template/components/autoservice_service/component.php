@@ -31,7 +31,7 @@ function service_info($autoservice_id, $service_id)
         $arService['price'] = '';
         $arService['text'] = '';
         $arService['certification'] = '';
-        echo '<div id="con2" class="con2"> Стоимость услуги(обязательно): ' . '<input name="add_price" id="add_price" class="form-control" type="text" value="' . $arService['price'] . '">' . '</br>' .
+        echo '<div id="con2" class="con2"> Стоимость услуги(обязательно): ' . '<input name="add_price" id="add_price" class="form-control" type="text" value="' . $arService['price'] . '" required>' . '</br>' .
             'Описание услуги(необязательно): ' . '<input name="add_text" id="add_text" class="form-control" type="add_text" value="' . $arService['text'] . '">' . '</br>' .
             'Сертификация(необязательно): ' .
             '<input name="add_certification" id="add_certification" accept="application/pdf" class="form-control" type="file">
