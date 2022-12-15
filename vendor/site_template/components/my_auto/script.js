@@ -307,7 +307,6 @@ function addTires(add_tires_btn) {
     
       //добавление комплекта в область
       let cloned_plate = document.getElementsByClassName("plate")[0];
-      console.log(cloned_plate.getElementsByTagName("div")[6]);
       if(cloned_plate.getElementsByTagName("div")[6]) {
         cloned_plate.removeChild(cloned_plate.getElementsByTagName("div")[6]);        
       }
