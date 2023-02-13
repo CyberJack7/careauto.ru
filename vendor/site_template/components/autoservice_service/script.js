@@ -32,7 +32,7 @@ $(document).ready(function () {
         });
         $('input[id="certification"]').prop("disabled", true);
         document.getElementById("price").setAttribute("readonly", "true");
-        document.getElementById("text").setAttribute("readonly", "true");
+        document.getElementById("text1").setAttribute("readonly", "true");
         document
           .getElementById("price")
           .setAttribute("class", "form-control-plaintext");

@@ -67,7 +67,7 @@ if (isset($_POST['submit_pay_application'])) {
         }
         foreach($application_pay as $key => $item) {
             if ($key == 'cardholder_name') {
-                if ($user_requisites[$key] != '' && $item != mb_strtolower($user_requisites[$key])) {
+                if ($user_requisites[$key] != '' || $item != mb_strtolower($user_requisites[$key])) {
                     $valid = 1; //данные неверны
                     break;
                 }
